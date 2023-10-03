@@ -1,0 +1,12 @@
+﻿  first_app.cpp
+E:\VulkanEngine\Vulkan\VulkanVideos\lve_renderer.hpp(45,43): warning C4267: 'return' : conversion de 'size_t' en 'uint32_t', perte possible de données
+  keyboard_movement_controller.cpp
+  lve_game_object.cpp
+  main.cpp
+E:\VulkanEngine\Vulkan\VulkanVideos\lve_renderer.hpp(45,43): warning C4267: 'return' : conversion de 'size_t' en 'uint32_t', perte possible de données
+  model.cpp
+  point_light_system.cpp
+  simple_render_system.cpp
+  Génération de code en cours...
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Microsoft\VC\v160\Microsoft.CppCommon.targets(1074,5): warning MSB4220: En attente d'annulation de la tâche "Link" actuellement en cours d'exécution.
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Microsoft\VC\v160\Microsoft.CppCommon.targets(1074,5): error MSB6006: Arrêt de "link.exe" avec le code 1.

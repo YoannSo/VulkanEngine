@@ -1,0 +1,10 @@
+﻿  first_app.cpp
+  lve_renderer.cpp
+C:\stage\vulkan\vide2\Vulkan\VulkanVideos\lve_renderer.cpp(111,110): warning C4244: 'argument': conversion from 'float' to 'uint32_t', possible loss of data
+  main.cpp
+  Generating code
+  5 of 1831 functions ( 0.3%) were compiled, the rest were copied from previous compilation.
+    0 functions were new in current compilation
+    0 functions had inline decision re-evaluated but remain unchanged
+  Finished generating code
+  VulkanVideos.vcxproj -> C:\stage\vulkan\vide2\Vulkan\x64\Release\VulkanVideos.exe

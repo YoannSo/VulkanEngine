@@ -1,13 +1,19 @@
 #include "model.hpp"
+#include "lve_swap_chain.hpp"
 #include <iostream>
 #include "define.hpp"
 #include <glm/glm.hpp>
 
 namespace lve {
 	
+	//std::unique_ptr<LveDescriptorPool> Model::_modelDescriptorPool = nullptr;
+
+
 	Model::Model(LveDevice& device, const std::string p_name, const std::string p_filePath) :_lveDevice{ device }, _name { p_name }, _filePath{ p_filePath }
 	{
 		std::cout << "Loading model " << _name << " from: " << p_filePath << std::endl;
+
+
 
 		Assimp::Importer importer;
 		_dirPath = "models/" + _name + "/";
@@ -27,18 +33,23 @@ namespace lve {
 			_loadMesh(scene->mMeshes[i], scene);
 		}
 
+		setupDescriptorPool();
 
+		for (auto& mesh: _meshes) {
+			mesh.setupDescriptorSetLayout(_modelDescriptorPool, _modelDescriptorLayout);
+		}
 
 	}
 	Model::~Model()
 	{
 	}
+
 	void Model::_loadMesh(const aiMesh* const p_mesh, const aiScene* const p_scene)
 	{
 		const std::string meshName = _name + "_" + std::string(p_mesh->mName.C_Str());
 	
 		if (VERBOSE)
-			std::cout << "-- Loading mesh: " << meshName << std::endl;
+			std::cout << "-- Loading mesh: " << meshName <<" number:"<< p_mesh->mNumVertices<< std::endl;
 
 		// Load vertex attributes.
 		std::vector<Vertex> vertices;
@@ -112,7 +123,7 @@ namespace lve {
 		_nbTriangles += p_mesh->mNumFaces;
 		_nbVertices += p_mesh->mNumVertices;
 
-		//_meshes.emplace_back(std::move(TriangleMesh(_lveDevice,meshName, vertices, indices, material)));
+		_meshes.emplace_back(std::move(TriangleMesh(_lveDevice,meshName, vertices, indices, material)));
 
 		if (VERBOSE)
 		{
@@ -200,6 +211,34 @@ namespace lve {
 		return material;
 
 	}
+	void Model::setupDescriptorPool()
+	{
+		uint32_t numberOfTextures = 0;
+		for (auto& mesh : this->_meshes) {
+			if (mesh._material._hasAmbientMap)
+				numberOfTextures++;
+			if (mesh._material._hasDiffuseMap)
+				numberOfTextures++;
+			if (mesh._material._hasShininessMap)
+				numberOfTextures++;
+			if (mesh._material._hasSpecularMap)
+				numberOfTextures++;
+		}
+
+		auto builder=LveDescriptorPool::Builder(_lveDevice);
+		builder.setMaxSets(this->_meshes.size()*2);
+		builder.addPoolSize(VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, numberOfTextures* LveSwapChain::MAX_FRAMES_IN_FLIGHT);
+		builder.addPoolSize(VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, this->_meshes.size() * LveSwapChain::MAX_FRAMES_IN_FLIGHT);
+
+
+
+		_modelDescriptorPool = builder.build();
+
+
+		_modelDescriptorLayout = LveDescriptorSetLayout::Builder(_lveDevice).addBinding(0, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, VK_SHADER_STAGE_FRAGMENT_BIT).build();
+
+
+	}
 	/*LveTexture Model::_loadTexture(const aiString& p_path, const std::string& p_type) {
 
 		const char* entryPath = p_path.C_Str();
@@ -231,18 +270,19 @@ namespace lve {
 
 
 
-	void Model::bind(VkCommandBuffer commandBuffer)
+	void Model::bind(VkCommandBuffer& commandBuffer, int& p_frameIndex, VkPipelineLayout& p_pipelineLayout)
 	{
 		for (size_t i = 0; i < _meshes.size(); i++)
 		{
-			_meshes[i].bind(commandBuffer);
 		}
 	}
 
-	void Model::draw(VkCommandBuffer commandBuffer)
+	void Model::draw(VkCommandBuffer& commandBuffer, int& p_frameIndex, VkPipelineLayout& p_pipelineLayout)
 	{
 		for (size_t i = 0; i < _meshes.size(); i++)
 		{
+			_meshes[i].bind(commandBuffer, p_frameIndex, p_pipelineLayout);
+
 			_meshes[i].draw(commandBuffer);
 		}
 	}

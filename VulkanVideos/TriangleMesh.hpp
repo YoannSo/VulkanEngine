@@ -43,10 +43,23 @@ namespace lve {
 	class TriangleMesh {
 	public:
 		TriangleMesh() = delete;
-		~TriangleMesh() = default;
-		TriangleMesh(const TriangleMesh&) = default;
+		~TriangleMesh();
+		//TriangleMesh(const TriangleMesh&) = default;
 		//TriangleMesh(const TriangleMesh&) = delete; // delete copy constructor
 		//TriangleMesh& operator=(const TriangleMesh&) = delete; // and copy operator, make sure to not have 2 pointer to window, then if we destroy one, the second isnt destroyed
+
+
+		 // Constructeur de copie désactivé
+		TriangleMesh(const TriangleMesh& other) = delete;
+
+		// Opérateur d'assignation de copie désactivé
+		TriangleMesh& operator=(const TriangleMesh& other) = delete;
+
+		// Constructeur de déplacement
+		TriangleMesh(TriangleMesh&& other) noexcept = default;
+
+		// Opérateur d'assignation de déplacement
+		TriangleMesh& operator=(TriangleMesh&& other) noexcept = default;
 
 
 		TriangleMesh( LveDevice& p_lveDevice,const std::string& p_name,
@@ -54,14 +67,18 @@ namespace lve {
 			const std::vector<unsigned int>& p_indices,
 			const Material& p_material);
 
-		void bind(VkCommandBuffer commandBuffer);
-		void draw(VkCommandBuffer commandBuffer);
+		void bind(VkCommandBuffer& commandBuffer, int& p_frameIndex, VkPipelineLayout& p_pipelineLayout);
+		void draw(VkCommandBuffer& commandBuffer);
 
 		void createVertexBuffers();
 		void createIndexBuffer();
 		void createImageDescriptor();
 
+		Material _material;
 
+		void setupDescriptorSetLayout(std::unique_ptr<LveDescriptorPool>& p_descriptorPool, std::unique_ptr<LveDescriptorSetLayout>& p_descriptorSetLayout);
+
+		
 	private:
 
 		LveDevice& _lveDevice;
@@ -74,20 +91,18 @@ namespace lve {
 		std::vector<uint32_t> _indices;
 
 
-		Material _material;
 
 		uint32_t _indexCount{ 0 };
 		uint32_t _vertexCount{ 0 };
 
-		VkDescriptorImageInfo _specularMapDescriptorInfo{};
-		VkDescriptorImageInfo _ambientMapDescriptorInfo{};
-		VkDescriptorImageInfo _diffuseMapDescriptorInfo{};
-		VkDescriptorImageInfo _shininessMapDescriptorInfo{};
+		std::unique_ptr<VkDescriptorImageInfo> _specularMapDescriptorInfo{nullptr};
+		std::unique_ptr<VkDescriptorImageInfo> _ambientMapDescriptorInfo{ nullptr };
+		std::unique_ptr<VkDescriptorImageInfo> _diffuseMapDescriptorInfo{ nullptr };
+		std::unique_ptr<VkDescriptorImageInfo> _shininessMapDescriptorInfo{ nullptr };
 
 		std::shared_ptr<LveBuffer> _vertexBuffer{ nullptr };
 
-		//LveDescriptorSetLayout* _descriptorSet{};//bug
-
+		std::vector<VkDescriptorSet> _globalDescriptorSets{};
 		bool _hasIndexBuffer{ false };
 		std::shared_ptr<LveBuffer> _indexBuffer{ nullptr };
 

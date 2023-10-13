@@ -10,7 +10,7 @@ namespace lve {
 		glm::mat4 modelMatrix{ 1.f };//offest homegous 
 		glm::mat4 normalMatrix{ 1.f };
 	};
-	SimpleRenderSystem::SimpleRenderSystem(LveDevice& device,VkRenderPass renderPass,VkDescriptorSetLayout globalSetLayout): lveDevice(device) {
+	SimpleRenderSystem::SimpleRenderSystem(LveDevice& device,VkRenderPass renderPass, std::vector<VkDescriptorSetLayout>& globalSetLayout): lveDevice(device) {
 		createPipelineLayout(globalSetLayout);
 		createPipeline(renderPass);
 	}
@@ -20,7 +20,7 @@ namespace lve {
 
 
 
-	void SimpleRenderSystem::createPipelineLayout(VkDescriptorSetLayout globalSetLayout)
+	void SimpleRenderSystem::createPipelineLayout(std::vector<VkDescriptorSetLayout>& globalSetLayout)
 	{
 		VkPushConstantRange pushConstantRange{};
 		pushConstantRange.stageFlags = VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT;
@@ -28,12 +28,12 @@ namespace lve {
 		pushConstantRange.size = sizeof(SimplePushConstantData);
 
 
-		std::vector<VkDescriptorSetLayout> descriptorSetLayout{ globalSetLayout };
+	//	std::vector<VkDescriptorSetLayout> descriptorSetLayout{ globalSetLayout };
 
 		VkPipelineLayoutCreateInfo pipelineLayoutInfo{};
 		pipelineLayoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO; //empyt layout so 0 
-		pipelineLayoutInfo.setLayoutCount = static_cast<uint32_t>(descriptorSetLayout.size()); //empty so 0
-		pipelineLayoutInfo.pSetLayouts = descriptorSetLayout.data(); // pass date, autre que vertex data to vertex and framgnet (texture/uniform)
+		pipelineLayoutInfo.setLayoutCount = static_cast<uint32_t>(globalSetLayout.size()); //empty so 0
+		pipelineLayoutInfo.pSetLayouts = globalSetLayout.data(); // pass date, autre que vertex data to vertex and framgnet (texture/uniform)
 		pipelineLayoutInfo.pushConstantRangeCount = 1;
 		pipelineLayoutInfo.pPushConstantRanges = &pushConstantRange; // small amount of data, 
 
@@ -69,6 +69,7 @@ void SimpleRenderSystem::renderGameObjects(FrameInfo &frameInfo)
 		0,
 		nullptr
 		);
+
 	for (auto& kv : frameInfo.gameObjects) {
 		auto& obj = kv.second;
 		if (obj._model == nullptr) continue;
@@ -78,8 +79,8 @@ void SimpleRenderSystem::renderGameObjects(FrameInfo &frameInfo)
 		push.normalMatrix =obj.transform.normalMatrix();
 			//record push command date to the command buffer
 			vkCmdPushConstants(frameInfo.commandBuffer, pipelineLayout, VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT, 0, sizeof(SimplePushConstantData), &push);
-			obj._model->bind(frameInfo.commandBuffer);
-			obj._model->draw(frameInfo.commandBuffer);
+			//obj._model->bind(frameInfo.commandBuffer,frameInfo.frameIndex,pipelineLayout);
+			obj._model->draw(frameInfo.commandBuffer, frameInfo.frameIndex, pipelineLayout);
 
 		
 	}

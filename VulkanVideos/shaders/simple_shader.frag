@@ -23,8 +23,8 @@ layout(set=0, binding=0)uniform GlobalUbo{
 	int numLights;
 }ubo;
 
-layout(set=0, binding=1)uniform sampler2D image;
 
+layout(set = 1, binding = 0) uniform sampler2D image;
 
 
 layout(push_constant) uniform Push{
@@ -45,6 +45,7 @@ void main(){
 
 	vec3 cameraPosWorld=ubo.inverseView[3].xyz;
 	vec3 viewDir=normalize(cameraPosWorld-inFragPosWorld);
+
 
 	for(int i=0;i<ubo.numLights;i++){
 		PointLight currentLight=ubo.pointLights[i];
@@ -76,7 +77,36 @@ void main(){
 
 	}
 
+	PointLight cameraLight= PointLight(vec4(cameraPosWorld,1.0f),vec4(1.0f));
 
-	vec3 imageColor=texture(image,inFragUV).rgb;
+		vec3 directionToLight=cameraLight.position.xyz-inFragPosWorld;
+		float attenuation=1.0/ dot(directionToLight,directionToLight);
+
+		directionToLight=normalize(directionToLight);
+
+
+		float cosAngIncidence=max(dot(surfaceNormal,directionToLight),0.f);
+		vec3 intensity=cameraLight.color.xyz* cameraLight.color.w*attenuation;
+
+
+
+		diffuseLight+=intensity*cosAngIncidence;
+
+
+		//specular part
+
+		vec3 halfAngle=normalize(directionToLight+viewDir);
+		float blinnTerm=dot(surfaceNormal,halfAngle);
+
+		blinnTerm=clamp(blinnTerm,0,1);
+		blinnTerm=pow(blinnTerm,32.f);//higher exponnet => shaper highlight
+
+		//specularLight+= currentLight.color.xyz*attenuation*blinnTerm;
+		specularLight+= intensity*blinnTerm;
+
+
+
+  vec3 imageColor = texture(image, inFragUV).rgb;
+
 	outColor=vec4((diffuseLight*inColor+specularLight*inColor)*imageColor,1.0);
 }

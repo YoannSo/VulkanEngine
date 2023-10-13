@@ -1,4 +1,9 @@
 #include "TriangleMesh.hpp"
+#include "lve_swap_chain.hpp"
+lve::TriangleMesh::~TriangleMesh()
+{
+	
+}
 
 lve::TriangleMesh::TriangleMesh( LveDevice &p_lveDevice , const std::string& p_name, const std::vector<Vertex>& p_vertices, const std::vector<uint32_t>& p_indices, const Material& p_material)
 	:_lveDevice{ p_lveDevice }, _name {p_name}, _vertices{ p_vertices }, _material{ p_material }, _indices{ p_indices }
@@ -13,12 +18,21 @@ lve::TriangleMesh::TriangleMesh( LveDevice &p_lveDevice , const std::string& p_n
 	createVertexBuffers();
 	createIndexBuffer();
 	createImageDescriptor();
-   // _descriptorSet = LveDescriptorSetLayout::Builder(_lveDevice).addBinding(0, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, VK_SHADER_STAGE_FRAGMENT_BIT).addBinding(1, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, VK_SHADER_STAGE_FRAGMENT_BIT).addBinding(2, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, VK_SHADER_STAGE_FRAGMENT_BIT).addBinding(3, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, VK_SHADER_STAGE_FRAGMENT_BIT).build().get();
+    //_descriptorSet = LveDescriptorSetLayout::Builder(_lveDevice).addBinding(0, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, VK_SHADER_STAGE_FRAGMENT_BIT).addBinding(1, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, VK_SHADER_STAGE_FRAGMENT_BIT).addBinding(2, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, VK_SHADER_STAGE_FRAGMENT_BIT).addBinding(3, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, VK_SHADER_STAGE_FRAGMENT_BIT).build().get();
 
 }
 
-void lve::TriangleMesh::bind(VkCommandBuffer commandBuffer)
+void lve::TriangleMesh::bind(VkCommandBuffer& commandBuffer, int& p_frameIndex, VkPipelineLayout& p_pipelineLayout)
 {
+	if(this->_material._hasDiffuseMap)
+	vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, p_pipelineLayout,
+		1,//strating sert
+		1,//number of set
+		&_globalDescriptorSets[p_frameIndex],
+		0,
+		nullptr
+	);
+
 	VkBuffer buffers[] = { _vertexBuffer->getBuffer() };
 	VkDeviceSize offsets[] = { 0 };
 	vkCmdBindVertexBuffers(commandBuffer, 0, 1, buffers, offsets);// record comand buffer, to bind one vertex buffer at index 0 with offset of 0
@@ -26,10 +40,11 @@ void lve::TriangleMesh::bind(VkCommandBuffer commandBuffer)
 
 	if (_hasIndexBuffer) {
 		vkCmdBindIndexBuffer(commandBuffer, _indexBuffer->getBuffer(), 0, VK_INDEX_TYPE_UINT32);
+
 	}
 }
 
-void lve::TriangleMesh::draw(VkCommandBuffer commandBuffer)
+void lve::TriangleMesh::draw(VkCommandBuffer& commandBuffer)
 {
 
 	if (_hasIndexBuffer) {
@@ -104,27 +119,45 @@ void lve::TriangleMesh::createIndexBuffer()
 }
 void lve::TriangleMesh::createImageDescriptor()
 {
-	/*if (this->_material._hasAmbientMap) {
-		_ambientMapDescriptorInfo.sampler = this->_material._ambientMap->getSampler();
-		_ambientMapDescriptorInfo.imageView = this->_material._ambientMap->getImageView();
-		_ambientMapDescriptorInfo.imageLayout = this->_material._ambientMap->getImageLayout();
+	if (this->_material._hasAmbientMap) {
+
+		_ambientMapDescriptorInfo =std::make_unique< VkDescriptorImageInfo>();
+		_ambientMapDescriptorInfo->sampler = this->_material._ambientMap->getSampler();
+		_ambientMapDescriptorInfo->imageView = this->_material._ambientMap->getImageView();
+		_ambientMapDescriptorInfo->imageLayout = this->_material._ambientMap->getImageLayout();
 	}
 	if (this->_material._hasDiffuseMap) {
 		std::cout << "test" << std::endl;
-		_diffuseMapDescriptorInfo.sampler = this->_material._diffuseMap->getSampler();
-		_diffuseMapDescriptorInfo.imageView = this->_material._diffuseMap->getImageView();
-		_diffuseMapDescriptorInfo.imageLayout = this->_material._diffuseMap->getImageLayout();
+		_diffuseMapDescriptorInfo = std::make_unique< VkDescriptorImageInfo>();
+		_diffuseMapDescriptorInfo->sampler = this->_material._diffuseMap->getSampler();
+		_diffuseMapDescriptorInfo->imageView = this->_material._diffuseMap->getImageView();
+		_diffuseMapDescriptorInfo->imageLayout = this->_material._diffuseMap->getImageLayout();
 	}
 	if (this->_material._hasSpecularMap) {
-		_specularMapDescriptorInfo.sampler = this->_material._specularMap->getSampler();
-		_specularMapDescriptorInfo.imageView = this->_material._specularMap->getImageView();
-		_specularMapDescriptorInfo.imageLayout = this->_material._specularMap->getImageLayout();
+		_specularMapDescriptorInfo = std::make_unique< VkDescriptorImageInfo>();
+		_specularMapDescriptorInfo->sampler = this->_material._specularMap->getSampler();
+		_specularMapDescriptorInfo->imageView = this->_material._specularMap->getImageView();
+		_specularMapDescriptorInfo->imageLayout = this->_material._specularMap->getImageLayout();
 	}
 	if (this->_material._hasShininessMap) {
-		_shininessMapDescriptorInfo.sampler = this->_material._shininessMap->getSampler();
-		_shininessMapDescriptorInfo.imageView = this->_material._shininessMap->getImageView();
-		_shininessMapDescriptorInfo.imageLayout = this->_material._shininessMap->getImageLayout();
-	}*/
+		_shininessMapDescriptorInfo = std::make_unique< VkDescriptorImageInfo>();
+		_shininessMapDescriptorInfo->sampler = this->_material._shininessMap->getSampler();
+		_shininessMapDescriptorInfo->imageView = this->_material._shininessMap->getImageView();
+		_shininessMapDescriptorInfo->imageLayout = this->_material._shininessMap->getImageLayout();
+	}
+}
+void lve::TriangleMesh::setupDescriptorSetLayout(std::unique_ptr<LveDescriptorPool>& p_descriptorPool, std::unique_ptr<LveDescriptorSetLayout>& p_descriptorSetLayout)
+{
+	if (this->_material._hasDiffuseMap) {
+		_globalDescriptorSets.resize(LveSwapChain::MAX_FRAMES_IN_FLIGHT);
+		std::cout << this->_name << std::endl;
+		for (int i = 0; i < _globalDescriptorSets.size(); i++) {
+			LveDescriptorWriter(*p_descriptorSetLayout, *p_descriptorPool).
+				writeImage(0, _diffuseMapDescriptorInfo.get())
+				.build(_globalDescriptorSets[i]);
+		}
+	}
+//
 }
 std::vector<VkVertexInputBindingDescription> lve::Vertex::getBindingDescriptions()
 {

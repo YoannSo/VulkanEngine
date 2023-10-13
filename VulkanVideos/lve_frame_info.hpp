@@ -3,7 +3,6 @@
 #include "lve_camera.hpp"
 #include "lve_descriptor.hpp"
 #include "lve_game_object.hpp"
-#include "model.hpp"
 #include <vulkan/vulkan.h>
 namespace lve {
 #define MAX_LIGHTS 10

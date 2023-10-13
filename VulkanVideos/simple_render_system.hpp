@@ -16,7 +16,7 @@ namespace lve {
 	public:
 
 
-		SimpleRenderSystem(LveDevice& device, VkRenderPass renderPass, VkDescriptorSetLayout globalSetLayout);//globalSetLayout to tell the pipeline what descriptor set layout will be
+		SimpleRenderSystem(LveDevice& device, VkRenderPass renderPass, std::vector<VkDescriptorSetLayout>& globalSetLayout);//globalSetLayout to tell the pipeline what descriptor set layout will be
 		~SimpleRenderSystem();
 		
 		SimpleRenderSystem(const SimpleRenderSystem&) = delete; // delete copy constructor
@@ -25,7 +25,7 @@ namespace lve {
 				void renderGameObjects(FrameInfo &frameInfo);// camera not meber bs we want to be able to share camera object multiple mtiple render system
 
 	private:
-		void createPipelineLayout(VkDescriptorSetLayout globalSetLayout);
+		void createPipelineLayout(std::vector<VkDescriptorSetLayout>& globalSetLayout);
 		void createPipeline(VkRenderPass renderPass);//just to create the pipeline
 
 		//LveWindow _window{ WIDTH,HEIGHT,"SimpleRenderSystem" };// first app created auto creat window destroy auto destroy

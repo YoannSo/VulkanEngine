@@ -33,7 +33,11 @@ namespace lve {
 
 
 	FirstApp::FirstApp() {
-		_globalPool = LveDescriptorPool::Builder(lveDevice).setMaxSets(LveSwapChain::MAX_FRAMES_IN_FLIGHT).addPoolSize(VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, LveSwapChain::MAX_FRAMES_IN_FLIGHT).addPoolSize(VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, LveSwapChain::MAX_FRAMES_IN_FLIGHT).addPoolSize(VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, LveSwapChain::MAX_FRAMES_IN_FLIGHT).build();
+		_globalPool =
+			LveDescriptorPool::Builder(lveDevice)
+			.setMaxSets(LveSwapChain::MAX_FRAMES_IN_FLIGHT)
+			.addPoolSize(VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, LveSwapChain::MAX_FRAMES_IN_FLIGHT)
+			.build();		
 		loadGameObjects();
 
 	}
@@ -53,36 +57,35 @@ namespace lve {
 	
 
 		std::vector<std::unique_ptr<LveBuffer>> uboBuffers(LveSwapChain::MAX_FRAMES_IN_FLIGHT);
-		for (int i = 0; i < uboBuffers.size(); i++) {
-			uboBuffers[i] = std::make_unique<LveBuffer>(
+		for (auto& uboBuffer : uboBuffers)
+		{
+			uboBuffer = std::make_unique<LveBuffer>(
 				lveDevice,
 				sizeof(GlobalUbo),
 				1,
 				VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT,
 				VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT);
-			uboBuffers[i]->map();
+			uboBuffer->map();
 		}
-		auto globalSetLayout = LveDescriptorSetLayout::Builder(lveDevice).addBinding(0, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, VK_SHADER_STAGE_ALL_GRAPHICS).addBinding(1,VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,VK_SHADER_STAGE_FRAGMENT_BIT).build();
+		auto globalSetLayout = LveDescriptorSetLayout::Builder(lveDevice).addBinding(0, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, VK_SHADER_STAGE_ALL_GRAPHICS).build();
 		//this global set, will be the master globalset, for all our shader, Single Master Render System, we can derive to
 
 
-		LveTexture tex = LveTexture(lveDevice, "models/bunny/bunny_diffuse.png");
 
-		VkDescriptorImageInfo imageInfo = {};
-		imageInfo.sampler = tex.getSampler();
-		imageInfo.imageView = tex.getImageView();
-		imageInfo.imageLayout = tex.getImageLayout();
 
 
 		std::vector<VkDescriptorSet> globalDescriptorSets(LveSwapChain::MAX_FRAMES_IN_FLIGHT);
 		for (int i = 0; i < globalDescriptorSets.size(); i++) {
 			auto bufferInfo = uboBuffers[i]->descriptorInfo();
 			LveDescriptorWriter(*globalSetLayout, *_globalPool)
-				.writeBuffer(0, &bufferInfo).writeImage(1,&imageInfo)
+				.writeBuffer(0, &bufferInfo)
 				.build(globalDescriptorSets[i]);
 		}
+		std::vector<VkDescriptorSetLayout> test;
+		test.emplace_back(globalSetLayout->getDescriptorSetLayout());
+		test.emplace_back(gameObjects.at(0)._model->_modelDescriptorLayout->getDescriptorSetLayout());
 
-		SimpleRenderSystem simpleRenderSystem{ lveDevice,lveRenderer.getSwapChainRenderPass(),globalSetLayout->getDescriptorSetLayout() };
+		SimpleRenderSystem simpleRenderSystem{ lveDevice,lveRenderer.getSwapChainRenderPass(),test };
 		PointLighRenderSystem pointLightSystem{ lveDevice,lveRenderer.getSwapChainRenderPass(),globalSetLayout->getDescriptorSetLayout() };
         LveCamera camera{};
         //camera.setViewDirection(glm::vec3(0.f), glm::vec3(0.5f, 0.f, 1.f));
@@ -126,9 +129,10 @@ namespace lve {
 
 
 				   int frameIndex = lveRenderer.getFrameIndex();
+
 				   FrameInfo frameInfo{ frameIndex, frameTime, commandBuffer, camera,globalDescriptorSets[frameIndex],gameObjects };
 
-
+				   
 
 
 				   GlobalUbo ubo{};
@@ -212,11 +216,16 @@ namespace lve {
 		floor.transform.scale = { 0.02f, 0.02f, 0.02f };
 		gameObjects.emplace(floor.getId(),std::move(floor));*/
 
-		auto _myModel = Model(lveDevice, "bunny", "models/bunny/bunny_2.obj");
+		//auto _myModel = std::make_shared<Model>(lveDevice, "sponza", "models/sponza/sponza.obj");
+		auto _myModel = std::make_shared<Model>(lveDevice, "sponza", "models/sponza/sponza.obj");
+
+		//auto _myModel = std::make_shared<Model>(lveDevice, "bunny", "models/bunny/bunny_2.obj");
+		//auto _myModel = std::make_shared<Model>(lveDevice, "pinguin", "models/pinguin/PenguinBaseMesh.obj");
+
 		auto test = LveGameObject::createGameObject();
-		test._model = std::make_shared<Model>(_myModel);
+		test._model = _myModel;
 		test.transform.translation = { .5f, .5f, 0.f };
-		test.transform.scale = { 2.f, 2.f, 2.f };
+		test.transform.scale = { 0.02f, 0.02f, 0.02f };
 		test.transform.rotation = { 0.f,0.f,glm::pi<float>() };
 		gameObjects.emplace(test.getId(), std::move(test));
 

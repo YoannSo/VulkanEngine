@@ -16,14 +16,14 @@
     <Filter Include="shader">
       <UniqueIdentifier>{fb93326a-af6a-4a68-a414-b330faa794cd}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\systems">
-      <UniqueIdentifier>{b4da41a5-622e-4e10-a46c-3f2d3df203b2}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\systems">
       <UniqueIdentifier>{d4516ede-5a5f-44ae-a62c-b6a8b0069910}</UniqueIdentifier>
     </Filter>
     <Filter Include="Resource Files\imgui">
       <UniqueIdentifier>{479bfcb3-2dfa-4517-b0c5-4448012847f3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\systems\systems">
+      <UniqueIdentifier>{b4da41a5-622e-4e10-a46c-3f2d3df203b2}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -102,6 +102,9 @@
     <ClCompile Include="model.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="TriangleMesh.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="window.hpp">
@@ -147,10 +150,10 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="simple_render_system.hpp">
-      <Filter>Header Files\systems</Filter>
+      <Filter>Source Files\systems\systems</Filter>
     </ClInclude>
     <ClInclude Include="point_light_system.hpp">
-      <Filter>Header Files\systems</Filter>
+      <Filter>Source Files\systems\systems</Filter>
     </ClInclude>
     <ClInclude Include="..\lib\imgui\imconfig.h">
       <Filter>Resource Files\imgui</Filter>

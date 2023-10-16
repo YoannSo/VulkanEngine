@@ -1,3 +1,43 @@
-﻿  first_app.cpp
-E:\VulkanEngine\MyEngine\VulkanEngine\VulkanVideos\lve_renderer.hpp(45,43): warning C4267: 'return': conversion from 'size_t' to 'uint32_t', possible loss of data
+﻿  imgui_impl_glfw.cpp
+  imgui_impl_vulkan.cpp
+  imgui.cpp
+  imgui_demo.cpp
+  imgui_draw.cpp
+  imgui_tables.cpp
+  imgui_widgets.cpp
+  first_app.cpp
+E:\VulkanEngine\MyEngine\VulkanEngine\VulkanVideos\lve_renderer.hpp(45,76): warning C4267: 'return': conversion from 'size_t' to 'uint32_t', possible loss of data
+  keyboard_movement_controller.cpp
+  lve_buffer.cpp
+  lve_camera.cpp
+  lve_descriptor.cpp
+E:\VulkanEngine\MyEngine\VulkanEngine\VulkanVideos\lve_descriptor.cpp(193,68): warning C4267: 'argument': conversion from 'size_t' to 'uint32_t', possible loss of data
+  lve_game_object.cpp
+  lve_gui.cpp
+  lve_model.cpp
+  lve_renderer.cpp
+E:\VulkanEngine\MyEngine\VulkanEngine\VulkanVideos\lve_renderer.hpp(45,76): warning C4267: 'return': conversion from 'size_t' to 'uint32_t', possible loss of data
+E:\VulkanEngine\MyEngine\VulkanEngine\VulkanVideos\lve_renderer.cpp(111,110): warning C4244: 'argument': conversion from 'float' to 'uint32_t', possible loss of data
+  lve_swap_chain.cpp
+  lve_texture.cpp
+E:\VulkanEngine\MyEngine\VulkanEngine\VulkanVideos\lve_texture.cpp(17,7): warning C4101: 'channels': unreferenced local variable
+E:\VulkanEngine\MyEngine\VulkanEngine\VulkanVideos\lve_texture.cpp(105,7): warning C4101: 'channels': unreferenced local variable
+E:\VulkanEngine\MyEngine\VulkanEngine\VulkanVideos\lve_texture.cpp(268,26): warning C4018: '<': signed/unsigned mismatch
+  main.cpp
+E:\VulkanEngine\MyEngine\VulkanEngine\VulkanVideos\lve_renderer.hpp(45,76): warning C4267: 'return': conversion from 'size_t' to 'uint32_t', possible loss of data
+  lve_device.cpp
+  Generating Code...
+  Compiling...
+  model.cpp
+E:\VulkanEngine\MyEngine\VulkanEngine\VulkanVideos\model.cpp(229,42): warning C4267: 'argument': conversion from 'size_t' to 'uint32_t', possible loss of data
+E:\VulkanEngine\MyEngine\VulkanEngine\VulkanVideos\model.cpp(231,79): warning C4267: 'argument': conversion from 'size_t' to 'uint32_t', possible loss of data
+  pipeline.cpp
+  point_light_system.cpp
+  simple_render_system.cpp
+  TriangleMesh.cpp
+E:\VulkanEngine\MyEngine\VulkanEngine\VulkanVideos\TriangleMesh.cpp(11,29): warning C4267: '=': conversion from 'size_t' to 'uint32_t', possible loss of data
+E:\VulkanEngine\MyEngine\VulkanEngine\VulkanVideos\TriangleMesh.cpp(12,31): warning C4267: '=': conversion from 'size_t' to 'uint32_t', possible loss of data
+  window.cpp
+  Generating Code...
+LINK : warning LNK4098: defaultlib 'MSVCRT' conflicts with use of other libs; use /NODEFAULTLIB:library
   VulkanVideos.vcxproj -> E:\VulkanEngine\MyEngine\VulkanEngine\x64\Debug\VulkanVideos.exe

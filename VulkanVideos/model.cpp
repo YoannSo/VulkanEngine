@@ -1,15 +1,11 @@
 #include "model.hpp"
-#include "lve_swap_chain.hpp"
-#include <iostream>
-#include "define.hpp"
-#include <glm/glm.hpp>
+
+#include "SceneManager.h"
 
 namespace lve {
 	
-	//std::unique_ptr<LveDescriptorPool> Model::_modelDescriptorPool = nullptr;
 
-
-	Model::Model(LveDevice& device, const std::string p_name, const std::string p_filePath) :_lveDevice{ device }, _name { p_name }, _filePath{ p_filePath }
+	Model::Model( const std::string p_name, const std::string p_filePath) : _name { p_name }, _filePath{ p_filePath }
 	{
 		std::cout << "Loading model " << _name << " from: " << p_filePath << std::endl;
 
@@ -17,7 +13,8 @@ namespace lve {
 
 		Assimp::Importer importer;
 		_dirPath = "models/" + _name + "/";
-		const unsigned int flags = aiProcessPreset_TargetRealtime_Fast | aiProcess_FlipUVs;
+
+		const unsigned int flags = aiProcessPreset_TargetRealtime_Fast |aiProcess_Triangulate| aiProcess_FlipUVs| aiProcess_JoinIdenticalVertices;
 
 		const aiScene* const scene = importer.ReadFile(p_filePath, flags);
 
@@ -25,23 +22,24 @@ namespace lve {
 		{
 			throw std::runtime_error("Fail to load file \" " + p_filePath + "\": " + importer.GetErrorString());
 		}
+
+
 		_nbMeshes = scene->mNumMeshes;
 		std::cout <<  "--** Your model got " <<  _nbMeshes << " meshes **--" << std::endl;
-
 
 		for (uint32_t i = 0; i < _nbMeshes; ++i) {
 			_loadMesh(scene->mMeshes[i], scene);
 		}
 
-		setupDescriptorPool();
-
-		for (auto& mesh: _meshes) {
-			mesh.setupDescriptorSetLayout(_modelDescriptorPool, _modelDescriptorLayout);
-		}
 
 	}
 	Model::~Model()
 	{
+	}
+
+	std::vector<std::string> Model::LoadMaterials(const aiScene* p_scene)
+	{
+		return std::vector<std::string>();
 	}
 
 	void Model::_loadMesh(const aiMesh* const p_mesh, const aiScene* const p_scene)
@@ -123,7 +121,7 @@ namespace lve {
 		_nbTriangles += p_mesh->mNumFaces;
 		_nbVertices += p_mesh->mNumVertices;
 
-		_meshes.emplace_back(std::move(TriangleMesh(_lveDevice,meshName, vertices, indices, material)));
+		_meshes.emplace_back(std::move(TriangleMesh(meshName, vertices, indices, material)));
 
 		if (VERBOSE)
 		{
@@ -150,7 +148,9 @@ namespace lve {
 			p_mtl->GetTexture(aiTextureType_AMBIENT, 0, &texturePath);
 			std::cout << texturePath.C_Str() << std::endl;
 
-			material._ambientMap = std::make_shared<LveTexture>(_lveDevice, _dirPath + texturePath.C_Str());
+			//material._ambientMap = std::make_shared<LveTexture>( _dirPath + texturePath.C_Str());
+
+			//SceneManager::getInstance()->s_allTexturesName.emplace_back(_dirPath + texturePath.C_Str());
 			material._hasAmbientMap = true;
 			
 		}
@@ -159,15 +159,35 @@ namespace lve {
 			material._ambient = glm::vec3(color.r, color.g, color.b);
 		}
 
+		// ===================================================== NORMAL
+		if (p_mtl->GetTextureCount(aiTextureType_NORMALS) > 0) // Texture ?
+		{
 
+			p_mtl->GetTexture(aiTextureType_NORMALS, 0, &texturePath);
+			std::string completePath = _dirPath + texturePath.C_Str();
+
+			if(VERBOSE)
+				std::cout << "-*- Load Normal Map:" << std::endl;
+
+			material.m_idNormal = addTexture(completePath);
+			material._hasNormalMap = true;
+
+		}
+		else if (p_mtl->Get(AI_MATKEY_COLOR_AMBIENT, color) == AI_SUCCESS) // else Material ?
+		{
+			//material._ambient = glm::vec3(color.r, color.g, color.b);
+		}
 
 		// ===================================================== DIFFUSE
 		if (p_mtl->GetTextureCount(aiTextureType_DIFFUSE) > 0) // Texture ?
 		{
 			p_mtl->GetTexture(aiTextureType_DIFFUSE, 0, &texturePath);
-			std::cout << _dirPath + texturePath.C_Str() << std::endl;
+			std::string completePath = _dirPath + texturePath.C_Str();
 
-				material._diffuseMap = std::make_shared<LveTexture>(_lveDevice, _dirPath + texturePath.C_Str());
+			if (VERBOSE)
+				std::cout << "-*- Load Normal Map:" << std::endl;
+
+				material.m_idDiffuse = addTexture(completePath);
 				material._hasDiffuseMap = true;
 
 		}
@@ -185,7 +205,8 @@ namespace lve {
 		if (p_mtl->GetTextureCount(aiTextureType_SPECULAR) > 0) // Texture ?
 		{
 			p_mtl->GetTexture(aiTextureType_SPECULAR, 0, &texturePath);
-			material._specularMap = std::make_shared<LveTexture>(_lveDevice, _dirPath + texturePath.C_Str());
+			//material._specularMap = std::make_shared<LveTexture>( _dirPath + texturePath.C_Str());
+			//Model::s_allTexturesName.emplace_back(_dirPath + texturePath.C_Str());
 			material._hasSpecularMap = true;
 		}
 		else if (p_mtl->Get(AI_MATKEY_COLOR_SPECULAR, color) == AI_SUCCESS) // else Material ?
@@ -200,7 +221,8 @@ namespace lve {
 		{
 			p_mtl->GetTexture(aiTextureType_SHININESS, 0, &texturePath);
 
-			material._shininessMap = std::make_shared<LveTexture>(_lveDevice, _dirPath + texturePath.C_Str());
+			//material._shininessMap = std::make_shared<LveTexture>( _dirPath + texturePath.C_Str());
+			//Model::s_allTexturesName.emplace_back(_dirPath + texturePath.C_Str());
 			material._hasShininessMap = true;
 		}
 		else if (p_mtl->Get(AI_MATKEY_SHININESS, shininess) == AI_SUCCESS) // else Material ?
@@ -211,63 +233,23 @@ namespace lve {
 		return material;
 
 	}
-	void Model::setupDescriptorPool()
+	int Model::addTexture(std::string completePath)
 	{
-		uint32_t numberOfTextures = 0;
-		for (auto& mesh : this->_meshes) {
-			if (mesh._material._hasAmbientMap)
-				numberOfTextures++;
-			if (mesh._material._hasDiffuseMap)
-				numberOfTextures++;
-			if (mesh._material._hasShininessMap)
-				numberOfTextures++;
-			if (mesh._material._hasSpecularMap)
-				numberOfTextures++;
-		}
+		
+		auto texturesMap = SceneManager::getInstance()->getTextureMap();
+		auto textureId = SceneManager::getInstance()->getShaderTextureId();
 
-		auto builder=LveDescriptorPool::Builder(_lveDevice);
-		builder.setMaxSets(this->_meshes.size()*2);
-		builder.addPoolSize(VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, numberOfTextures* LveSwapChain::MAX_FRAMES_IN_FLIGHT);
-		builder.addPoolSize(VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, this->_meshes.size() * LveSwapChain::MAX_FRAMES_IN_FLIGHT);
+		if (texturesMap.count(completePath) ==0) 
+			return SceneManager::getInstance()->addTextureElement(completePath, new LveTexture(completePath));
+		else {
+			auto it = std::find(textureId.begin(), textureId.end(), completePath);
 
-
-
-		_modelDescriptorPool = builder.build();
-
-
-		_modelDescriptorLayout = LveDescriptorSetLayout::Builder(_lveDevice).addBinding(0, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, VK_SHADER_STAGE_FRAGMENT_BIT).build();
-
-
-	}
-	/*LveTexture Model::_loadTexture(const aiString& p_path, const std::string& p_type) {
-
-		const char* entryPath = p_path.C_Str();
-
-		if (VERBOSE)
-			std::cout << "Loading texture (" << p_type << "): " << entryPath << std::endl;
-	
-		for (size_t i = 0; i < _textures.size(); ++i)
-		{
-			if (std::strcmp(_textures[i].getPath().data(), entryPath) == 0)
-			{
-				if (VERBOSE)
-				{
-					std::cout << "-> Already loaded !" << std::endl;
-				}
-				if (_textures[i].getType() == p_type)
-				{
-					return _textures[i];
-				}
-				else // One texture can be used for more than one type.
-				{
-				
-					return LveTexture(_textures[i],p_type);
-
-				}
+			if (it != textureId.end()) {
+				return std::distance(textureId.begin(), it);
 			}
 		}
-	}*/
-
+		return -1;
+	}
 
 
 	void Model::bind(VkCommandBuffer& commandBuffer, int& p_frameIndex, VkPipelineLayout& p_pipelineLayout)

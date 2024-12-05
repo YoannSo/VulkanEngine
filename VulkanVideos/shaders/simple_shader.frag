@@ -1,13 +1,8 @@
 #version 450
+#extension GL_EXT_nonuniform_qualifier : require
+
+
 //frag
-
-layout (location=0) out vec4 outColor;
-//layout => location value,  multiple location, now only locatio0, ut => output
-
-layout (location=0)in vec3 inColor;
-layout(location=1) in vec3 inFragPosWorld;
-layout(location=2) in vec3 inFragNormalWorld;
-layout(location=3) in vec2 inFragUV;
 
 struct PointLight{
 	vec4 position; // ingore w for aligment
@@ -23,9 +18,11 @@ layout(set=0, binding=0)uniform GlobalUbo{
 	int numLights;
 }ubo;
 
+layout(set = 1, binding = 0) uniform sampler2D textures[];
 
-layout(set = 1, binding = 0) uniform sampler2D image;
-
+layout(set=2, binding=0)uniform ObjectUbo{
+	int idText;
+}objectUbo;
 
 layout(push_constant) uniform Push{
 	mat4 modelMatrix;
@@ -33,7 +30,14 @@ layout(push_constant) uniform Push{
 }push;
 
 
+layout (location=0)in vec3 inColor;
+layout(location=1) in vec3 inFragPosWorld;
+layout(location=2) in vec3 inFragNormalWorld;
+layout(location=3) in vec2 inUV;
 
+layout (location=0) out vec4 outColor;
+
+//layout => location value,  multiple location, now only locatio0, ut => output
 
 void main(){
 
@@ -76,37 +80,12 @@ void main(){
 		specularLight+= intensity*blinnTerm;
 
 	}
+	
+	//outColor=vec4(inUV,0.0,1.0);
+	if(objectUbo.idText!=1)
+   		outColor = texture(textures[objectUbo.idText], inUV);
+	else
+		//outColor=vec4((diffuseLight*inColor+specularLight*inColor),1.0);
+		outColor=vec4(1.0,0.0,0.0,1.0);
 
-	PointLight cameraLight= PointLight(vec4(cameraPosWorld,1.0f),vec4(1.0f));
-
-		vec3 directionToLight=cameraLight.position.xyz-inFragPosWorld;
-		float attenuation=1.0/ dot(directionToLight,directionToLight);
-
-		directionToLight=normalize(directionToLight);
-
-
-		float cosAngIncidence=max(dot(surfaceNormal,directionToLight),0.f);
-		vec3 intensity=cameraLight.color.xyz* cameraLight.color.w*attenuation;
-
-
-
-		diffuseLight+=intensity*cosAngIncidence;
-
-
-		//specular part
-
-		vec3 halfAngle=normalize(directionToLight+viewDir);
-		float blinnTerm=dot(surfaceNormal,halfAngle);
-
-		blinnTerm=clamp(blinnTerm,0,1);
-		blinnTerm=pow(blinnTerm,32.f);//higher exponnet => shaper highlight
-
-		//specularLight+= currentLight.color.xyz*attenuation*blinnTerm;
-		specularLight+= intensity*blinnTerm;
-
-
-
-  vec3 imageColor = texture(image, inFragUV).rgb;
-
-	outColor=vec4((diffuseLight*inColor+specularLight*inColor)*imageColor,1.0);
 }

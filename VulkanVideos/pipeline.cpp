@@ -6,16 +6,16 @@
 #include <iostream>
 #include <cassert>
 namespace lve {
-	LvePipeline::LvePipeline(LveDevice &device,const std::string& vertFilePath, const std::string fragFilePath,const PipelineConfigInfo& configInfo): lveDevice(device)
+	LvePipeline::LvePipeline(const std::string& vertFilePath, const std::string fragFilePath,const PipelineConfigInfo& configInfo)
 	{
 		createGraphicsPipeline(vertFilePath, fragFilePath,configInfo);
 	}
 
 	LvePipeline::~LvePipeline() {
-		vkDestroyShaderModule(lveDevice.device(), vertShaderModule, nullptr);//clean up frag and vertex module
-		vkDestroyShaderModule(lveDevice.device(), fragShaderModule, nullptr);
+		vkDestroyShaderModule(LveDevice::getInstance()->getDevice(), vertShaderModule, nullptr);//clean up frag and vertex module
+		vkDestroyShaderModule(LveDevice::getInstance()->getDevice(), fragShaderModule, nullptr);
 
-		vkDestroyPipeline(lveDevice.device(), graphicsPipeline, nullptr);//destroy our pipelien
+		vkDestroyPipeline(LveDevice::getInstance()->getDevice(), graphicsPipeline, nullptr);//destroy our pipelien
 	}
 	void LvePipeline::bind(VkCommandBuffer commandBuffer)//bind the pipeline with the command buffer
 	{
@@ -227,7 +227,7 @@ void LvePipeline::enableAlphaBlinding(PipelineConfigInfo& configInfo)
 		pipelineInfo.basePipelineHandle = VK_NULL_HANDLE;
 
 
-		if (vkCreateGraphicsPipelines(lveDevice.device(), VK_NULL_HANDLE, 1, &pipelineInfo, nullptr, &graphicsPipeline) != VK_SUCCESS)//null handle to pipeline cache => performance, pipeline count =>1, no allocation callback 
+		if (vkCreateGraphicsPipelines(LveDevice::getInstance()->getDevice(), VK_NULL_HANDLE, 1, &pipelineInfo, nullptr, &graphicsPipeline) != VK_SUCCESS)//null handle to pipeline cache => performance, pipeline count =>1, no allocation callback 
 			throw	std::runtime_error("Failed to create graphics pipeline");
 
 		std::cout << "Vertex shader code size " << vertCode.size() << std::endl;
@@ -240,7 +240,7 @@ void LvePipeline::enableAlphaBlinding(PipelineConfigInfo& configInfo)
 		createInfo.codeSize = code.size();
 		createInfo.pCode = reinterpret_cast<const uint32_t*> (code.data());//vulkan expect uint32 instrad of char, sotre in vector, default allocator already insure
 
-		if (vkCreateShaderModule(lveDevice.device(), &createInfo, nullptr, shaderModule) != VK_SUCCESS)
+		if (vkCreateShaderModule(LveDevice::getInstance()->getDevice(), &createInfo, nullptr, shaderModule) != VK_SUCCESS)
 			throw std::runtime_error("failed to create shader module");
 	}
 }

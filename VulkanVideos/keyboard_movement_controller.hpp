@@ -18,7 +18,7 @@ namespace lve {
             int lookUp = GLFW_KEY_UP;
             int lookDown = GLFW_KEY_DOWN;
         };
-        void moveInPLaneXZ(GLFWwindow* window, float dt, LveGameObject& gameObject);
+        void moveInPLaneXZ(GLFWwindow* window, float dt, LveGameObject* gameObject);
 
         KeyMappings keys{};
         float moveSpeed{ 3.f };

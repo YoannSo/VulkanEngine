@@ -30,26 +30,25 @@ namespace lve {
     }
 
     LveBuffer::LveBuffer(
-        LveDevice& device,
         VkDeviceSize instanceSize,
         uint32_t instanceCount,
         VkBufferUsageFlags usageFlags,
         VkMemoryPropertyFlags memoryPropertyFlags,
         VkDeviceSize minOffsetAlignment)
-        : lveDevice{ device },
+        : 
         instanceSize{ instanceSize },
         instanceCount{ instanceCount },
         usageFlags{ usageFlags },
         memoryPropertyFlags{ memoryPropertyFlags } {
         alignmentSize = getAlignment(instanceSize, minOffsetAlignment);
         bufferSize = alignmentSize * instanceCount;
-        device.createBuffer(bufferSize, usageFlags, memoryPropertyFlags, buffer, memory);
+        LveDevice::getInstance()->createBuffer(bufferSize, usageFlags, memoryPropertyFlags, buffer, memory);
     }
 
     LveBuffer::~LveBuffer() {
         unmap();
-        vkDestroyBuffer(lveDevice.device(), buffer, nullptr);
-        vkFreeMemory(lveDevice.device(), memory, nullptr);
+        vkDestroyBuffer(LveDevice::getInstance()->getDevice(), buffer, nullptr);
+        vkFreeMemory(LveDevice::getInstance()->getDevice(), memory, nullptr);
     }
 
     /**
@@ -63,7 +62,7 @@ namespace lve {
      */
     VkResult LveBuffer::map(VkDeviceSize size, VkDeviceSize offset) {
         assert(buffer && memory && "Called map on buffer before create");
-        return vkMapMemory(lveDevice.device(), memory, offset, size, 0, &mapped);
+        return vkMapMemory(LveDevice::getInstance()->getDevice(), memory, offset, size, 0, &mapped);
     }
 
     /**
@@ -73,7 +72,7 @@ namespace lve {
      */
     void LveBuffer::unmap() {
         if (mapped) {
-            vkUnmapMemory(lveDevice.device(), memory);
+            vkUnmapMemory(LveDevice::getInstance()->getDevice(), memory);
             mapped = nullptr;
         }
     }
@@ -117,7 +116,7 @@ namespace lve {
         mappedRange.memory = memory;
         mappedRange.offset = offset;
         mappedRange.size = size;
-        return vkFlushMappedMemoryRanges(lveDevice.device(), 1, &mappedRange);
+        return vkFlushMappedMemoryRanges(LveDevice::getInstance()->getDevice(), 1, &mappedRange);
     }
 
     /**
@@ -137,7 +136,7 @@ namespace lve {
         mappedRange.memory = memory;
         mappedRange.offset = offset;
         mappedRange.size = size;
-        return vkInvalidateMappedMemoryRanges(lveDevice.device(), 1, &mappedRange);
+        return vkInvalidateMappedMemoryRanges(LveDevice::getInstance()->getDevice(), 1, &mappedRange);
     }
 
     /**

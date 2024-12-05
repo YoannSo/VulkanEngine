@@ -5,7 +5,6 @@
 #include "model.hpp"
 // std
 #include <memory>
-#include <unordered_map>
 namespace lve {
 
     struct TransformComponent {
@@ -23,34 +22,26 @@ namespace lve {
     };
     class LveGameObject {
     public:
-        using id_t = unsigned int;
-        using Map = std::unordered_map<id_t, LveGameObject>; //effienclty look up object
 
-        static LveGameObject createGameObject() {
-            static id_t currentId = 0;
-            return LveGameObject{ currentId++ };
+        static LveGameObject* createGameObject() {
+            static uint32_t currentId = 0;
+            return new LveGameObject{ currentId++ };
         }
-
-        LveGameObject(const LveGameObject&) = delete;
-        LveGameObject& operator=(const LveGameObject&) = delete;
-        LveGameObject(LveGameObject&&) = default;
-        LveGameObject& operator=(LveGameObject&&) = default;
-
-        static LveGameObject makePointLight(float intensity = 10.f, float radius = 0.1f, glm::vec3 color = glm::vec3(1.f));
+        static LveGameObject* makePointLight(float intensity = 10.f, float radius = 0.1f, glm::vec3 color = glm::vec3(1.f));
 
 
 
-        id_t getId() { return id; }
+        uint32_t getId() { return id; }
 
         glm::vec3 color{};
         TransformComponent transform{};
 
         std::shared_ptr<LveModel> model= nullptr;
         std::shared_ptr<Model> _model= nullptr;
-        std::unique_ptr<PointLightComponent> pointLight = nullptr;
+        std::shared_ptr<PointLightComponent> pointLight = nullptr;
     private:
-        LveGameObject(id_t objId) : id{ objId } {}
+        LveGameObject(uint32_t objId) : id{ objId } {}
 
-        id_t id;
+        uint32_t id;
     };
 }  // namespace lve

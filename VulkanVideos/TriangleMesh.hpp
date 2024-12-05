@@ -1,4 +1,6 @@
 #pragma once
+#ifndef TRIANGLE_MESH_HPP
+#define TRIANGLE_MESH_HPP
 #include <vector>
 #include <glm/glm.hpp>
 #include <iostream>
@@ -6,6 +8,7 @@
 #include <string>
 #include "lve_texture.hpp"
 #include "lve_descriptor.hpp"
+
 namespace lve {
 
 	struct Vertex {
@@ -33,12 +36,21 @@ namespace lve {
 		bool _hasDiffuseMap{ false };
 		bool _hasSpecularMap{ false };
 		bool _hasShininessMap{ false };
+		bool _hasNormalMap{ false };
+
+		int m_idDiffuse{ -1 };
+		int m_idNormal{ -1 };
 
 		std::shared_ptr<LveTexture> _ambientMap{ nullptr };//cab ne null ? 
 		std::shared_ptr<LveTexture> _diffuseMap{ nullptr };
 		std::shared_ptr<LveTexture> _specularMap{ nullptr };
 		std::shared_ptr<LveTexture> _shininessMap{ nullptr };
 	};
+
+	struct ObjectUbo {
+		int diffuseTextureID=-1;
+	};
+
 
 	class TriangleMesh {
 	public:
@@ -62,7 +74,7 @@ namespace lve {
 		TriangleMesh& operator=(TriangleMesh&& other) noexcept = default;
 
 
-		TriangleMesh( LveDevice& p_lveDevice,const std::string& p_name,
+		TriangleMesh(const std::string& p_name,
 			const std::vector<Vertex>& p_vertices,
 			const std::vector<unsigned int>& p_indices,
 			const Material& p_material);
@@ -72,16 +84,18 @@ namespace lve {
 
 		void createVertexBuffers();
 		void createIndexBuffer();
-		void createImageDescriptor();
+		void setupObjectDescriptor();
+
+		inline std::vector<VkDescriptorSet> getDescriptorSet() { return m_objectDescriptorSet; }
 
 		Material _material;
 
-		void setupDescriptorSetLayout(std::unique_ptr<LveDescriptorPool>& p_descriptorPool, std::unique_ptr<LveDescriptorSetLayout>& p_descriptorSetLayout);
 
-		
 	private:
 
-		LveDevice& _lveDevice;
+		ObjectUbo createObjectUbo();
+		
+	private:
 
 		std::string _name{ "Unknow" };
 		std::vector<Vertex> _vertices;
@@ -89,7 +103,6 @@ namespace lve {
 		std::vector<glm::vec3> _positions;
 
 		std::vector<uint32_t> _indices;
-
 
 
 		uint32_t _indexCount{ 0 };
@@ -100,11 +113,18 @@ namespace lve {
 		std::unique_ptr<VkDescriptorImageInfo> _diffuseMapDescriptorInfo{ nullptr };
 		std::unique_ptr<VkDescriptorImageInfo> _shininessMapDescriptorInfo{ nullptr };
 
+
+	
+		std::vector<LveBuffer*> m_objectUbo;
+		std::vector<VkDescriptorSet> m_objectDescriptorSet{};
+
+
+
 		std::shared_ptr<LveBuffer> _vertexBuffer{ nullptr };
 
-		std::vector<VkDescriptorSet> _globalDescriptorSets{};
 		bool _hasIndexBuffer{ false };
 		std::shared_ptr<LveBuffer> _indexBuffer{ nullptr };
 
 	};
 }
+#endif

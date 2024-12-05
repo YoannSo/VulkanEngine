@@ -12,12 +12,12 @@ namespace lve {
 		glm::vec4 color{};
 		float radius;
 	};
-	PointLighRenderSystem::PointLighRenderSystem(LveDevice& device, VkRenderPass renderPass, VkDescriptorSetLayout globalSetLayout) : lveDevice(device) {
+	PointLighRenderSystem::PointLighRenderSystem( VkRenderPass renderPass, VkDescriptorSetLayout globalSetLayout) {
 		createPipelineLayout(globalSetLayout);
 		createPipeline(renderPass);
 	}
 	PointLighRenderSystem::~PointLighRenderSystem() {
-		vkDestroyPipelineLayout(lveDevice.device(), pipelineLayout, nullptr);
+		vkDestroyPipelineLayout(LveDevice::getInstance()->getDevice(), pipelineLayout, nullptr);
 	}
 
 
@@ -39,7 +39,7 @@ namespace lve {
 		pipelineLayoutInfo.pushConstantRangeCount = 1;
 		pipelineLayoutInfo.pPushConstantRanges = &pushConstantRange; // small amount of data, 
 
-		if (vkCreatePipelineLayout(lveDevice.device(), &pipelineLayoutInfo, nullptr, &pipelineLayout) !=
+		if (vkCreatePipelineLayout(LveDevice::getInstance()->getDevice(), &pipelineLayoutInfo, nullptr, &pipelineLayout) !=
 			VK_SUCCESS) {
 			throw std::runtime_error("failed to create pipeline layout!");
 		}
@@ -58,7 +58,7 @@ namespace lve {
 		// take swap chain w and h bc dont necessarly match the window,
 		pipelineConfig.renderPass = renderPass;
 		pipelineConfig.pipelineLayout = pipelineLayout;
-		lvePipeline = std::make_unique<LvePipeline>(lveDevice, "shaders/point_light.vert.spv", "shaders/point_light.frag.spv", pipelineConfig);
+		lvePipeline = std::make_unique<LvePipeline>( "shaders/point_light.vert.spv", "shaders/point_light.frag.spv", pipelineConfig);
 	}
 
 
@@ -71,17 +71,17 @@ namespace lve {
 			{ 0.f, -1.f, 0.f });//up vector
 
 		int lightIndex = 0;
-		for (auto& kv : frameInfo.gameObjects) {
+		for (auto& kv : SceneManager::getInstance()->getSceneObjects()) {
 			auto& obj = kv.second;
-			if (obj.pointLight == nullptr) continue;
+			if (obj->pointLight == nullptr) continue;
 
 
 			assert(lightIndex < MAX_LIGHTS && "Points light xceed maximum number");
 			//update light pos
-			obj.transform.translation = glm::vec3(rotateLight * glm::vec4(obj.transform.translation, 1.f));
+			obj->transform.translation = glm::vec3(rotateLight * glm::vec4(obj->transform.translation, 1.f));
 
-			ubo.pointsLights[lightIndex].positions = glm::vec4(obj.transform.translation, 1.f);
-			ubo.pointsLights[lightIndex].color = glm::vec4(obj.color, obj.pointLight->lightIntensity);
+			ubo.pointsLights[lightIndex].positions = glm::vec4(obj->transform.translation, 1.f);
+			ubo.pointsLights[lightIndex].color = glm::vec4(obj->color, obj->pointLight->lightIntensity);
 			lightIndex++;
 		}
 		ubo.numLights = lightIndex;
@@ -90,16 +90,16 @@ namespace lve {
 	void PointLighRenderSystem::render(FrameInfo& frameInfo)
 	{
 
-		std::map<float, LveGameObject::id_t> sorted;
+		std::map<float, uint32_t> sorted;
 
-		for (auto& kv : frameInfo.gameObjects) {
+		for (auto& kv : SceneManager::getInstance()->getSceneObjects()) {
 			auto& obj = kv.second;
 
-			if (obj.pointLight == nullptr) continue;
+			if (obj->pointLight == nullptr) continue;
 
-			auto offset = frameInfo.camera.getPosition() - obj.transform.translation;
+			auto offset = frameInfo.camera.getPosition() - obj->transform.translation;
 			float distSquared = glm::dot(offset, offset);
-			sorted[distSquared] = obj.getId();
+			sorted[distSquared] = obj->getId();
 		}
 
 		lvePipeline->bind(frameInfo.commandBuffer);
@@ -117,15 +117,15 @@ namespace lve {
 		// iterate through sorted lights in reverse order
 		for (auto it = sorted.rbegin(); it != sorted.rend(); ++it) {
 			// use game obj id to find light object
-			auto& obj = frameInfo.gameObjects.at(it->second);
-			if (obj.pointLight == nullptr) continue;
+			auto obj = SceneManager::getInstance()->getSceneObjects().at(it->second);
+			if (obj->pointLight == nullptr) continue;
 
 
 			PointLightPushConstants push{};
 
-			push.position = glm::vec4(obj.transform.translation, 1.f);
-			push.color = glm::vec4(obj.color, obj.pointLight->lightIntensity);
-			push.radius = obj.transform.scale.x;
+			push.position = glm::vec4(obj->transform.translation, 1.f);
+			push.color = glm::vec4(obj->color, obj->pointLight->lightIntensity);
+			push.radius = obj->transform.scale.x;
 			vkCmdPushConstants(frameInfo.commandBuffer, pipelineLayout, VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT, 0, sizeof(PointLightPushConstants), &push);
 			vkCmdDraw(frameInfo.commandBuffer, 6, 1, 0, 0);
 

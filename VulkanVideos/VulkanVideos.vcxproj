@@ -88,7 +88,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>D:\vulkan\Include;C:\Users\hardg\Documents\Visual Studio 2019\Libraries\glfw-3.3.8\include;C:\Users\hardg\Documents\Visual Studio 2019\Libraries\glm;D:\vulkan\Include;C:\Users\hardg\Documents\Visual Studio 2019\Libraries\glfw-3.3.8\include;C:\Users\hardg\Documents\Visual Studio 2019\Libraries\glm</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\vulkan\Include;C:\Users\hardg\Documents\Visual Studio 2019\Libraries\glfw-3.3.8\include;C:\Users\hardg\Documents\Visual Studio 2019\Libraries\glm;D:\vulkan\Include;C:\Users\hardg\Documents\Visual Studio 2019\Libraries\glfw-3.3.8\include;C:\Users\hardg\Documents\Visual Studio 2019\Libraries\glm;$(SolutionDir)\lib\ImageLoader;$(SolutionDir)\ImageLoader;$(SolutionDir)\assimp\assimp;C:\VulkanSDK\1.3.261.1\Include</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
@@ -106,7 +106,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>D:\vulkan\Include;C:\Users\hardg\Documents\Visual Studio 2019\Libraries\glfw-3.3.8\include;C:\Users\hardg\Documents\Visual Studio 2019\Libraries\glm;D:\vulkan\Include;C:\Users\hardg\Documents\Visual Studio 2019\Libraries\glfw-3.3.8\include;C:\Users\hardg\Documents\Visual Studio 2019\Libraries\glm</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\vulkan\Include;C:\Users\hardg\Documents\Visual Studio 2019\Libraries\glfw-3.3.8\include;C:\Users\hardg\Documents\Visual Studio 2019\Libraries\glm;D:\vulkan\Include;C:\Users\hardg\Documents\Visual Studio 2019\Libraries\glfw-3.3.8\include;C:\Users\hardg\Documents\Visual Studio 2019\Libraries\glm;$(SolutionDir)\lib\ImageLoader;$(SolutionDir)\ImageLoader;$(SolutionDir)\assimp\assimp;C:\VulkanSDK\1.3.261.1\Include</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
@@ -124,7 +124,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\VulkanSDK\1.3.261.1\Include;C:\Users\anton\OneDrive\Documents\Visual Studio 2019\Libraries\glfw-3.3.8\include;C:\Users\anton\OneDrive\Documents\Visual Studio 2019\Libraries\glm;D:\vulkan\Include;C:\Users\hardg\Documents\Visual Studio 2019\Libraries\glfw-3.3.8\include;C:\Users\hardg\Documents\Visual Studio 2019\Libraries\glm;C:\Users\hardg\Documents\Visual Studio 2019\Libraries\tinyobjectloader;E:\VulkanEngine\Vulkan\lib\imgui;E:\VulkanEngine\Vulkan\lib\imageLoader;$(SolutionDir)\lib\assimp</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\VulkanSDK\1.3.261.1\Include;C:\Users\anton\OneDrive\Documents\Visual Studio 2019\Libraries\glfw-3.3.8\include;C:\Users\anton\OneDrive\Documents\Visual Studio 2019\Libraries\glm;D:\vulkan\Include;C:\Users\hardg\Documents\Visual Studio 2019\Libraries\glfw-3.3.8\include;C:\Users\hardg\Documents\Visual Studio 2019\Libraries\glm;C:\Users\hardg\Documents\Visual Studio 2019\Libraries\tinyobjectloader;E:\VulkanEngine\Vulkan\lib\imgui;E:\VulkanEngine\Vulkan\lib\imageLoader;$(SolutionDir)\lib\assimp;$(SolutionDir)\lib\ImageLoader;$(SolutionDir)\ImageLoader;$(SolutionDir)\assimp\assimp;C:\VulkanSDK\1.3.261.1\Include</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
@@ -142,7 +142,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\VulkanSDK\1.3.250.1\Include;C:\Users\anton\OneDrive\Documents\Visual Studio 2019\Libraries\glfw-3.3.8\include;C:\Users\anton\OneDrive\Documents\Visual Studio 2019\Libraries\glm;D:\vulkan\Include;C:\Users\hardg\Documents\Visual Studio 2019\Libraries\glfw-3.3.8\include;C:\Users\hardg\Documents\Visual Studio 2019\Libraries\glm</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\VulkanSDK\1.3.250.1\Include;C:\Users\anton\OneDrive\Documents\Visual Studio 2019\Libraries\glfw-3.3.8\include;C:\Users\anton\OneDrive\Documents\Visual Studio 2019\Libraries\glm;D:\vulkan\Include;C:\Users\hardg\Documents\Visual Studio 2019\Libraries\glfw-3.3.8\include;C:\Users\hardg\Documents\Visual Studio 2019\Libraries\glm;$(SolutionDir)\lib\ImageLoader;$(SolutionDir)\ImageLoader;$(SolutionDir)\assimp\assimp;C:\VulkanSDK\1.3.261.1\Include</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
@@ -155,20 +155,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\lib\imgui\backends\imgui_impl_glfw.cpp" />
-    <ClCompile Include="..\lib\imgui\backends\imgui_impl_vulkan.cpp" />
-    <ClCompile Include="..\lib\imgui\imgui.cpp" />
-    <ClCompile Include="..\lib\imgui\imgui_demo.cpp" />
-    <ClCompile Include="..\lib\imgui\imgui_draw.cpp" />
-    <ClCompile Include="..\lib\imgui\imgui_tables.cpp" />
-    <ClCompile Include="..\lib\imgui\imgui_widgets.cpp" />
     <ClCompile Include="first_app.cpp" />
     <ClCompile Include="keyboard_movement_controller.cpp" />
     <ClCompile Include="lve_buffer.cpp" />
     <ClCompile Include="lve_camera.cpp" />
     <ClCompile Include="lve_descriptor.cpp" />
     <ClCompile Include="lve_game_object.cpp" />
-    <ClCompile Include="lve_gui.cpp" />
     <ClCompile Include="lve_model.cpp" />
     <ClCompile Include="lve_renderer.cpp" />
     <ClCompile Include="lve_swap_chain.cpp" />
@@ -178,19 +170,12 @@
     <ClCompile Include="model.cpp" />
     <ClCompile Include="pipeline.cpp" />
     <ClCompile Include="point_light_system.cpp" />
+    <ClCompile Include="SceneManager.cpp" />
     <ClCompile Include="simple_render_system.cpp" />
     <ClCompile Include="TriangleMesh.cpp" />
     <ClCompile Include="window.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\lib\imgui\backends\imgui_impl_glfw.h" />
-    <ClInclude Include="..\lib\imgui\backends\imgui_impl_vulkan.h" />
-    <ClInclude Include="..\lib\imgui\imconfig.h" />
-    <ClInclude Include="..\lib\imgui\imgui.h" />
-    <ClInclude Include="..\lib\imgui\imgui_internal.h" />
-    <ClInclude Include="..\lib\imgui\imstb_rectpack.h" />
-    <ClInclude Include="..\lib\imgui\imstb_textedit.h" />
-    <ClInclude Include="..\lib\imgui\imstb_truetype.h" />
     <ClInclude Include="define.hpp" />
     <ClInclude Include="first_app.hpp" />
     <ClInclude Include="keyboard_movement_controller.hpp" />
@@ -200,7 +185,6 @@
     <ClInclude Include="lve_device.hpp" />
     <ClInclude Include="lve_frame_info.hpp" />
     <ClInclude Include="lve_game_object.hpp" />
-    <ClInclude Include="lve_gui.hpp" />
     <ClInclude Include="lve_model.hpp" />
     <ClInclude Include="lve_renderer.hpp" />
     <ClInclude Include="lve_swap_chain.hpp" />
@@ -209,14 +193,12 @@
     <ClInclude Include="model.hpp" />
     <ClInclude Include="pipeline.hpp" />
     <ClInclude Include="point_light_system.hpp" />
+    <ClInclude Include="SceneManager.h" />
     <ClInclude Include="simple_render_system.hpp" />
     <ClInclude Include="TriangleMesh.hpp" />
     <ClInclude Include="window.hpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\lib\imgui\backends\vulkan\generate_spv.sh" />
-    <None Include="..\lib\imgui\backends\vulkan\glsl_shader.frag" />
-    <None Include="..\lib\imgui\backends\vulkan\glsl_shader.vert" />
     <None Include="compile.bat" />
     <None Include="point_light.frag">
       <FileType>Document</FileType>

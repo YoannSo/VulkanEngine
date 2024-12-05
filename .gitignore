@@ -397,3 +397,5 @@ FodyWeavers.xsd
 # JetBrains Rider
 *.sln.iml
 x64/*
+/VulkanVideos/x64
+/VulkanVideos/x64

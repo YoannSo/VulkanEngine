@@ -1,5 +1,5 @@
 #include "first_app.hpp"
-
+#define STB_IMAGE_IMPLEMENTATION
 #include <cstdlib>
 #include <iostream>
 #include <stdexcept>

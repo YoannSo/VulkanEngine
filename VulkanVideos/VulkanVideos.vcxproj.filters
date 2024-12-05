@@ -19,9 +19,6 @@
     <Filter Include="Source Files\systems">
       <UniqueIdentifier>{d4516ede-5a5f-44ae-a62c-b6a8b0069910}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Resource Files\imgui">
-      <UniqueIdentifier>{479bfcb3-2dfa-4517-b0c5-4448012847f3}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\systems\systems">
       <UniqueIdentifier>{b4da41a5-622e-4e10-a46c-3f2d3df203b2}</UniqueIdentifier>
     </Filter>
@@ -72,30 +69,6 @@
     <ClCompile Include="point_light_system.cpp">
       <Filter>Source Files\systems</Filter>
     </ClCompile>
-    <ClCompile Include="..\lib\imgui\imgui.cpp">
-      <Filter>Resource Files\imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="..\lib\imgui\imgui_demo.cpp">
-      <Filter>Resource Files\imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="..\lib\imgui\imgui_draw.cpp">
-      <Filter>Resource Files\imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="..\lib\imgui\imgui_tables.cpp">
-      <Filter>Resource Files\imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="..\lib\imgui\imgui_widgets.cpp">
-      <Filter>Resource Files\imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="..\lib\imgui\backends\imgui_impl_glfw.cpp">
-      <Filter>Resource Files\imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="..\lib\imgui\backends\imgui_impl_vulkan.cpp">
-      <Filter>Resource Files\imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="lve_gui.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="lve_texture.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -103,6 +76,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="TriangleMesh.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -155,33 +131,6 @@
     <ClInclude Include="point_light_system.hpp">
       <Filter>Source Files\systems\systems</Filter>
     </ClInclude>
-    <ClInclude Include="..\lib\imgui\imconfig.h">
-      <Filter>Resource Files\imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\lib\imgui\imgui.h">
-      <Filter>Resource Files\imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\lib\imgui\imgui_internal.h">
-      <Filter>Resource Files\imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\lib\imgui\imstb_rectpack.h">
-      <Filter>Resource Files\imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\lib\imgui\imstb_textedit.h">
-      <Filter>Resource Files\imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\lib\imgui\imstb_truetype.h">
-      <Filter>Resource Files\imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\lib\imgui\backends\imgui_impl_glfw.h">
-      <Filter>Resource Files\imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\lib\imgui\backends\imgui_impl_vulkan.h">
-      <Filter>Resource Files\imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="lve_gui.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="lve_texture.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -192,6 +141,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="define.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -210,15 +162,6 @@
     </None>
     <None Include="point_light.frag">
       <Filter>shader</Filter>
-    </None>
-    <None Include="..\lib\imgui\backends\vulkan\generate_spv.sh">
-      <Filter>Resource Files\imgui</Filter>
-    </None>
-    <None Include="..\lib\imgui\backends\vulkan\glsl_shader.frag">
-      <Filter>Resource Files\imgui</Filter>
-    </None>
-    <None Include="..\lib\imgui\backends\vulkan\glsl_shader.vert">
-      <Filter>Resource Files\imgui</Filter>
     </None>
   </ItemGroup>
 </Project>

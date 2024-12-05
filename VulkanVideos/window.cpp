@@ -1,9 +1,12 @@
 #include "window.hpp"
 #include <stdexcept>
+
+#include "lve_device.hpp"
 namespace lve {
 
 	LveWindow::LveWindow(int w, int h, std::string name) :_width{ w }, _height{ h }, _windowName{ name }{
 		initWindow();
+		LveDevice::setupInstance(*this);
 	}
 	LveWindow::~LveWindow() {
 		glfwDestroyWindow(_window);//detroy our window

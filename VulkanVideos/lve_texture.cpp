@@ -6,28 +6,32 @@
 #include "lve_buffer.hpp"
 #include <stdexcept>
 #include <iostream>
+#include "define.hpp"
 namespace lve {
 
 
 	uint32_t LveTexture::_nextAvailbleId = 0;
 
-	LveTexture::LveTexture(LveDevice& device, const std::string& filepath): _device(device)
+	LveTexture::LveTexture( const std::string& filepath)
 	{
+
+		m_deviceRef = LveDevice::getInstance();
 
 		int channels;
 		int m_BytesPerPixel;
 		
+		if (VERBOSE)
+			std::cout << "-****- Load Texture:" << filepath << std::endl;
 
 		auto data = stbi_load(filepath.c_str(), &_width, &_height, &m_BytesPerPixel, 4);
 
-		_mipLevels = static_cast<uint32_t>(std::floor(std::log2(std::max(_width, _height)))) + 1;//eq to generate mipmap
+		_mipLevels = 1;//static_cast<uint32_t>(std::floor(std::log2(std::max(_width, _height)))) + 1;//eq to generate mipmap
 
 
 		_id = LveTexture::_nextAvailbleId;
 		++LveTexture::_nextAvailbleId;
 
 		LveBuffer stagingBuffer{
-			   _device,
 			   4,
 			   static_cast<uint32_t>(_width * _height),
 			   VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
@@ -51,11 +55,11 @@ namespace lve {
 		imageInfo.extent = { static_cast<uint32_t>(_width), static_cast<uint32_t>(_height), 1 };
 		imageInfo.usage = VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT;
 
-		_device.createImageWithInfo(imageInfo, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, _vkImage, _vkDeviceMem);
+		m_deviceRef->createImageWithInfo(imageInfo, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, _vkImage, _vkDeviceMem);
 
 		transitionImageLayout(VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);
 
-		_device.copyBufferToImage(stagingBuffer.getBuffer(), _vkImage, static_cast<uint32_t>(_width), static_cast<uint32_t>(_height), 1);
+		m_deviceRef->copyBufferToImage(stagingBuffer.getBuffer(), _vkImage, static_cast<uint32_t>(_width), static_cast<uint32_t>(_height), 1);
 
 		generateMipMaps();
 
@@ -78,7 +82,7 @@ namespace lve {
 		samplerInfo.anisotropyEnable = VK_TRUE;
 		samplerInfo.borderColor = VK_BORDER_COLOR_FLOAT_OPAQUE_WHITE;
 
-		vkCreateSampler(_device.device(), &samplerInfo, nullptr, &_vkSampler);
+		vkCreateSampler(m_deviceRef->getDevice(), &samplerInfo, nullptr, &_vkSampler);
 
 
 		VkImageViewCreateInfo imageViewInfo{};
@@ -93,13 +97,13 @@ namespace lve {
 		imageViewInfo.subresourceRange.levelCount = _mipLevels;
 		imageViewInfo.image = _vkImage;
 
-		vkCreateImageView(_device.device(), &imageViewInfo, nullptr, &_vkImageView);
+		vkCreateImageView(m_deviceRef->getDevice(), &imageViewInfo, nullptr, &_vkImageView);
 
 
 		stbi_image_free(data);
 	}
 
-	LveTexture::LveTexture(LveDevice& device, const std::string& filepath, const std::string p_type ) : _device(device), _type{p_type}
+	LveTexture::LveTexture( const std::string& filepath, const std::string p_type ) : _type{p_type}
 	{
 
 		int channels;
@@ -111,7 +115,6 @@ namespace lve {
 
 
 		LveBuffer stagingBuffer{
-			   _device,
 			   4,
 			   static_cast<uint32_t>(_width * _height),
 			   VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
@@ -135,13 +138,13 @@ namespace lve {
 		imageInfo.extent = { static_cast<uint32_t>(_width), static_cast<uint32_t>(_height), 1 };
 		imageInfo.usage = VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT;
 
-		_device.createImageWithInfo(imageInfo, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, _vkImage, _vkDeviceMem);
+		m_deviceRef->createImageWithInfo(imageInfo, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, _vkImage, _vkDeviceMem);
 
 
 		transitionImageLayout(VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);//transfer image layout from stagging to image object in gpu
 
 
-		_device.copyBufferToImage(stagingBuffer.getBuffer(), _vkImage, static_cast<uint32_t>(_width), static_cast<uint32_t>(_height), 1);
+		m_deviceRef->copyBufferToImage(stagingBuffer.getBuffer(), _vkImage, static_cast<uint32_t>(_width), static_cast<uint32_t>(_height), 1);
 
 		generateMipMaps();
 
@@ -164,7 +167,7 @@ namespace lve {
 		samplerInfo.anisotropyEnable = VK_TRUE;
 		samplerInfo.borderColor = VK_BORDER_COLOR_FLOAT_OPAQUE_WHITE;
 
-		vkCreateSampler(_device.device(), &samplerInfo, nullptr, &_vkSampler);
+		vkCreateSampler(m_deviceRef->getDevice(), &samplerInfo, nullptr, &_vkSampler);
 
 
 		VkImageViewCreateInfo imageViewInfo{};
@@ -179,7 +182,7 @@ namespace lve {
 		imageViewInfo.subresourceRange.levelCount = _mipLevels;
 		imageViewInfo.image = _vkImage;
 
-		vkCreateImageView(_device.device(), &imageViewInfo, nullptr, &_vkImageView);
+		vkCreateImageView(m_deviceRef->getDevice(), &imageViewInfo, nullptr, &_vkImageView);
 
 
 		stbi_image_free(data);
@@ -189,14 +192,14 @@ namespace lve {
 
 	LveTexture::~LveTexture()
 	{
-		vkDestroyImage(_device.device(), _vkImage, nullptr);
-		vkFreeMemory(_device.device(), _vkDeviceMem, nullptr);
-		vkDestroyImageView(_device.device(), _vkImageView, nullptr);
-		vkDestroySampler(_device.device(), _vkSampler, nullptr);
+		vkDestroyImage(m_deviceRef->getDevice(), _vkImage, nullptr);
+		vkFreeMemory(m_deviceRef->getDevice(), _vkDeviceMem, nullptr);
+		vkDestroyImageView(m_deviceRef->getDevice(), _vkImageView, nullptr);
+		vkDestroySampler(m_deviceRef->getDevice(), _vkSampler, nullptr);
 	}
 
 	void LveTexture::transitionImageLayout(VkImageLayout oldLayout, VkImageLayout newLayout) {//transition image layout 
-		VkCommandBuffer commandBuffer = _device.beginSingleTimeCommands();// we need a single timle command buffer to execute pipeline barrier, 
+		VkCommandBuffer commandBuffer = m_deviceRef->beginSingleTimeCommands();// we need a single timle command buffer to execute pipeline barrier, 
 
 		VkImageMemoryBarrier barrier{};
 		barrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
@@ -235,22 +238,31 @@ namespace lve {
 
 		vkCmdPipelineBarrier(commandBuffer, sourceStage, destinationStage, 0, 0, nullptr, 0, nullptr, 1, &barrier);
 
-		_device.endSingleTimeCommands(commandBuffer);
+		m_deviceRef->endSingleTimeCommands(commandBuffer);
 
 
+	}
+
+	VkDescriptorImageInfo LveTexture::getDescriptorImageInfo()
+	{
+		VkDescriptorImageInfo imageDescriptor= VkDescriptorImageInfo();
+		imageDescriptor.imageLayout = _vkImageLayout;
+		imageDescriptor.imageView = _vkImageView;
+		imageDescriptor.sampler = _vkSampler;
+		return imageDescriptor;
 	}
 
 	void LveTexture::generateMipMaps()
 	{
 
 		VkFormatProperties formatProperties;
-		vkGetPhysicalDeviceFormatProperties(_device.getPhysicalDevice(), _vkFormat, &formatProperties);
+		vkGetPhysicalDeviceFormatProperties(m_deviceRef->getPhysicalDevice(), _vkFormat, &formatProperties);
 
 		if (!(formatProperties.optimalTilingFeatures & VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT)) {
 			throw std::runtime_error("texture image format does not support linear blitting!");
 		}
 
-		VkCommandBuffer commandBuffer = _device.beginSingleTimeCommands();
+		VkCommandBuffer commandBuffer = m_deviceRef->beginSingleTimeCommands();
 
 		VkImageMemoryBarrier barrier{};
 		barrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
@@ -309,7 +321,7 @@ namespace lve {
 
 		vkCmdPipelineBarrier(commandBuffer, VK_PIPELINE_STAGE_TRANSFER_BIT, VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT, 0, 0, nullptr, 0, nullptr, 1, &barrier);
 
-		_device.endSingleTimeCommands(commandBuffer);
+		m_deviceRef->endSingleTimeCommands(commandBuffer);
 	}
 
 }

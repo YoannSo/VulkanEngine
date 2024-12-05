@@ -7,7 +7,6 @@ namespace lve {
     class LveBuffer {
     public:
         LveBuffer(
-            LveDevice& device,
             VkDeviceSize instanceSize,
             uint32_t instanceCount,
             VkBufferUsageFlags usageFlags,
@@ -46,7 +45,6 @@ namespace lve {
     private:
         static VkDeviceSize getAlignment(VkDeviceSize instanceSize, VkDeviceSize minOffsetAlignment);
 
-        LveDevice& lveDevice;
         void* mapped = nullptr;
         VkBuffer buffer = VK_NULL_HANDLE;
         VkDeviceMemory memory = VK_NULL_HANDLE;

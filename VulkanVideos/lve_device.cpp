@@ -79,7 +79,7 @@ void LveDevice::createInstance() {
   appInfo.applicationVersion = VK_MAKE_VERSION(1, 0, 0);
   appInfo.pEngineName = "No Engine";
   appInfo.engineVersion = VK_MAKE_VERSION(1, 0, 0);
-  appInfo.apiVersion = VK_API_VERSION_1_0;
+  appInfo.apiVersion = VK_API_VERSION_1_2;
 
   VkInstanceCreateInfo createInfo = {};
   createInfo.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
@@ -161,6 +161,16 @@ void LveDevice::createLogicalDevice() {
   createInfo.pEnabledFeatures = &deviceFeatures;
   createInfo.enabledExtensionCount = static_cast<uint32_t>(deviceExtensions.size());
   createInfo.ppEnabledExtensionNames = deviceExtensions.data();
+
+
+  //bindless textures, 
+  VkPhysicalDeviceDescriptorIndexingFeatures indexingFeatures{};
+  indexingFeatures.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_FEATURES_EXT;
+  indexingFeatures.descriptorBindingPartiallyBound = VK_TRUE;
+  indexingFeatures.runtimeDescriptorArray = VK_TRUE;
+  indexingFeatures.shaderSampledImageArrayNonUniformIndexing = VK_TRUE; // permet d'acceder a des valeurs differentes dans le tableau dans le shader sur different tjhread
+  indexingFeatures.descriptorBindingVariableDescriptorCount = VK_TRUE; //permet de mettre [] dans les shader au lieu de la taille fixe
+  createInfo.pNext=&indexingFeatures;
 
   // might not really be necessary anymore because device specific validation layers
   // have been deprecated

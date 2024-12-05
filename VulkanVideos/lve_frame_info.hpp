@@ -3,6 +3,7 @@
 #include "lve_camera.hpp"
 #include "lve_descriptor.hpp"
 #include "lve_game_object.hpp"
+#include "SceneManager.h"
 #include <vulkan/vulkan.h>
 namespace lve {
 #define MAX_LIGHTS 10
@@ -27,6 +28,5 @@ namespace lve {
 		VkCommandBuffer commandBuffer;
 		LveCamera& camera;
 		VkDescriptorSet globalDescriptorSet;
-		LveGameObject::Map& gameObjects; // all system will hve acces to all gameobject without need to pass extra parameters 
 	};
 }

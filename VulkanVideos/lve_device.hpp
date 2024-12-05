@@ -30,8 +30,19 @@ class LveDevice {
   const bool enableValidationLayers = true;
 #endif
 
-  LveDevice(LveWindow &window);
   ~LveDevice();
+
+  static LveDevice* s_device;
+  static void setupInstance(LveWindow& window) {
+      s_device = new LveDevice(window);
+  }
+  static LveDevice* getInstance() {
+      if (s_device)
+          return LveDevice::s_device;
+      return nullptr;
+  }
+  bool m_initialized{ false };
+
 
   // Not copyable or movable
   LveDevice(const LveDevice &) = delete;
@@ -72,13 +83,16 @@ class LveDevice {
 
   VkPhysicalDeviceProperties properties;
    
-  inline VkInstance getInstance()const { return instance; }
+  inline VkInstance getVkInstance()const { return instance; }
   inline VkPhysicalDevice getPhysicalDevice()const { return physicalDevice; }
   inline VkDevice getDevice()const { return device_; }
   inline VkQueue getGraphicsQueue()const { return graphicsQueue_; }
   inline uint32_t getGraphicsQueueFamily() { return findPhysicalQueueFamilies().graphicsFamily; }
 
  private:
+     LveDevice(LveWindow& window);
+
+
   void createInstance();
   void setupDebugMessenger();
   void pickPhysicalDevice();

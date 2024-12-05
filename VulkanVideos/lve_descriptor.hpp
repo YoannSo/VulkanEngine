@@ -13,7 +13,7 @@ namespace lve {
     public:
         class Builder {//tell the pipeline what gonna expect 
         public:
-            Builder(LveDevice& lveDevice) : lveDevice{ lveDevice } {}
+            Builder() {}
 
             Builder& addBinding( //what type of descriptor to expect ? will shader stgae will have acces ? each biding can have a array of descriptor of that type, can indexed 
                 uint32_t binding,
@@ -23,12 +23,10 @@ namespace lve {
             std::unique_ptr<LveDescriptorSetLayout> build() const;//create instance of the DescripotrSetLayout
 
         private:
-            LveDevice& lveDevice;
             std::unordered_map<uint32_t, VkDescriptorSetLayoutBinding> bindings{};//cosntruct the ordererd map; 
         };
 
-        LveDescriptorSetLayout(
-            LveDevice& lveDevice, std::unordered_map<uint32_t, VkDescriptorSetLayoutBinding> bindings);
+        LveDescriptorSetLayout( std::unordered_map<uint32_t, VkDescriptorSetLayoutBinding> bindings);
         ~LveDescriptorSetLayout();
         LveDescriptorSetLayout(const LveDescriptorSetLayout&) = delete;
         LveDescriptorSetLayout& operator=(const LveDescriptorSetLayout&) = delete;
@@ -36,7 +34,6 @@ namespace lve {
         VkDescriptorSetLayout getDescriptorSetLayout() const { return descriptorSetLayout; }
 
     private:
-        LveDevice& lveDevice;
         VkDescriptorSetLayout descriptorSetLayout;
         std::unordered_map<uint32_t, VkDescriptorSetLayoutBinding> bindings;
 
@@ -51,7 +48,7 @@ namespace lve {
     public:
         class Builder {
         public:
-            Builder(LveDevice& lveDevice) : lveDevice{ lveDevice } {}
+            Builder()  {}
 
             Builder& addPoolSize(VkDescriptorType descriptorType, uint32_t count);//how many descriptor of each type to execpt 
             Builder& setPoolFlags(VkDescriptorPoolCreateFlags flags);//behavior of the pool object
@@ -59,14 +56,12 @@ namespace lve {
             std::unique_ptr<LveDescriptorPool> build() const;
 
         private:
-            LveDevice& lveDevice;
             std::vector<VkDescriptorPoolSize> poolSizes{};
             uint32_t maxSets = 1000;
             VkDescriptorPoolCreateFlags poolFlags = 0;
         };
 
         LveDescriptorPool(
-            LveDevice& lveDevice,
             uint32_t maxSets,
             VkDescriptorPoolCreateFlags poolFlags,
             const std::vector<VkDescriptorPoolSize>& poolSizes);
@@ -82,7 +77,6 @@ namespace lve {
         void resetPool();
 
     private:
-        LveDevice& lveDevice;
         VkDescriptorPool descriptorPool;
 
         friend class LveDescriptorWriter;
@@ -97,6 +91,7 @@ namespace lve {
 
         LveDescriptorWriter& writeBuffer(uint32_t binding, VkDescriptorBufferInfo* bufferInfo);
         LveDescriptorWriter& writeImage(uint32_t binding, VkDescriptorImageInfo* imageInfo);
+        LveDescriptorWriter& writeImages(uint32_t binding, std::vector<VkDescriptorImageInfo>& imageInfo);
 
         bool build(VkDescriptorSet& set);
         void overwrite(VkDescriptorSet& set);

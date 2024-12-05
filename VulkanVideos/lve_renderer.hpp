@@ -13,11 +13,10 @@ namespace lve {
 
 	public:
 
-		LveRenderer(LveWindow &window, LveDevice &device);
+		LveRenderer(LveWindow &window);
 		~LveRenderer();
-		
-		LveRenderer(const LveRenderer&) = delete; // delete copy constructor
-		LveRenderer& operator=(const LveRenderer&) = delete; // and copy operator, make sure to not have 2 pointer to window, then if we destroy one, the second isnt destroyed
+		//LveRenderer(const LveRenderer&) = delete; // delete copy constructor
+		//LveRenderer& operator=(const LveRenderer&) = delete; // and copy operator, make sure to not have 2 pointer to window, then if we destroy one, the second isnt destroyed
 
 
 				VkCommandBuffer beginFrame(); //can't be private that use outside , split drawfram into 
@@ -53,7 +52,6 @@ namespace lve {
 		void createCommandBuffers();
 
 		LveWindow& _window;// first app created auto creat window destroy auto destroy
-		LveDevice& lveDevice;
 		std::unique_ptr<LveSwapChain> lveSwapChain;//using pointer small performance cost
 		std::vector<VkCommandBuffer> commandBuffers;
 

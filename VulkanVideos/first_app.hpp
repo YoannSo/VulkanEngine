@@ -9,12 +9,14 @@
 #include "lve_descriptor.hpp"
 #include <memory>
 #include <vector>
+
+#include "SceneManager.h"
 namespace lve {
 
 	class FirstApp {
 
 	public:
-		static constexpr int WIDTH = 800;//cst for w and h
+		static constexpr int WIDTH = 1400;//cst for w and h
 		static constexpr int HEIGHT = 800;
 
 		FirstApp();
@@ -23,7 +25,6 @@ namespace lve {
 		FirstApp(const FirstApp&) = delete; // delete copy constructor
 		FirstApp& operator=(const FirstApp&) = delete; // and copy operator, make sure to not have 2 pointer to window, then if we destroy one, the second isnt destroyed
 
-		void init_imgui();
 		void run();
 	private:
 		void loadGameObjects();
@@ -33,10 +34,10 @@ namespace lve {
 
 		//order matter init top to bottom destroy bottom to top
 		LveWindow _window{ WIDTH,HEIGHT,"FirstApp" };// first app created auto creat window destroy auto destroy
-		LveDevice lveDevice{ _window };
-		LveRenderer lveRenderer{ _window,lveDevice };
+		LveRenderer lveRenderer{ _window };
 		std::unique_ptr<LveDescriptorPool> _globalPool{};
 		//std::unique_ptr<LveTexture> texture{};
-		LveGameObject::Map gameObjects;
+
+		std::shared_ptr<SceneManager> m_sceneManager;
 	};
 }

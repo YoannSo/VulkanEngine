@@ -7,8 +7,8 @@ namespace lve {
 
 
 	public:
-		LveTexture(LveDevice& device, const std::string& filepath);
-		LveTexture(LveDevice& device, const std::string& filepath, const std::string p_type);
+		LveTexture( const std::string& filepath);
+		LveTexture( const std::string& filepath, const std::string p_type);
 		LveTexture(const LveTexture& p_lveTexture, const std::string p_type);
 		~LveTexture();
 
@@ -27,6 +27,7 @@ namespace lve {
 		VkSampler getSampler() { return _vkSampler; }
 		VkImageView getImageView() { return _vkImageView; }
 		VkImageLayout getImageLayout() { return _vkImageLayout; }
+		VkDescriptorImageInfo getDescriptorImageInfo();
 
 	private:
 		void generateMipMaps();
@@ -42,8 +43,9 @@ namespace lve {
 		VkImageView _vkImageView;
 		VkSampler _vkSampler;
 		VkFormat _vkFormat;
-		LveDevice& _device;
 		VkImageLayout _vkImageLayout;
+
+		LveDevice* m_deviceRef;
 
 			
 	};

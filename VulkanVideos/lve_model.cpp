@@ -20,7 +20,7 @@ namespace std {
 
 namespace lve {
 
-	LveModel::LveModel(LveDevice& device, const LveModel::Builder& builder) : lveDevice{ device } {
+	LveModel::LveModel( const LveModel::Builder& builder)  {
 
 		createVertexBuffers(builder._vertices);
 		createIndexBuffer(builder._indices);
@@ -29,13 +29,13 @@ namespace lve {
 	{
 
 	}
-	std::unique_ptr<LveModel> LveModel::createModelFromFile(LveDevice& device, const std::string& filePath)
+	std::unique_ptr<LveModel> LveModel::createModelFromFile( const std::string& filePath)
 	{
 
 		Builder builder{};
 		builder.loadModel(filePath);
 		std::cout << "Vertex count:" << builder._vertices.size() << "\n ";
-		return std::make_unique<LveModel>(device, builder);
+		return std::make_unique<LveModel>( builder);
 
 	}
 	void LveModel::bind(VkCommandBuffer commandBuffer)
@@ -68,7 +68,7 @@ namespace lve {
 		VkDeviceSize bufferSize = sizeof(vertices[0]) * vertexCount; // total number of vertex buffer of all vertices
 		uint32_t vertexSize = sizeof(vertices[0]);
 
-		LveBuffer stagingBuffer{ lveDevice,vertexSize,vertexCount,VK_BUFFER_USAGE_TRANSFER_SRC_BIT,//tell device that we want to create a buffer for vextes data
+		LveBuffer stagingBuffer{vertexSize,vertexCount,VK_BUFFER_USAGE_TRANSFER_SRC_BIT,//tell device that we want to create a buffer for vextes data
 			VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT |//allocate mem to be accessible from the host, host to write on device meem
 			VK_MEMORY_PROPERTY_HOST_COHERENT_BIT };//keep host and device memory consistent together, }
 
@@ -78,10 +78,10 @@ namespace lve {
 		stagingBuffer.writeToBuffer((void*)vertices.data());
 
 
-		_vertexBuffer = std::make_unique<LveBuffer>(lveDevice, vertexSize, vertexCount, VK_BUFFER_USAGE_VERTEX_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT,//tell device that we want to create a buffer for vextes data
+		_vertexBuffer = std::make_unique<LveBuffer>( vertexSize, vertexCount, VK_BUFFER_USAGE_VERTEX_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT,//tell device that we want to create a buffer for vextes data
 			VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
 
-		lveDevice.copyBuffer(stagingBuffer.getBuffer(), _vertexBuffer->getBuffer(), bufferSize);
+		LveDevice::getInstance()->copyBuffer(stagingBuffer.getBuffer(), _vertexBuffer->getBuffer(), bufferSize);
 
 
 	}
@@ -128,9 +128,6 @@ namespace lve {
 		if (!tinyobj::LoadObj(&attrib, &shapes, &materials, &warn, &err, filePath.c_str())) {
 			throw std::runtime_error(warn + err);
 		}
-		std::cout << "SHAPE:" << shapes.size() << " "<< shapes.at(0).name<<std::endl;
-		std::cout << "material:" << materials.size();
-		
 		_vertices.clear();
 		_indices.clear();
 		std::unordered_map<Vertex, uint32_t> uniqueVertices{};

@@ -4,7 +4,7 @@
 #include <iostream>
 namespace lve {
 
-	LveRenderer::LveRenderer(LveWindow &window, LveDevice& device): _window(window),lveDevice(device){
+	LveRenderer::LveRenderer(LveWindow &window): _window(window){
 		
 		recreateSwapChain();
 		createCommandBuffers();
@@ -108,7 +108,7 @@ namespace lve {
 	
 	void LveRenderer::freeCommandBuffers()
 	{
-		vkFreeCommandBuffers(lveDevice.device(), lveDevice.getCommandPool(), static_cast<float>(commandBuffers.size()), commandBuffers.data());
+		vkFreeCommandBuffers(LveDevice::getInstance()->getDevice(), LveDevice::getInstance()->getCommandPool(), static_cast<float>(commandBuffers.size()), commandBuffers.data());
 	}
 
 	void LveRenderer::createCommandBuffers() {
@@ -117,10 +117,10 @@ namespace lve {
   VkCommandBufferAllocateInfo allocInfo{};
   allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
   allocInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
-  allocInfo.commandPool = lveDevice.getCommandPool();
+  allocInfo.commandPool = LveDevice::getInstance()->getCommandPool();
   allocInfo.commandBufferCount = static_cast<uint32_t>(commandBuffers.size());
 
-  if (vkAllocateCommandBuffers(lveDevice.device(), &allocInfo, commandBuffers.data()) !=
+  if (vkAllocateCommandBuffers(LveDevice::getInstance()->getDevice(), &allocInfo, commandBuffers.data()) !=
       VK_SUCCESS) {
     throw std::runtime_error("failed to allocate command buffers!");
   }
@@ -134,14 +134,14 @@ namespace lve {
 			extent = _window.getExtent();
 			glfwWaitEvents();
 		}
-		vkDeviceWaitIdle(lveDevice.device());//make wait the swap chain while we are creating one more
+		vkDeviceWaitIdle(LveDevice::getInstance()->getDevice());//make wait the swap chain while we are creating one more
 		if (lveSwapChain == nullptr) {
-					lveSwapChain = std::make_unique<LveSwapChain>(lveDevice, extent);
+					lveSwapChain = std::make_unique<LveSwapChain>(extent);
 
 		}
 		else {
 			std::shared_ptr<LveSwapChain> oldSwapChain = std::move(lveSwapChain);
-			lveSwapChain = std::make_unique<LveSwapChain>(lveDevice, extent,std::move(lveSwapChain));//allow to create a copy, mem management is not broken
+			lveSwapChain = std::make_unique<LveSwapChain>(extent,std::move(lveSwapChain));//allow to create a copy, mem management is not broken
 			if (!oldSwapChain->compareSwapFormats(*lveSwapChain.get())) {
 				throw std::runtime_error("Swap chain image or depth format has changed");
 			}

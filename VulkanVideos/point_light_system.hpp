@@ -16,7 +16,7 @@ namespace lve {
 	public:
 
 
-		PointLighRenderSystem(LveDevice& device, VkRenderPass renderPass, VkDescriptorSetLayout globalSetLayout);//globalSetLayout to tell the pipeline what descriptor set layout will be
+		PointLighRenderSystem( VkRenderPass renderPass, VkDescriptorSetLayout globalSetLayout);//globalSetLayout to tell the pipeline what descriptor set layout will be
 		~PointLighRenderSystem();
 
 		PointLighRenderSystem(const PointLighRenderSystem&) = delete; // delete copy constructor
@@ -29,7 +29,6 @@ namespace lve {
 		void createPipeline(VkRenderPass renderPass);//just to create the pipeline
 
 		//LveWindow _window{ WIDTH,HEIGHT,"SimpleRenderSystem" };// first app created auto creat window destroy auto destroy
-		LveDevice& lveDevice;
 		//std::unique_ptr<LveSwapChain> lveSwapChain;//using pointer small performance cost
 		std::unique_ptr<LvePipeline> lvePipeline;//smart pointer, avoid memory leak, only one uniqe ptr have the oject dynamcly asscoeied
 		VkPipelineLayout pipelineLayout;

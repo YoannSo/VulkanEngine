@@ -10,35 +10,38 @@ namespace lve {
 		glm::mat4 modelMatrix{ 1.f };//offest homegous 
 		glm::mat4 normalMatrix{ 1.f };
 	};
-	SimpleRenderSystem::SimpleRenderSystem(LveDevice& device,VkRenderPass renderPass, std::vector<VkDescriptorSetLayout>& globalSetLayout): lveDevice(device) {
+	SimpleRenderSystem::SimpleRenderSystem(VkRenderPass renderPass, VkDescriptorSetLayout globalSetLayout) {
 		createPipelineLayout(globalSetLayout);
 		createPipeline(renderPass);
 	}
 	SimpleRenderSystem::~SimpleRenderSystem() {
-		vkDestroyPipelineLayout(lveDevice.device(), pipelineLayout, nullptr);
+		vkDestroyPipelineLayout(LveDevice::getInstance()->getDevice(), pipelineLayout, nullptr);
 	}
 
 
 
-	void SimpleRenderSystem::createPipelineLayout(std::vector<VkDescriptorSetLayout>& globalSetLayout)
+	void SimpleRenderSystem::createPipelineLayout(VkDescriptorSetLayout globalSetLayout)
 	{
 		VkPushConstantRange pushConstantRange{};
 		pushConstantRange.stageFlags = VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT;
 		pushConstantRange.offset = 0;
 		pushConstantRange.size = sizeof(SimplePushConstantData);
+	 
+		std::vector<VkDescriptorSetLayout> descriptorSetLayout{ globalSetLayout};
 
-
-	//	std::vector<VkDescriptorSetLayout> descriptorSetLayout{ globalSetLayout };
-
+		if (SceneManager::getInstance()->getTextureMap().size() > 0) {
+			descriptorSetLayout.push_back(SceneManager::getInstance()->getDescriptorSetLayout().getDescriptorSetLayout());
+		}
+		descriptorSetLayout.push_back(SceneManager::getInstance()->getLocalDescriptorSetLayout().getDescriptorSetLayout());
 		VkPipelineLayoutCreateInfo pipelineLayoutInfo{};
 		pipelineLayoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO; //empyt layout so 0 
-		pipelineLayoutInfo.setLayoutCount = static_cast<uint32_t>(globalSetLayout.size()); //empty so 0
-		pipelineLayoutInfo.pSetLayouts = globalSetLayout.data(); // pass date, autre que vertex data to vertex and framgnet (texture/uniform)
+		pipelineLayoutInfo.setLayoutCount = descriptorSetLayout.size(); //empty so 0
+		pipelineLayoutInfo.pSetLayouts = descriptorSetLayout.data(); // pass date, autre que vertex data to vertex and framgnet (texture/uniform)
 		pipelineLayoutInfo.pushConstantRangeCount = 1;
 		pipelineLayoutInfo.pPushConstantRanges = &pushConstantRange; // small amount of data, 
 
-		if (vkCreatePipelineLayout(lveDevice.device(), &pipelineLayoutInfo, nullptr, &pipelineLayout) !=
-      VK_SUCCESS) {
+		if (vkCreatePipelineLayout(LveDevice::getInstance()->getDevice(), &pipelineLayoutInfo, nullptr, &pipelineLayout) !=
+		VK_SUCCESS) {
 		 throw std::runtime_error("failed to create pipeline layout!");
 		 }
 	}
@@ -52,35 +55,47 @@ namespace lve {
   // take swap chain w and h bc dont necessarly match the window,
   pipelineConfig.renderPass = renderPass;
 		pipelineConfig.pipelineLayout = pipelineLayout;
-		lvePipeline = std::make_unique<LvePipeline>(lveDevice, "shaders/simple_shader.vert.spv", "shaders/simple_shader.frag.spv",pipelineConfig);
+		lvePipeline = std::make_unique<LvePipeline>("shaders/simple_shader.vert.spv", "shaders/simple_shader.frag.spv",pipelineConfig);
 	}
 	
 
 
-void SimpleRenderSystem::renderGameObjects(FrameInfo &frameInfo)
-{
-	lvePipeline->bind(frameInfo.commandBuffer);
+	void SimpleRenderSystem::renderGameObjects(FrameInfo& frameInfo)
+	{
+		lvePipeline->bind(frameInfo.commandBuffer);
 
 
-	vkCmdBindDescriptorSets(frameInfo.commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout, 
-		0,//strating sert
-		1,//number of set
-		&frameInfo.globalDescriptorSet,
-		0,
-		nullptr
+		vkCmdBindDescriptorSets(frameInfo.commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout,
+			0,//strating sert
+			1,//number of set
+			&frameInfo.globalDescriptorSet,
+			0,
+			nullptr
 		);
 
-	for (auto& kv : frameInfo.gameObjects) {
-		auto& obj = kv.second;
-		if (obj._model == nullptr) continue;
+
+		auto test = SceneManager::getInstance()->getGlobalDescriptorSet();
+			vkCmdBindDescriptorSets(frameInfo.commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout,
+				1,//strating sert
+				1,//number of set
+				&(SceneManager::getInstance()->getGlobalDescriptorSet()[frameInfo.frameIndex]),
+				0,
+				nullptr
+			);
+		
+
+	for (auto& kv : SceneManager::getInstance()->getSceneObjects()) {
+		auto obj = kv.second;
+		if (obj->_model == nullptr) continue;
 		SimplePushConstantData push{};
 
-		push.modelMatrix = obj.transform.mat4();
-		push.normalMatrix =obj.transform.normalMatrix();
+		push.modelMatrix = obj->transform.mat4();
+		push.normalMatrix =obj->transform.normalMatrix();
+
 			//record push command date to the command buffer
 			vkCmdPushConstants(frameInfo.commandBuffer, pipelineLayout, VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT, 0, sizeof(SimplePushConstantData), &push);
-			//obj._model->bind(frameInfo.commandBuffer,frameInfo.frameIndex,pipelineLayout);
-			obj._model->draw(frameInfo.commandBuffer, frameInfo.frameIndex, pipelineLayout);
+			//obj->_model->bind(frameInfo.commandBuffer,frameInfo.frameIndex,pipelineLayout);
+			obj->_model->draw(frameInfo.commandBuffer, frameInfo.frameIndex, pipelineLayout);
 
 		
 	}

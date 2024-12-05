@@ -32,7 +32,7 @@ struct PipelineConfigInfo {
 	class LvePipeline {
 
 	public:
-		LvePipeline(LveDevice &device,const std::string& vertFilePath, const std::string fragFilePath,const PipelineConfigInfo& configInfo);
+		LvePipeline(const std::string& vertFilePath, const std::string fragFilePath,const PipelineConfigInfo& configInfo);
 		~LvePipeline();
 
 		LvePipeline(const LvePipeline&) = delete; // delete copy constructor
@@ -51,7 +51,6 @@ struct PipelineConfigInfo {
 		void createShaderModule(const std::vector<char> &code, VkShaderModule* shaderModule);
 
 
-		LveDevice& lveDevice;
 		VkPipeline graphicsPipeline;
 		VkShaderModule vertShaderModule;
 		VkShaderModule fragShaderModule;

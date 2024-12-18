@@ -1,4 +1,6 @@
 #pragma once
+#ifndef GAMEOBJECT_HPP
+#define GAMEOBJECT_HPP
 
 #include "lve_model.hpp"
 #include <glm/gtc/matrix_transform.hpp>
@@ -14,34 +16,24 @@ namespace lve {
         glm::mat4 mat4();
         glm::mat3 normalMatrix();
     };
-
-
     struct PointLightComponent {
         float lightIntensity=1.0f;
         
     };
-    class LveGameObject {
+    class GameObject {
     public:
 
-        static LveGameObject* createGameObject() {
-            static uint32_t currentId = 0;
-            return new LveGameObject{ currentId++ };
-        }
-        static LveGameObject* makePointLight(float intensity = 10.f, float radius = 0.1f, glm::vec3 color = glm::vec3(1.f));
+        virtual ~GameObject() = default;
+        GameObject();
 
-
-
-        uint32_t getId() { return id; }
-
+        uint32_t getId() { return m_id; }
         glm::vec3 color{};
-        TransformComponent transform{};
 
-        std::shared_ptr<LveModel> model= nullptr;
-        std::shared_ptr<Model> _model= nullptr;
-        std::shared_ptr<PointLightComponent> pointLight = nullptr;
+        TransformComponent transform;
     private:
-        LveGameObject(uint32_t objId) : id{ objId } {}
 
-        uint32_t id;
+        uint32_t m_id;
+        static uint32_t s_maxId;
     };
 }  // namespace lve
+#endif

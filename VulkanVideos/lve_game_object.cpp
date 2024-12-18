@@ -2,6 +2,13 @@
 
 
 namespace lve {
+
+    uint32_t GameObject::s_maxId = 0;
+
+    GameObject::GameObject() {
+        m_id = ++s_maxId;
+    }
+
     glm::mat4 TransformComponent::mat4() {//need to be imrpove bc use by frames for all bojects
         const float c3 = glm::cos(rotation.z);
         const float s3 = glm::sin(rotation.z);
@@ -61,7 +68,7 @@ namespace lve {
     }
 
 
-    LveGameObject* LveGameObject::makePointLight(float intensity, float radius, glm::vec3 color)
+   /* LveGameObject* LveGameObject::makePointLight(float intensity, float radius, glm::vec3 color)
     {
         LveGameObject* gameObj = LveGameObject::createGameObject();
 
@@ -71,5 +78,5 @@ namespace lve {
         gameObj->pointLight->lightIntensity = intensity;
         return gameObj;
     }
-
+    */
 }

@@ -15,7 +15,8 @@ namespace lve {
 	{
 		using TextureMap = std::unordered_map<std::string, LveTexture*>; //effienclty look up object
 		using Map = std::unordered_map<uint32_t, LveGameObject*>; //effienclty look up object
-
+		using MaterialMap = std::unordered_map<std::string, std::shared_ptr<Material>>; //effienclty look up object
+		using RenderingBatch= std::vector<std::pair<std::string,std::vector<TriangleMesh*>>>;
 
 	public:
 		SceneManager();
@@ -37,10 +38,16 @@ namespace lve {
 		inline LveDescriptorSetLayout& getDescriptorSetLayout() { return *m_globalSetLayout; };
 
 		inline LveDescriptorSetLayout& getLocalDescriptorSetLayout() { return *m_objectLocalSetLayout; };
+		inline LveDescriptorSetLayout& getMaterialDescriptorSetLayout() { return *m_materialSetLayout; };
+
 		inline LveDescriptorPool& getPool() { return *m_descriptorPool; };
+
+		inline RenderingBatch& getRenderingBatch() { return m_renderingBatch; };
+		inline MaterialMap& getMaterialMap() { return m_materialMap; };
 
 
 		int addTextureElement(std::string p_path, LveTexture* p_texture);
+		void addMaterial(std::unique_ptr<Material> p_material);
 
 
 		static SceneManager* s_sceneSingleton;
@@ -51,7 +58,8 @@ namespace lve {
 
 		}
 
-		void setObjectDescriptorSet();
+		void setMaterialDescriptorSet();
+		void setupRenderingBatch();
 
 
 	private:
@@ -62,6 +70,9 @@ namespace lve {
 	public:
 		const uint16_t MAX_TEXTURE_IN_SCENE{ 100 };
 		const uint16_t MAX_OBJECT_IN_SCENE{ 100 };
+		const uint16_t MAX_MATERIAL_IN_SCENE{ 100 };
+
+		uint32_t _currentIdTexture{ 0 };
 	private:
 
 
@@ -72,15 +83,19 @@ namespace lve {
 
 		//std::unique_ptr<LveDescriptorPool> m_globalModelDescriptorPool;
 		std::unique_ptr<LveDescriptorPool> m_descriptorPool{};
+
 		std::unique_ptr <LveDescriptorSetLayout> m_globalSetLayout;
+		std::unique_ptr <LveDescriptorSetLayout> m_materialSetLayout;
+
 		std::unique_ptr <LveDescriptorSetLayout> m_objectLocalSetLayout;
 		std::vector<VkDescriptorSet> m_globalDescriptorSet;
 
 
 
-
 		TextureMap m_textureMap;
 		Map m_objectMap;
+		MaterialMap m_materialMap;
+		RenderingBatch m_renderingBatch;
 		std::vector<std::string> m_shaderTextureId;
 
 

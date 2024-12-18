@@ -9,6 +9,7 @@ struct PointLight{
 	vec4 color; //w = intenity 
 };
 
+
 layout(set=0, binding=0)uniform GlobalUbo{
 	mat4 projection;
 	mat4 view;
@@ -20,9 +21,17 @@ layout(set=0, binding=0)uniform GlobalUbo{
 
 layout(set = 1, binding = 0) uniform sampler2D textures[];
 
-layout(set=2, binding=0)uniform ObjectUbo{
-	int idText;
-}objectUbo;
+layout(set = 2, binding = 0) uniform MaterialData {
+    vec4 ambient;      // 12 bytes
+    vec4 diffuseColor;      // 12 bytes
+    vec4 specular;     // 12 bytes
+    float shininess;   // 4 bytes
+	int hasDiffuseMap; // 4 bytes
+	int hasNormalMap; // 4 bytes
+	int hasSpecularMap;// 4 bytes
+	int hasShininessMap;// 4 bytes
+    int hasAmbientMap; // 4 bytes
+}materialUbo;
 
 layout(push_constant) uniform Push{
 	mat4 modelMatrix;
@@ -82,10 +91,14 @@ void main(){
 	}
 	
 	//outColor=vec4(inUV,0.0,1.0);
-	if(objectUbo.idText!=1)
-   		outColor = texture(textures[objectUbo.idText], inUV);
-	else
+	//if(objectUbo.idText!=1)
+   		//outColor = texture(textures[objectUbo.idText], inUV);
+	//else
 		//outColor=vec4((diffuseLight*inColor+specularLight*inColor),1.0);
-		outColor=vec4(1.0,0.0,0.0,1.0);
+		if(materialUbo.hasDiffuseMap!=-1)
+			outColor = texture(textures[materialUbo.hasDiffuseMap], inUV);
+		else
+			outColor=vec4(materialUbo.diffuseColor.xyz,1.0);z
+
 
 }

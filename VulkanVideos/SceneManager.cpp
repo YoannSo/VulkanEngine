@@ -3,11 +3,13 @@
 namespace lve {
 
 
-
 	SceneManager::SceneManager()
 	{
 		m_objectMap = Map();
 		m_textureMap = TextureMap();
+		m_materialMap = MaterialMap();
+		m_renderingBatch = RenderingBatch();
+
 		m_shaderTextureId = std::vector<std::string>();
 
 
@@ -16,6 +18,7 @@ namespace lve {
 			.setMaxSets(LveSwapChain::MAX_FRAMES_IN_FLIGHT*500)
 			.addPoolSize(VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, LveSwapChain::MAX_FRAMES_IN_FLIGHT * MAX_TEXTURE_IN_SCENE)
 			.addPoolSize(VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, MAX_OBJECT_IN_SCENE * LveSwapChain::MAX_FRAMES_IN_FLIGHT)
+			.addPoolSize(VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, MAX_MATERIAL_IN_SCENE * LveSwapChain::MAX_FRAMES_IN_FLIGHT)
 			.build();
 
 
@@ -25,7 +28,7 @@ namespace lve {
 	SceneManager::~SceneManager()
 	{
 	}
-	LveGameObject* SceneManager::appendGameObject()
+	GameObject* SceneManager::appendGameObject()
 	{
 		if (VERBOSE)
 			std::cout << "-*-" << " Append Game Object"<< std::endl;
@@ -36,7 +39,7 @@ namespace lve {
 	LveGameObject* SceneManager::createMeshObject(std::string p_meshName, std::string p_path)
 	{
 		if (VERBOSE)
-			std::cout << "-*-" << " Create Mesh Game Object"<<std::endl;
+			std::cout << "-*-" << " Create Mesh Game Object:"<< p_meshName <<std::endl;
 
 		LveGameObject* obj = LveGameObject::createGameObject();
 		obj->_model = std::make_shared<Model>(p_meshName, p_path);
@@ -58,22 +61,31 @@ namespace lve {
 
 		return m_textureMap.size()-1;
 	}
-
-	void SceneManager::setObjectDescriptorSet()
+	void SceneManager::addMaterial(std::unique_ptr<Material>  p_material)
 	{
-		m_globalSetLayout = LveDescriptorSetLayout::Builder().addBinding(0, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, VK_SHADER_STAGE_FRAGMENT_BIT, m_textureMap.size()).build();
+		m_materialMap.emplace(p_material->getName(), std::move(p_material));
 
-		std::cout << "DEBUG " << m_textureMap.size();
+	}
 
+	void SceneManager::setMaterialDescriptorSet()
+	{
+
+		m_globalSetLayout = LveDescriptorSetLayout::Builder().addBinding(0, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, VK_SHADER_STAGE_FRAGMENT_BIT, _currentIdTexture).build();
+
+		for (auto it = m_materialMap.begin(); it != m_materialMap.end(); ++it) {
+			it->second->setupDescriptorSet();
+		}
 			m_globalDescriptorSet = std::vector<VkDescriptorSet>(LveSwapChain::MAX_FRAMES_IN_FLIGHT);
 
 			for (int i = 0; i < m_globalDescriptorSet.size(); ++i) {
 				std::vector<VkDescriptorImageInfo> imageInfos;
-				imageInfos.resize(m_shaderTextureId.size());
 
 				int index = 0;
-				for (auto it = m_textureMap.begin(); it != m_textureMap.end(); ++it, ++index) {
-					imageInfos[index] = it->second->getDescriptorImageInfo();
+
+				for (auto it = m_materialMap.begin(); it != m_materialMap.end(); ++it, ++index) {
+					std::vector<VkDescriptorImageInfo> getImageInfo=it->second->getVkDescriptorImages();
+					if(getImageInfo.size()>0)
+						imageInfos.insert(imageInfos.end(), std::make_move_iterator(getImageInfo.begin()), std::make_move_iterator(getImageInfo.end()));
 				}
 
 				LveDescriptorWriter(*m_globalSetLayout, *m_descriptorPool)
@@ -81,13 +93,24 @@ namespace lve {
 					.build(m_globalDescriptorSet[i]);
 
 			}
-		
 
+	}
+	void SceneManager::setupRenderingBatch()
+	{
+		for (auto& material : m_materialMap) {
+			const std::string name = material.first;
+			for (auto& model : m_objectMap) {
+				if (model.second->_model != nullptr) {
+					m_renderingBatch.emplace_back(std::make_pair(name, model.second->_model->getAllMeshesFromMaterial(name)));
+				}
+			}
+		}
 
 	}
 	void SceneManager::setupDescriptorSet()
 	{
 		m_objectLocalSetLayout = LveDescriptorSetLayout::Builder().addBinding(0, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, VK_SHADER_STAGE_ALL_GRAPHICS).build();
+		m_materialSetLayout = LveDescriptorSetLayout::Builder().addBinding(0, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, VK_SHADER_STAGE_FRAGMENT_BIT).build();
 
 	}
 }

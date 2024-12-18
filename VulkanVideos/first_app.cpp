@@ -183,14 +183,14 @@ namespace lve {
 
 		LveGameObject* floor = SceneManager::getInstance()->createMeshObject("bunny", "models/quad.obj");
 		floor->transform.translation = { 0.f, 1.5f, 0.f };
-		floor->transform.scale = { 3.f,  3.f, 3.f };
+		floor->transform.scale = { 3.f,  3.f, 3.f }; 
 
 	
 
-		LveGameObject* bunny2 = SceneManager::getInstance()->createMeshObject("sponza", "models/sponza/sponza.obj");
-		bunny2->transform.translation = { 0.f, 1.0f, 0.f };
-		bunny2->transform.scale = { 0.5f, 0.5f, 0.5f };
-		bunny2->transform.rotation = { 0.f, 0.f,  0.f };
+		LveGameObject* bunny2 = SceneManager::getInstance()->createMeshObject("Helicopter", "models/Helicopter/Seahawk.obj");
+		bunny2->transform.translation = { 0.f, 10.0f, 0.f };
+		bunny2->transform.scale = { 0.1f, 0.1f, 0.1f };
+		bunny2->transform.rotation = { 0.f, 180.f,  0.f };
 
 
 
@@ -206,7 +206,7 @@ namespace lve {
 		 {1.f, 1.f, 1.f}  //
 	};
 
-  for (int i = 0; i < lightColors.size(); i++) {
+ /* for (int i = 0; i < lightColors.size(); i++) {
     auto pointLight = LveGameObject::makePointLight(0.2f);
     pointLight->color = lightColors[i];
     auto rotateLight = glm::rotate(
@@ -216,9 +216,10 @@ namespace lve {
     pointLight->transform.translation = glm::vec3(rotateLight * glm::vec4(-1.f, -1.f, -1.f, 1.f));
 	SceneManager::getInstance()->addGameObject(pointLight);
 	
-  }
+  }*/
 
-  SceneManager::getInstance()->setObjectDescriptorSet();
+  SceneManager::getInstance()->setMaterialDescriptorSet();
+  SceneManager::getInstance()->setupRenderingBatch();
 
 }
 

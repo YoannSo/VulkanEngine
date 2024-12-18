@@ -167,6 +167,7 @@
     <ClCompile Include="lve_texture.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="lve_device.cpp" />
+    <ClCompile Include="Material.cpp" />
     <ClCompile Include="model.cpp" />
     <ClCompile Include="pipeline.cpp" />
     <ClCompile Include="point_light_system.cpp" />
@@ -190,6 +191,7 @@
     <ClInclude Include="lve_swap_chain.hpp" />
     <ClInclude Include="lve_texture.hpp" />
     <ClInclude Include="lve_utils.hpp" />
+    <ClInclude Include="Material.h" />
     <ClInclude Include="model.hpp" />
     <ClInclude Include="pipeline.hpp" />
     <ClInclude Include="point_light_system.hpp" />

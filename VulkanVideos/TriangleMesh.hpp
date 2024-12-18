@@ -26,26 +26,6 @@ namespace lve {
 		static std::vector<VkVertexInputAttributeDescription>getAttributeDescription();
 	};
 
-	struct Material {
-		glm::vec3 _ambient{ 0.f,0.f,0.f };
-		glm::vec3 _diffuse{ 0.f,0.f,0.f };
-		glm::vec3 _specular{ 0.f,0.f,0.f };
-		float _shininess{ 0.f };
-
-		bool _hasAmbientMap{ false };
-		bool _hasDiffuseMap{ false };
-		bool _hasSpecularMap{ false };
-		bool _hasShininessMap{ false };
-		bool _hasNormalMap{ false };
-
-		int m_idDiffuse{ -1 };
-		int m_idNormal{ -1 };
-
-		std::shared_ptr<LveTexture> _ambientMap{ nullptr };//cab ne null ? 
-		std::shared_ptr<LveTexture> _diffuseMap{ nullptr };
-		std::shared_ptr<LveTexture> _specularMap{ nullptr };
-		std::shared_ptr<LveTexture> _shininessMap{ nullptr };
-	};
 
 	struct ObjectUbo {
 		int diffuseTextureID=-1;
@@ -77,7 +57,7 @@ namespace lve {
 		TriangleMesh(const std::string& p_name,
 			const std::vector<Vertex>& p_vertices,
 			const std::vector<unsigned int>& p_indices,
-			const Material& p_material);
+			const std::string p_material);
 
 		void bind(VkCommandBuffer& commandBuffer, int& p_frameIndex, VkPipelineLayout& p_pipelineLayout);
 		void draw(VkCommandBuffer& commandBuffer);
@@ -88,7 +68,6 @@ namespace lve {
 
 		inline std::vector<VkDescriptorSet> getDescriptorSet() { return m_objectDescriptorSet; }
 
-		Material _material;
 
 
 	private:
@@ -103,6 +82,7 @@ namespace lve {
 		std::vector<glm::vec3> _positions;
 
 		std::vector<uint32_t> _indices;
+		std::string m_materialName;
 
 
 		uint32_t _indexCount{ 0 };

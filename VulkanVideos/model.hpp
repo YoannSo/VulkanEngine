@@ -10,8 +10,13 @@
 #include "lve_swap_chain.hpp"
 #include "define.hpp"
 #include <glm/glm.hpp>
+#include "Material.h"
+#include <map>
+
+#include "lve_game_object.hpp"
+
 namespace lve {
-	class Model {
+	class Model: public GameObject{
 
 
 
@@ -24,7 +29,10 @@ namespace lve {
 		void draw(VkCommandBuffer& commandBuffer, int& p_frameIndex, VkPipelineLayout& p_pipelineLayout);
 
 
+
+
 		static std::vector<std::string> LoadMaterials(const aiScene* p_scene);
+		std::vector<TriangleMesh*> getAllMeshesFromMaterial(const std::string p_materialName);
 
 
 	private:
@@ -46,12 +54,16 @@ namespace lve {
 		std::string _name{"UNDEFINED"};
 		
 		std::vector<TriangleMesh> _meshes;
-			
+
+		std::multimap<std::string, TriangleMesh*> m_meshes;
+
 		uint32_t _nbTriangles{ 0 };
 		uint32_t _nbVertices{ 0 };
 		uint32_t _nbMeshes{ 0 };
+		uint32_t m_nbMaterials{ 0 };
 
 		std::string _filePath;
 		std::string _dirPath;
+
 	};
 }

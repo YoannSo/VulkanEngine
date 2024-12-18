@@ -5,7 +5,7 @@
 namespace lve {
 	
 
-	Model::Model( const std::string p_name, const std::string p_filePath) : _name { p_name }, _filePath{ p_filePath }
+	Model::Model(const std::string p_name, const std::string p_filePath) :GameObject(), _name{ p_name }, _filePath{ p_filePath }
 	{
 		std::cout << "Loading model " << _name << " from: " << p_filePath << std::endl;
 
@@ -20,9 +20,16 @@ namespace lve {
 
 		if (scene == nullptr)
 		{
+			std::cout << "FAILED model " << _name << " from: " << p_filePath<< importer.GetErrorString() << std::endl;
+
 			throw std::runtime_error("Fail to load file \" " + p_filePath + "\": " + importer.GetErrorString());
 		}
 
+		m_nbMaterials = scene->mNumMaterials;
+
+			for (uint32_t i = 0; i < m_nbMaterials; ++i) {
+				SceneManager::getInstance()->addMaterial(std::make_unique<Material>(_loadMaterial(scene->mMaterials[i])));
+			}
 
 		_nbMeshes = scene->mNumMeshes;
 		std::cout <<  "--** Your model got " <<  _nbMeshes << " meshes **--" << std::endl;
@@ -41,7 +48,18 @@ namespace lve {
 	{
 		return std::vector<std::string>();
 	}
+	std::vector<TriangleMesh*>  Model::getAllMeshesFromMaterial(const std::string p_materialName) {
+		auto range = m_meshes.equal_range(p_materialName);
 
+		std::vector<TriangleMesh*> returnList{};
+
+		for (auto it = range.first; it != range.second; ++it) {
+			returnList.push_back(it->second);
+		}
+
+		return returnList;
+
+	}
 	void Model::_loadMesh(const aiMesh* const p_mesh, const aiScene* const p_scene)
 	{
 		const std::string meshName = _name + "_" + std::string(p_mesh->mName.C_Str());
@@ -107,22 +125,14 @@ namespace lve {
 		{
 			std::cout << "-- Mesh Loading Done! - Starting with Material --" << std::endl;
 		}
-		Material				 material;
-		if (mtl == nullptr)
-		{
-			std::cerr << "[WARNING] - Loading mesh: " << meshName << std::endl;
-			std::cerr << "=> Material undefined," << meshName << " assigned to default material" << std::endl;
-		}
-		else
-		{
-			material = _loadMaterial(mtl);
-		}
 
 		_nbTriangles += p_mesh->mNumFaces;
 		_nbVertices += p_mesh->mNumVertices;
 
-		_meshes.emplace_back(std::move(TriangleMesh(meshName, vertices, indices, material)));
 
+		//_meshes.emplace_back(std::move());
+		std::string materialName = p_scene->mMaterials[p_mesh->mMaterialIndex]->GetName().C_Str();
+		m_meshes.emplace(materialName, new TriangleMesh(meshName, vertices, indices, materialName));
 		if (VERBOSE)
 		{
 			std::cout << "-- Done! "						  //
@@ -133,9 +143,15 @@ namespace lve {
 	
 	}
 
+
 	Material Model::_loadMaterial(const aiMaterial* const p_mtl)
 	{
-		Material material;
+		aiString materialName;
+			
+		p_mtl->Get(AI_MATKEY_NAME, materialName);
+			std::cout << "DEBUG" << materialName.C_Str() << std::endl;
+
+		Material material{ materialName.C_Str() };
 
 		aiColor3D color;
 		aiString  texturePath;
@@ -145,32 +161,32 @@ namespace lve {
 		// ===================================================== AMBIENT
 		if (p_mtl->GetTextureCount(aiTextureType_AMBIENT) > 0) // Texture ?
 		{
-			p_mtl->GetTexture(aiTextureType_AMBIENT, 0, &texturePath);
-			std::cout << texturePath.C_Str() << std::endl;
+		//	p_mtl->GetTexture(aiTextureType_AMBIENT, 0, &texturePath);
+		//	std::cout << texturePath.C_Str() << std::endl;
 
 			//material._ambientMap = std::make_shared<LveTexture>( _dirPath + texturePath.C_Str());
 
 			//SceneManager::getInstance()->s_allTexturesName.emplace_back(_dirPath + texturePath.C_Str());
-			material._hasAmbientMap = true;
+		//	material._hasAmbientMap = true;
 			
 		}
 		else if (p_mtl->Get(AI_MATKEY_COLOR_AMBIENT, color) == AI_SUCCESS) // else Material ?
 		{
-			material._ambient = glm::vec3(color.r, color.g, color.b);
+			//material._ambient = glm::vec3(color.r, color.g, color.b);
 		}
 
 		// ===================================================== NORMAL
 		if (p_mtl->GetTextureCount(aiTextureType_NORMALS) > 0) // Texture ?
 		{
 
-			p_mtl->GetTexture(aiTextureType_NORMALS, 0, &texturePath);
-			std::string completePath = _dirPath + texturePath.C_Str();
+			//p_mtl->GetTexture(aiTextureType_NORMALS, 0, &texturePath);
+			//std::string completePath = _dirPath + texturePath.C_Str();
 
 			if(VERBOSE)
 				std::cout << "-*- Load Normal Map:" << std::endl;
 
-			material.m_idNormal = addTexture(completePath);
-			material._hasNormalMap = true;
+			//material.m_idNormal = addTexture(completePath);
+			//material._hasNormalMap = true;
 
 		}
 		else if (p_mtl->Get(AI_MATKEY_COLOR_AMBIENT, color) == AI_SUCCESS) // else Material ?
@@ -185,17 +201,13 @@ namespace lve {
 			std::string completePath = _dirPath + texturePath.C_Str();
 
 			if (VERBOSE)
-				std::cout << "-*- Load Normal Map:" << std::endl;
+				std::cout << "-*- Load Diffuse Map:" << std::endl;
 
-				material.m_idDiffuse = addTexture(completePath);
-				material._hasDiffuseMap = true;
-
+			material.setMaterialParameter(Material::EMaterialParameter::DIFFUSEMAP, std::make_shared<LveTexture>(completePath));
 		}
 		else if (p_mtl->Get(AI_MATKEY_COLOR_DIFFUSE, color) == AI_SUCCESS) // else Material ?
 		{
-			material._diffuse = glm::vec3(color.r, color.g, color.b);
-
-
+			material.setMaterialParameter(Material::EMaterialParameter::DIFFUSECOLOR, glm::vec4(color.r, color.g, color.b,0.f));
 		}
 
 
@@ -204,14 +216,14 @@ namespace lve {
 		// ===================================================== SPECULAR
 		if (p_mtl->GetTextureCount(aiTextureType_SPECULAR) > 0) // Texture ?
 		{
-			p_mtl->GetTexture(aiTextureType_SPECULAR, 0, &texturePath);
+			//p_mtl->GetTexture(aiTextureType_SPECULAR, 0, &texturePath);
 			//material._specularMap = std::make_shared<LveTexture>( _dirPath + texturePath.C_Str());
 			//Model::s_allTexturesName.emplace_back(_dirPath + texturePath.C_Str());
-			material._hasSpecularMap = true;
+			//material._hasSpecularMap = true;
 		}
 		else if (p_mtl->Get(AI_MATKEY_COLOR_SPECULAR, color) == AI_SUCCESS) // else Material ?
 		{
-			material._specular = glm::vec3(color.r, color.g, color.b);
+			//material._specular = glm::vec3(color.r, color.g, color.b);
 		}
 		// =====================================================
 
@@ -223,13 +235,14 @@ namespace lve {
 
 			//material._shininessMap = std::make_shared<LveTexture>( _dirPath + texturePath.C_Str());
 			//Model::s_allTexturesName.emplace_back(_dirPath + texturePath.C_Str());
-			material._hasShininessMap = true;
+			//material._hasShininessMap = true;
 		}
 		else if (p_mtl->Get(AI_MATKEY_SHININESS, shininess) == AI_SUCCESS) // else Material ?
 		{
-			material._shininess = shininess;
+			//material._shininess = shininess;
 		}
 
+		material.setupDescriptorSet();
 		return material;
 
 	}

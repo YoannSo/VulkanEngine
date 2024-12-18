@@ -32,7 +32,9 @@ namespace lve {
 		if (SceneManager::getInstance()->getTextureMap().size() > 0) {
 			descriptorSetLayout.push_back(SceneManager::getInstance()->getDescriptorSetLayout().getDescriptorSetLayout());
 		}
-		descriptorSetLayout.push_back(SceneManager::getInstance()->getLocalDescriptorSetLayout().getDescriptorSetLayout());
+
+		descriptorSetLayout.push_back(SceneManager::getInstance()->getMaterialDescriptorSetLayout().getDescriptorSetLayout());
+
 		VkPipelineLayoutCreateInfo pipelineLayoutInfo{};
 		pipelineLayoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO; //empyt layout so 0 
 		pipelineLayoutInfo.setLayoutCount = descriptorSetLayout.size(); //empty so 0
@@ -82,26 +84,45 @@ namespace lve {
 				0,
 				nullptr
 			);
-		
+	
+			auto renderingBatch = SceneManager::getInstance()->getRenderingBatch();
+			auto materialMap = SceneManager::getInstance()->getMaterialMap();
 
-	for (auto& kv : SceneManager::getInstance()->getSceneObjects()) {
-		auto obj = kv.second;
-		if (obj->_model == nullptr) continue;
-		SimplePushConstantData push{};
+			renderingBatch[0];
+			int index=0;
+	
+			for (auto& test : renderingBatch) {
+		auto material = materialMap.find(test.first);
 
-		push.modelMatrix = obj->transform.mat4();
-		push.normalMatrix =obj->transform.normalMatrix();
+		if (renderingBatch[index].second.size() > 0) {
 
-			//record push command date to the command buffer
-			vkCmdPushConstants(frameInfo.commandBuffer, pipelineLayout, VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT, 0, sizeof(SimplePushConstantData), &push);
-			//obj->_model->bind(frameInfo.commandBuffer,frameInfo.frameIndex,pipelineLayout);
-			obj->_model->draw(frameInfo.commandBuffer, frameInfo.frameIndex, pipelineLayout);
+			vkCmdBindDescriptorSets(frameInfo.commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout,
+				2,//strating sert
+				1,//number of set
+				&(material->second->getDescriptorSet()[frameInfo.frameIndex]),
+				0,
+				nullptr
+			);
 
-		
+			for (auto& object : renderingBatch[index].second) { // ici changer la fct bind a 
+				SimplePushConstantData push{};
+
+				push.modelMatrix = object->transform.mat4();
+				push.normalMatrix = object->transform.normalMatrix();
+
+				//record push command date to the command buffer
+				vkCmdPushConstants(frameInfo.commandBuffer, pipelineLayout, VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT, 0, sizeof(SimplePushConstantData), &push);
+				object->bind(frameInfo.commandBuffer, frameInfo.frameIndex, pipelineLayout);
+				object->draw(frameInfo.commandBuffer);
+			}
+		}
+		++index;
+		}
 	}
+
+
 
 
 }
 
 	
-}

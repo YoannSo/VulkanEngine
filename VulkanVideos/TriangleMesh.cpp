@@ -1,14 +1,17 @@
 #include "TriangleMesh.hpp"
 #include "lve_swap_chain.hpp"
 #include "SceneManager.h"
+
 lve::TriangleMesh::~TriangleMesh()
 {
 	
 }
 
-lve::TriangleMesh::TriangleMesh( const std::string& p_name, const std::vector<Vertex>& p_vertices, const std::vector<uint32_t>& p_indices, const Material& p_material)
-	: _name {p_name}, _vertices{ p_vertices }, _material{ p_material }, _indices{ p_indices }
+lve::TriangleMesh::TriangleMesh( const std::string& p_name, const std::vector<Vertex>& p_vertices, const std::vector<uint32_t>& p_indices, const std::string p_material)
+	: _name {p_name}, _vertices{ p_vertices }, m_materialName{ p_material }, _indices{ p_indices }
 {
+
+	std::cout << "DEBUG3" << m_materialName << std::endl;
 	_indexCount = _indices.size();
 	_vertexCount = _vertices.size();
 	_positions.reserve(_vertexCount);
@@ -28,13 +31,7 @@ lve::TriangleMesh::TriangleMesh( const std::string& p_name, const std::vector<Ve
 void lve::TriangleMesh::bind(VkCommandBuffer& commandBuffer, int& p_frameIndex, VkPipelineLayout& p_pipelineLayout)
 {
 	
-	vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, p_pipelineLayout,
-		2,//strating set
-		1,//number of set
-		&m_objectDescriptorSet[p_frameIndex],
-		0,
-		nullptr
-	);
+
 
 	VkBuffer buffers[] = { _vertexBuffer->getBuffer() };
 	VkDeviceSize offsets[] = { 0 };
@@ -123,10 +120,10 @@ void lve::TriangleMesh::createIndexBuffer()
 lve::ObjectUbo lve::TriangleMesh::createObjectUbo() {
 	lve::ObjectUbo ubo{};
 
-	if (_material._hasDiffuseMap)
-		ubo.diffuseTextureID = _material.m_idDiffuse;
-	else
-		ubo.diffuseTextureID = -1;
+//	if (_material._hasDiffuseMap)
+	//	ubo.diffuseTextureID = _material.m_idDiffuse;
+	//else
+	//	ubo.diffuseTextureID = -1;
 
 	return ubo;
 }
@@ -143,7 +140,6 @@ void lve::TriangleMesh::setupObjectDescriptor()
 		buffer->map();
 		buffer->writeToBuffer(&ubo);
 		buffer->flush();
-
 	}
 
 	

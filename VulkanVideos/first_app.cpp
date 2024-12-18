@@ -90,11 +90,11 @@ namespace lve {
         //        camera.setPerspectiveProjection(glm::radians(50.f),aspect,0.1f,10.f)
 
 
-        auto viewerObject = LveGameObject::createGameObject();//store camera state
+        Camera* viewerObject = SceneManager::getInstance()->createCameraObject();//store camera state
 		viewerObject->transform.translation.z = -2.5f;
 
 		SimpleRenderSystem simpleRenderSystem{ lveRenderer.getSwapChainRenderPass(),globalSetLayout->getDescriptorSetLayout() };
-		PointLighRenderSystem pointLightSystem{ lveRenderer.getSwapChainRenderPass(),globalSetLayout->getDescriptorSetLayout() };
+		//PointLighRenderSystem pointLightSystem{ lveRenderer.getSwapChainRenderPass(),globalSetLayout->getDescriptorSetLayout() };
 
 
         KeyBoardMovementController cameraController{};
@@ -127,7 +127,7 @@ namespace lve {
 				   GlobalUbo ubo{};
 				   ubo.projection = camera.getProjection();
 					ubo.view=camera.getView();
-					pointLightSystem.update(frameInfo, ubo);
+				//	pointLightSystem.update(frameInfo, ubo);
 					ubo.inverseView = camera.getInverseView();
 				   uboBuffers[frameIndex]->writeToBuffer(&ubo);
 				   uboBuffers[frameIndex]->flush();
@@ -140,7 +140,7 @@ namespace lve {
 				   //render first solid object 
 				   simpleRenderSystem.renderGameObjects(frameInfo);
 
-				   pointLightSystem.render(frameInfo);
+				 //  pointLightSystem.render(frameInfo);
 
 
 
@@ -181,16 +181,16 @@ namespace lve {
 	bunny->transform.translation = { 0.f, .5f, 0.f };
 	bunny->transform.scale = { 3.f, 1.f, 3.f };*/
 
-		LveGameObject* floor = SceneManager::getInstance()->createMeshObject("bunny", "models/quad.obj");
+		Model* floor = SceneManager::getInstance()->createModelObject("bunny", "models/quad.obj");
 		floor->transform.translation = { 0.f, 1.5f, 0.f };
 		floor->transform.scale = { 3.f,  3.f, 3.f }; 
 
 	
 
-		LveGameObject* bunny2 = SceneManager::getInstance()->createMeshObject("Helicopter", "models/Helicopter/Seahawk.obj");
+		Model* bunny2 = SceneManager::getInstance()->createModelObject("Helicopter", "models/Helicopter/Seahawk.obj");
 		bunny2->transform.translation = { 0.f, 10.0f, 0.f };
 		bunny2->transform.scale = { 0.1f, 0.1f, 0.1f };
-		bunny2->transform.rotation = { 0.f, 180.f,  0.f };
+		bunny2->transform.rotation = { 0.f, 0.f,  0.f };
 
 
 

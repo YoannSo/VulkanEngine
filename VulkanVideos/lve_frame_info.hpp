@@ -2,7 +2,7 @@
 
 #include "lve_camera.hpp"
 #include "lve_descriptor.hpp"
-#include "lve_game_object.hpp"
+#include "GameObject.hpp"
 #include "SceneManager.h"
 #include <vulkan/vulkan.h>
 namespace lve {

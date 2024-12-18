@@ -73,7 +73,7 @@ namespace lve {
 		int lightIndex = 0;
 		for (auto& kv : SceneManager::getInstance()->getSceneObjects()) {
 			auto& obj = kv.second;
-			if (obj->pointLight == nullptr) continue;
+			//if (obj->pointLight == nullptr) continue;
 
 
 			assert(lightIndex < MAX_LIGHTS && "Points light xceed maximum number");
@@ -81,7 +81,7 @@ namespace lve {
 			obj->transform.translation = glm::vec3(rotateLight * glm::vec4(obj->transform.translation, 1.f));
 
 			ubo.pointsLights[lightIndex].positions = glm::vec4(obj->transform.translation, 1.f);
-			ubo.pointsLights[lightIndex].color = glm::vec4(obj->color, obj->pointLight->lightIntensity);
+			//ubo.pointsLights[lightIndex].color = glm::vec4(obj->color, obj->pointLight->lightIntensity);
 			lightIndex++;
 		}
 		ubo.numLights = lightIndex;
@@ -95,7 +95,7 @@ namespace lve {
 		for (auto& kv : SceneManager::getInstance()->getSceneObjects()) {
 			auto& obj = kv.second;
 
-			if (obj->pointLight == nullptr) continue;
+		//	if (obj->pointLight == nullptr) continue;
 
 			auto offset = frameInfo.camera.getPosition() - obj->transform.translation;
 			float distSquared = glm::dot(offset, offset);
@@ -118,13 +118,13 @@ namespace lve {
 		for (auto it = sorted.rbegin(); it != sorted.rend(); ++it) {
 			// use game obj id to find light object
 			auto obj = SceneManager::getInstance()->getSceneObjects().at(it->second);
-			if (obj->pointLight == nullptr) continue;
+			//if (obj->pointLight == nullptr) continue;
 
 
 			PointLightPushConstants push{};
 
 			push.position = glm::vec4(obj->transform.translation, 1.f);
-			push.color = glm::vec4(obj->color, obj->pointLight->lightIntensity);
+			//push.color = glm::vec4(obj->color, obj->pointLight->lightIntensity);
 			push.radius = obj->transform.scale.x;
 			vkCmdPushConstants(frameInfo.commandBuffer, pipelineLayout, VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT, 0, sizeof(PointLightPushConstants), &push);
 			vkCmdDraw(frameInfo.commandBuffer, 6, 1, 0, 0);

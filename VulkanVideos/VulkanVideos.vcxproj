@@ -155,12 +155,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Camera.cpp" />
     <ClCompile Include="first_app.cpp" />
     <ClCompile Include="keyboard_movement_controller.cpp" />
     <ClCompile Include="lve_buffer.cpp" />
     <ClCompile Include="lve_camera.cpp" />
     <ClCompile Include="lve_descriptor.cpp" />
-    <ClCompile Include="lve_game_object.cpp" />
+    <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="lve_model.cpp" />
     <ClCompile Include="lve_renderer.cpp" />
     <ClCompile Include="lve_swap_chain.cpp" />
@@ -177,6 +178,7 @@
     <ClCompile Include="window.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Camera.h" />
     <ClInclude Include="define.hpp" />
     <ClInclude Include="first_app.hpp" />
     <ClInclude Include="keyboard_movement_controller.hpp" />
@@ -185,7 +187,7 @@
     <ClInclude Include="lve_descriptor.hpp" />
     <ClInclude Include="lve_device.hpp" />
     <ClInclude Include="lve_frame_info.hpp" />
-    <ClInclude Include="lve_game_object.hpp" />
+    <ClInclude Include="GameObject.hpp" />
     <ClInclude Include="lve_model.hpp" />
     <ClInclude Include="lve_renderer.hpp" />
     <ClInclude Include="lve_swap_chain.hpp" />

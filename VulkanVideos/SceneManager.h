@@ -6,15 +6,18 @@
 #include <memory>
 #include <vector>
 #include "lve_texture.hpp"
+
 #include "model.hpp"
-#include "lve_game_object.hpp"
+#include "GameObject.hpp"
+#include "Camera.h"
+
 #include "define.hpp"
 namespace lve {
 
 	class SceneManager
 	{
 		using TextureMap = std::unordered_map<std::string, LveTexture*>; //effienclty look up object
-		using Map = std::unordered_map<uint32_t, LveGameObject*>; //effienclty look up object
+		using Map = std::unordered_map<uint32_t, GameObject*>; //effienclty look up object
 		using MaterialMap = std::unordered_map<std::string, std::shared_ptr<Material>>; //effienclty look up object
 		using RenderingBatch= std::vector<std::pair<std::string,std::vector<TriangleMesh*>>>;
 
@@ -22,10 +25,11 @@ namespace lve {
 		SceneManager();
 		~SceneManager();
 
-		LveGameObject* appendGameObject();
-		LveGameObject* createMeshObject(std::string p_meshName, std::string p_path);
+		GameObject* appendGameObject();
+		Model* createModelObject(std::string p_meshName, std::string p_path);
+		Camera* createCameraObject();
 
-		void addGameObject(LveGameObject* p_newGameObject);
+		void addGameObject(GameObject* p_newGameObject);
 
 		void loadGameObject(std::string p_name,std::string p_path);
 

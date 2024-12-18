@@ -75,7 +75,7 @@
     <ClCompile Include="lve_device.cpp">
       <Filter>Source Files\VulkanUtils</Filter>
     </ClCompile>
-    <ClCompile Include="lve_game_object.cpp">
+    <ClCompile Include="GameObject.cpp">
       <Filter>Source Files\VulkanUtils</Filter>
     </ClCompile>
     <ClCompile Include="lve_model.cpp">
@@ -95,6 +95,9 @@
     </ClCompile>
     <ClCompile Include="Material.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Camera.cpp">
+      <Filter>Source Files\Objects</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -155,13 +158,16 @@
     <ClInclude Include="lve_frame_info.hpp">
       <Filter>Header Files\VulkanUtils</Filter>
     </ClInclude>
-    <ClInclude Include="lve_game_object.hpp">
+    <ClInclude Include="GameObject.hpp">
       <Filter>Header Files\VulkanUtils</Filter>
     </ClInclude>
     <ClInclude Include="lve_texture.hpp">
       <Filter>Header Files\VulkanUtils</Filter>
     </ClInclude>
     <ClInclude Include="Material.h">
+      <Filter>Header Files\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera.h">
       <Filter>Header Files\Objects</Filter>
     </ClInclude>
   </ItemGroup>

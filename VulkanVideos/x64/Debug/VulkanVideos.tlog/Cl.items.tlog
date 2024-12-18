@@ -1,9 +1,10 @@
+E:\Prog\VulkanEngine\VulkanVideos\Camera.cpp;E:\Prog\VulkanEngine\VulkanVideos\x64\Debug\Camera.obj
 E:\Prog\VulkanEngine\VulkanVideos\first_app.cpp;E:\Prog\VulkanEngine\VulkanVideos\x64\Debug\first_app.obj
 E:\Prog\VulkanEngine\VulkanVideos\keyboard_movement_controller.cpp;E:\Prog\VulkanEngine\VulkanVideos\x64\Debug\keyboard_movement_controller.obj
 E:\Prog\VulkanEngine\VulkanVideos\lve_buffer.cpp;E:\Prog\VulkanEngine\VulkanVideos\x64\Debug\lve_buffer.obj
 E:\Prog\VulkanEngine\VulkanVideos\lve_camera.cpp;E:\Prog\VulkanEngine\VulkanVideos\x64\Debug\lve_camera.obj
 E:\Prog\VulkanEngine\VulkanVideos\lve_descriptor.cpp;E:\Prog\VulkanEngine\VulkanVideos\x64\Debug\lve_descriptor.obj
-E:\Prog\VulkanEngine\VulkanVideos\lve_game_object.cpp;E:\Prog\VulkanEngine\VulkanVideos\x64\Debug\lve_game_object.obj
+E:\Prog\VulkanEngine\VulkanVideos\GameObject.cpp;E:\Prog\VulkanEngine\VulkanVideos\x64\Debug\GameObject.obj
 E:\Prog\VulkanEngine\VulkanVideos\lve_model.cpp;E:\Prog\VulkanEngine\VulkanVideos\x64\Debug\lve_model.obj
 E:\Prog\VulkanEngine\VulkanVideos\lve_renderer.cpp;E:\Prog\VulkanEngine\VulkanVideos\x64\Debug\lve_renderer.obj
 E:\Prog\VulkanEngine\VulkanVideos\lve_swap_chain.cpp;E:\Prog\VulkanEngine\VulkanVideos\x64\Debug\lve_swap_chain.obj

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "pipeline.hpp"
-#include "lve_game_object.hpp"
+#include "GameObject.hpp"
 #include "lve_device.hpp"
 #include "lve_camera.hpp"
 #include "lve_model.hpp"

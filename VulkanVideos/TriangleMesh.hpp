@@ -70,10 +70,12 @@ namespace lve {
 
 
 
+
 	private:
 
 		ObjectUbo createObjectUbo();
 		
+
 	private:
 
 		std::string _name{ "Unknow" };
@@ -104,6 +106,7 @@ namespace lve {
 
 		bool _hasIndexBuffer{ false };
 		std::shared_ptr<LveBuffer> _indexBuffer{ nullptr };
+		
 
 	};
 }

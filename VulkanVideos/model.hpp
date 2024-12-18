@@ -13,7 +13,7 @@
 #include "Material.h"
 #include <map>
 
-#include "lve_game_object.hpp"
+#include "GameObject.hpp"
 
 namespace lve {
 	class Model: public GameObject{

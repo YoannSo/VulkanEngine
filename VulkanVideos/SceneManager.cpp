@@ -28,25 +28,33 @@ namespace lve {
 	SceneManager::~SceneManager()
 	{
 	}
-	GameObject* SceneManager::appendGameObject()
+	/*GameObject* SceneManager::appendGameObject()
 	{
 		if (VERBOSE)
 			std::cout << "-*-" << " Append Game Object"<< std::endl;
 		LveGameObject* newGameObject = LveGameObject::createGameObject();
 		m_objectMap.emplace(newGameObject->getId(), newGameObject);
 		return newGameObject;
+	}*/
+	Camera* SceneManager::createCameraObject()
+	{
+		if (VERBOSE)
+			std::cout << "-*-" << " Create Camera Game Object:" << std::endl;
+
+		Camera* obj = new Camera();
+		m_objectMap.emplace(obj->getId(), obj);
+		return obj;
 	}
-	LveGameObject* SceneManager::createMeshObject(std::string p_meshName, std::string p_path)
+	Model* SceneManager::createModelObject(std::string p_meshName, std::string p_path)
 	{
 		if (VERBOSE)
 			std::cout << "-*-" << " Create Mesh Game Object:"<< p_meshName <<std::endl;
 
-		LveGameObject* obj = LveGameObject::createGameObject();
-		obj->_model = std::make_shared<Model>(p_meshName, p_path);
+		Model* obj = new Model(p_meshName, p_path);
 		m_objectMap.emplace(obj->getId(), obj);
 		return obj;
 	}
-	void SceneManager::addGameObject(LveGameObject* p_newGameObject)
+	void SceneManager::addGameObject(GameObject* p_newGameObject)
 	{
 		if (VERBOSE)
 			std::cout << "-*-" << " add Game Object " << p_newGameObject->getId() << std::endl;
@@ -99,9 +107,9 @@ namespace lve {
 	{
 		for (auto& material : m_materialMap) {
 			const std::string name = material.first;
-			for (auto& model : m_objectMap) {
-				if (model.second->_model != nullptr) {
-					m_renderingBatch.emplace_back(std::make_pair(name, model.second->_model->getAllMeshesFromMaterial(name)));
+			for (auto& gameObject : m_objectMap) {
+				if (Model* model = dynamic_cast<Model*>(gameObject.second)) {
+					m_renderingBatch.emplace_back(std::make_pair(name, model->getAllMeshesFromMaterial(name)));
 				}
 			}
 		}

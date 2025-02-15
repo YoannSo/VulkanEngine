@@ -1,5 +1,6 @@
 #pragma once
-
+#ifndef MODEL_HPP
+#define MODEL_HPP
 #include "TriangleMesh.hpp"
 #include "lve_device.hpp"
 #include <vector>
@@ -7,6 +8,7 @@
 #include <assimp/Importer.hpp>
 #include <assimp/postProcess.h>
 #include <assimp/scene.h>
+
 #include "lve_swap_chain.hpp"
 #include "define.hpp"
 #include <glm/glm.hpp>
@@ -33,6 +35,8 @@ namespace lve {
 
 		static std::vector<std::string> LoadMaterials(const aiScene* p_scene);
 		std::vector<TriangleMesh*> getAllMeshesFromMaterial(const std::string p_materialName);
+
+
 
 
 	private:
@@ -67,3 +71,4 @@ namespace lve {
 
 	};
 }
+#endif

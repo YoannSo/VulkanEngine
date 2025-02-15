@@ -65,6 +65,8 @@ namespace lve {
 		void setMaterialDescriptorSet();
 		void setupRenderingBatch();
 
+		void updateAllGameObject(float p_dt);
+
 
 	private:
 		void setupDescriptorSet();

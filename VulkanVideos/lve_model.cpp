@@ -1,6 +1,5 @@
 #include "lve_model.hpp"
 #define TINYOBJLOADER_IMPLEMENTATION
-#include <tiny_obj_loader.h>
 #include <iostream>
 #include "lve_utils.hpp"
 #define GLM_ENABLE_EXPERIMENTAL
@@ -121,7 +120,7 @@ namespace lve {
 
 
 	void LveModel::Builder::loadModel(const std::string& filePath) {
-		tinyobj::attrib_t attrib;
+		/*tinyobj::attrib_t attrib;
 		std::vector<tinyobj::shape_t> shapes;
 		std::vector<tinyobj::material_t> materials;
 		std::string warn, err;
@@ -170,6 +169,6 @@ namespace lve {
 				}
 				_indices.push_back(uniqueVertices[vertex]);
 			}
-		}
+		}*/
 	}
 }

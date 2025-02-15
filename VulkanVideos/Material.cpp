@@ -12,6 +12,14 @@ namespace lve {
 				m_diffuseMap = p_texture;
 				m_ubo.idDiffuseMap = SceneManager::getInstance()->_currentIdTexture;
 				break;
+			case EMaterialParameter::SPECULARMAP:
+				m_specularMap = p_texture;
+				m_ubo.m_idSpecularMap = SceneManager::getInstance()->_currentIdTexture;
+				break;
+			case EMaterialParameter::AMBIENTMAP:
+				m_ambientMap = p_texture;
+				m_ubo.m_idAmbientMap = SceneManager::getInstance()->_currentIdTexture;
+				break;
 		}
 		++SceneManager::getInstance()->_currentIdTexture;
 	}

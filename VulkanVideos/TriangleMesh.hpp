@@ -10,6 +10,7 @@
 #include "lve_descriptor.hpp"
 
 namespace lve {
+	class Model;
 
 	struct Vertex {
 		glm::vec3 _position;
@@ -53,11 +54,12 @@ namespace lve {
 		// Opérateur d'assignation de déplacement
 		TriangleMesh& operator=(TriangleMesh&& other) noexcept = default;
 
-
 		TriangleMesh(const std::string& p_name,
 			const std::vector<Vertex>& p_vertices,
 			const std::vector<unsigned int>& p_indices,
-			const std::string p_material);
+			const std::string p_material,
+			const Model* p_parent);
+
 
 		void bind(VkCommandBuffer& commandBuffer, int& p_frameIndex, VkPipelineLayout& p_pipelineLayout);
 		void draw(VkCommandBuffer& commandBuffer);
@@ -67,6 +69,8 @@ namespace lve {
 		void setupObjectDescriptor();
 
 		inline std::vector<VkDescriptorSet> getDescriptorSet() { return m_objectDescriptorSet; }
+
+		inline const Model* getModel() const { return m_modelRef; };
 
 
 
@@ -107,6 +111,7 @@ namespace lve {
 		bool _hasIndexBuffer{ false };
 		std::shared_ptr<LveBuffer> _indexBuffer{ nullptr };
 		
+		const Model* m_modelRef;
 
 	};
 }

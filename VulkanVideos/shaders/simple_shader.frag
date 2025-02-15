@@ -51,8 +51,24 @@ layout (location=0) out vec4 outColor;
 void main(){
 
 
-	vec3 diffuseLight=ubo.ambientLightColor.xyz*ubo.ambientLightColor.w;
-	vec3 specularLight=vec3(0.f);
+    vec3 diffuseColor = materialUbo.diffuseColor.xyz;
+    if (materialUbo.hasDiffuseMap != -1) {
+        diffuseColor = texture(textures[materialUbo.hasDiffuseMap], inUV).xyz;
+    }
+
+    vec3 ambientColor = ubo.ambientLightColor.xyz * ubo.ambientLightColor.w;
+    if (materialUbo.hasAmbientMap != -1) {
+        ambientColor = texture(textures[materialUbo.hasAmbientMap], inUV).xyz;
+    }
+
+    vec3 specularColor = materialUbo.specular.xyz;
+    if (materialUbo.hasSpecularMap != -1) {
+        specularColor = texture(textures[materialUbo.hasSpecularMap], inUV).xyz;
+    }
+
+    vec3 diffuseLight = ambientColor;
+    vec3 specularLight = vec3(0.0);
+
 
 	vec3 surfaceNormal=normalize(inFragNormalWorld);
 
@@ -74,7 +90,7 @@ void main(){
 
 
 
-		diffuseLight+=intensity*cosAngIncidence;
+		diffuseLight+=intensity*cosAngIncidence*diffuseColor;
 
 
 		//specular part
@@ -86,7 +102,7 @@ void main(){
 		blinnTerm=pow(blinnTerm,32.f);//higher exponnet => shaper highlight
 
 		//specularLight+= currentLight.color.xyz*attenuation*blinnTerm;
-		specularLight+= intensity*blinnTerm;
+		specularLight+= intensity*blinnTerm*specularColor;
 
 	}
 	
@@ -95,10 +111,12 @@ void main(){
    		//outColor = texture(textures[objectUbo.idText], inUV);
 	//else
 		//outColor=vec4((diffuseLight*inColor+specularLight*inColor),1.0);
-		if(materialUbo.hasDiffuseMap!=-1)
-			outColor = texture(textures[materialUbo.hasDiffuseMap], inUV);
-		else
-			outColor=vec4(materialUbo.diffuseColor.xyz,1.0);z
+	//	if(materialUbo.hasSpecularMap!=-1)
+	//		outColor = texture(textures[materialUbo.hasSpecularMap], inUV);
+	//	else
+	//		outColor=vec4(materialUbo.diffuseColor.xyz,1.0);
+
+    outColor = vec4(diffuseLight + specularLight, 1.0);
 
 
 }

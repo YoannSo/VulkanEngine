@@ -94,6 +94,8 @@ namespace lve {
 		auto material = materialMap.find(test.first);
 
 		if (renderingBatch[index].second.size() > 0) {
+			if (material->first == "RHBodyTex")
+				std::cout << "MATERIAL"<<material->second->m_ubo.m_idAmbientMap<< material->second->m_ubo.idDiffuseMap<< material->second->m_ubo.m_idSpecularMap << std::endl;
 
 			vkCmdBindDescriptorSets(frameInfo.commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout,
 				2,//strating sert
@@ -106,8 +108,8 @@ namespace lve {
 			for (auto& object : renderingBatch[index].second) { // ici changer la fct bind a 
 				SimplePushConstantData push{};
 
-				//push.modelMatrix = object->transform.mat4();
-				//push.normalMatrix = object->transform.normalMatrix();
+				push.modelMatrix = object->getModel()->transform.mat4();
+				push.normalMatrix = object->getModel()->transform.normalMatrix();
 
 				//record push command date to the command buffer
 				vkCmdPushConstants(frameInfo.commandBuffer, pipelineLayout, VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT, 0, sizeof(SimplePushConstantData), &push);

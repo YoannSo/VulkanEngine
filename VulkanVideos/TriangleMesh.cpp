@@ -1,5 +1,6 @@
 #include "TriangleMesh.hpp"
 #include "lve_swap_chain.hpp"
+
 #include "SceneManager.h"
 
 lve::TriangleMesh::~TriangleMesh()
@@ -7,8 +8,9 @@ lve::TriangleMesh::~TriangleMesh()
 	
 }
 
-lve::TriangleMesh::TriangleMesh( const std::string& p_name, const std::vector<Vertex>& p_vertices, const std::vector<uint32_t>& p_indices, const std::string p_material)
-	: _name {p_name}, _vertices{ p_vertices }, m_materialName{ p_material }, _indices{ p_indices }
+
+lve::TriangleMesh::TriangleMesh(const std::string& p_name, const std::vector<Vertex>& p_vertices, const std::vector<unsigned int>& p_indices, const std::string p_material, const Model* p_parent)
+	: _name{ p_name }, _vertices{ p_vertices }, m_materialName{ p_material }, _indices{ p_indices },m_modelRef{ p_parent }
 {
 
 	std::cout << "DEBUG3" << m_materialName << std::endl;
@@ -24,9 +26,9 @@ lve::TriangleMesh::TriangleMesh( const std::string& p_name, const std::vector<Ve
 
 	setupObjectDescriptor();
 
-    //_descriptorSet = LveDescriptorSetLayout::Builder(_lveDevice).addBinding(0, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, VK_SHADER_STAGE_FRAGMENT_BIT).addBinding(1, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, VK_SHADER_STAGE_FRAGMENT_BIT).addBinding(2, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, VK_SHADER_STAGE_FRAGMENT_BIT).addBinding(3, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, VK_SHADER_STAGE_FRAGMENT_BIT).build().get();
-
+	//_descriptorSet = LveDescriptorSetLayout::Builder(_lveDevice).addBinding(0, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, VK_SHADER_STAGE_FRAGMENT_BIT).addBinding(1, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, VK_SHADER_STAGE_FRAGMENT_BIT).addBinding(2, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, VK_SHADER_STAGE_FRAGMENT_BIT).addBinding(3, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, VK_SHADER_STAGE_FRAGMENT_BIT).build().get();
 }
+
 
 void lve::TriangleMesh::bind(VkCommandBuffer& commandBuffer, int& p_frameIndex, VkPipelineLayout& p_pipelineLayout)
 {

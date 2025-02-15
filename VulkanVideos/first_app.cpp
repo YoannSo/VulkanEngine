@@ -87,7 +87,7 @@ namespace lve {
         LveCamera camera{};
         //camera.setViewDirection(glm::vec3(0.f), glm::vec3(0.5f, 0.f, 1.f));
         camera.setViewTarget(glm::vec3(-1.f,-2.f,2.f), glm::vec3(0.f, 0.f, 2.5f));
-        //        camera.setPerspectiveProjection(glm::radians(50.f),aspect,0.1f,10.f)
+        //       camera.setPerspectiveProjection(glm::radians(50.f),aspect,0.1f,10.f)
 
 
         Camera* viewerObject = SceneManager::getInstance()->createCameraObject();//store camera state
@@ -117,6 +117,8 @@ namespace lve {
             float aspect = lveRenderer.getAspectRatio();
         //camera.setOrthographicProjection(-aspect, aspect, -1, 1, -1, 1);
              camera.setPerspectiveProjection(glm::radians(50.f), aspect, 0.1f, 100.f);
+
+			 SceneManager::getInstance()->updateAllGameObject(frameTime);
                if (auto commandBuffer = lveRenderer.beginFrame()) {//begin fram return nullptr if swapchain need to be recreated
 				  
 
@@ -153,7 +155,7 @@ namespace lve {
 	}
 
 	void FirstApp::loadGameObjects() {
-		SceneManager::getInstance()->addTextureElement("E:/Prog/VulkanEngine/VulkanVideos/models/debugTex.png", new LveTexture("E:/Prog/VulkanEngine/VulkanVideos/models/debugTex.png"));
+		SceneManager::getInstance()->addTextureElement("C:/Users/anton/source/repos/VulkanEngine/VulkanVideos/models/debugTex.png", new LveTexture("C:/Users/anton/source/repos/VulkanEngine/VulkanVideos/models/debugTex.png"));
 
 
 
@@ -188,9 +190,14 @@ namespace lve {
 	
 
 		Model* bunny2 = SceneManager::getInstance()->createModelObject("Helicopter", "models/Helicopter/Seahawk.obj");
-		bunny2->transform.translation = { 0.f, 10.0f, 0.f };
+		bunny2->transform.translation = { 0.f,0.0f, 0.f };
 		bunny2->transform.scale = { 0.1f, 0.1f, 0.1f };
-		bunny2->transform.rotation = { 0.f, 0.f,  0.f };
+		bunny2->transform.rotation = { 0.f,  glm::pi<float>(),  glm::pi<float>() };
+
+		bunny2->setUpdateFunction([](GameObject* gameObject,float deltaTime) {
+			gameObject->transform.rotate(glm::vec3(0.f,1.f,0.f),deltaTime);
+			});
+
 
 
 

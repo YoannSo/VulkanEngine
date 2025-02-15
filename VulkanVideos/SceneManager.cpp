@@ -42,7 +42,7 @@ namespace lve {
 			std::cout << "-*-" << " Create Camera Game Object:" << std::endl;
 
 		Camera* obj = new Camera();
-		m_objectMap.emplace(obj->getId(), obj);
+		//m_objectMap.emplace(obj->getId(), obj);
 		return obj;
 	}
 	Model* SceneManager::createModelObject(std::string p_meshName, std::string p_path)
@@ -114,6 +114,12 @@ namespace lve {
 			}
 		}
 
+	}
+	void SceneManager::updateAllGameObject(float p_dt)
+	{
+		for (auto& gameObject : m_objectMap) {
+			gameObject.second->callUpdateFunction(p_dt);
+		}
 	}
 	void SceneManager::setupDescriptorSet()
 	{

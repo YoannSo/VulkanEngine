@@ -132,7 +132,7 @@ namespace lve {
 
 		//_meshes.emplace_back(std::move());
 		std::string materialName = p_scene->mMaterials[p_mesh->mMaterialIndex]->GetName().C_Str();
-		m_meshes.emplace(materialName, new TriangleMesh(meshName, vertices, indices, materialName));
+		m_meshes.emplace(materialName, new TriangleMesh(meshName, vertices, indices, materialName,this));
 		if (VERBOSE)
 		{
 			std::cout << "-- Done! "						  //
@@ -161,14 +161,13 @@ namespace lve {
 		// ===================================================== AMBIENT
 		if (p_mtl->GetTextureCount(aiTextureType_AMBIENT) > 0) // Texture ?
 		{
-		//	p_mtl->GetTexture(aiTextureType_AMBIENT, 0, &texturePath);
-		//	std::cout << texturePath.C_Str() << std::endl;
+			p_mtl->GetTexture(aiTextureType_AMBIENT, 0, &texturePath);
+			std::string completePath = _dirPath + texturePath.C_Str();
 
-			//material._ambientMap = std::make_shared<LveTexture>( _dirPath + texturePath.C_Str());
+			if (VERBOSE)
+				std::cout << "-*- Load Ambient Map:" << std::endl;
 
-			//SceneManager::getInstance()->s_allTexturesName.emplace_back(_dirPath + texturePath.C_Str());
-		//	material._hasAmbientMap = true;
-			
+			material.setMaterialParameter(Material::EMaterialParameter::AMBIENTMAP, std::make_shared<LveTexture>(completePath));
 		}
 		else if (p_mtl->Get(AI_MATKEY_COLOR_AMBIENT, color) == AI_SUCCESS) // else Material ?
 		{
@@ -216,10 +215,13 @@ namespace lve {
 		// ===================================================== SPECULAR
 		if (p_mtl->GetTextureCount(aiTextureType_SPECULAR) > 0) // Texture ?
 		{
-			//p_mtl->GetTexture(aiTextureType_SPECULAR, 0, &texturePath);
-			//material._specularMap = std::make_shared<LveTexture>( _dirPath + texturePath.C_Str());
-			//Model::s_allTexturesName.emplace_back(_dirPath + texturePath.C_Str());
-			//material._hasSpecularMap = true;
+			p_mtl->GetTexture(aiTextureType_SPECULAR, 0, &texturePath);
+			std::string completePath = _dirPath + texturePath.C_Str();
+
+			if (VERBOSE)
+				std::cout << "-*- Load Specular Map:" << std::endl;
+
+			material.setMaterialParameter(Material::EMaterialParameter::SPECULARMAP, std::make_shared<LveTexture>(completePath));
 		}
 		else if (p_mtl->Get(AI_MATKEY_COLOR_SPECULAR, color) == AI_SUCCESS) // else Material ?
 		{

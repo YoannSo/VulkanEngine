@@ -32,6 +32,8 @@ namespace lve {
 
 		enum class EMaterialParameter {
 			DIFFUSEMAP,
+			AMBIENTMAP,
+			SPECULARMAP,
 			DIFFUSECOLOR
 		};
 
@@ -50,6 +52,8 @@ namespace lve {
 
 		void setupDescriptorSet();
 
+		MaterialUBO m_ubo{};
+
 	private:
 		const std::string m_name;
 
@@ -64,7 +68,6 @@ namespace lve {
 		std::shared_ptr<LveTexture> m_shininessMap{ nullptr };
 		std::shared_ptr<LveTexture> m_normalMap{ nullptr };
 
-		MaterialUBO m_ubo{};
 
 
 		std::vector<LveBuffer*> m_uboBuffer;

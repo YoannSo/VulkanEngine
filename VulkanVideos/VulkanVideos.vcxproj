@@ -88,13 +88,13 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>D:\vulkan\Include;C:\Users\hardg\Documents\Visual Studio 2019\Libraries\glfw-3.3.8\include;C:\Users\hardg\Documents\Visual Studio 2019\Libraries\glm;D:\vulkan\Include;C:\Users\hardg\Documents\Visual Studio 2019\Libraries\glfw-3.3.8\include;C:\Users\hardg\Documents\Visual Studio 2019\Libraries\glm;$(SolutionDir)\lib\ImageLoader;$(SolutionDir)\ImageLoader;$(SolutionDir)\assimp\assimp;C:\VulkanSDK\1.3.261.1\Include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\vulkan\Include;C:\Users\hardg\Documents\Visual Studio 2019\Libraries\glfw-3.3.8\include;C:\Users\hardg\Documents\Visual Studio 2019\Libraries\glm;D:\vulkan\Include;C:\Users\hardg\Documents\Visual Studio 2019\Libraries\glfw-3.3.8\include;C:\Users\hardg\Documents\Visual Studio 2019\Libraries\glm;$(SolutionDir)\lib\ImageLoader;$(SolutionDir)\ImageLoader;$(SolutionDir)\assimp\assimp;C:\VulkanSDK\1.3.261.1\Include;$(SolutionDir)/../../externals/glfw/include;$(SolutionDir)/../../externals/glm/;C:\VulkanSDK\1.3.296.0\Lib;C:\VulkanSDK\1.3.296.0;C:\VulkanSDK\1.3.296.0\Include\vulkan;C:\VulkanSDK\1.3.296.0\Include</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\Users\hardg\Documents\Visual Studio 2019\Libraries\glfw-3.3.8\lib-vc2019;D:\vulkan\Lib;;C:\Users\hardg\Documents\Visual Studio 2019\Libraries\glfw-3.3.8\lib-vc2019;D:\vulkan\Lib</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\Users\hardg\Documents\Visual Studio 2019\Libraries\glfw-3.3.8\lib-vc2019;D:\vulkan\Lib;;C:\Users\hardg\Documents\Visual Studio 2019\Libraries\glfw-3.3.8\lib-vc2019;D:\vulkan\Lib;C:\VulkanSDK\1.3.296.0\Lib;C:\Users\anton\source\externals\glfw\lib-vc2022</AdditionalLibraryDirectories>
       <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies);vulkan-1.lib;glfw3.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
@@ -106,7 +106,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>D:\vulkan\Include;C:\Users\hardg\Documents\Visual Studio 2019\Libraries\glfw-3.3.8\include;C:\Users\hardg\Documents\Visual Studio 2019\Libraries\glm;D:\vulkan\Include;C:\Users\hardg\Documents\Visual Studio 2019\Libraries\glfw-3.3.8\include;C:\Users\hardg\Documents\Visual Studio 2019\Libraries\glm;$(SolutionDir)\lib\ImageLoader;$(SolutionDir)\ImageLoader;$(SolutionDir)\assimp\assimp;C:\VulkanSDK\1.3.261.1\Include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\vulkan\Include;C:\Users\hardg\Documents\Visual Studio 2019\Libraries\glfw-3.3.8\include;C:\Users\hardg\Documents\Visual Studio 2019\Libraries\glm;D:\vulkan\Include;C:\Users\hardg\Documents\Visual Studio 2019\Libraries\glfw-3.3.8\include;C:\Users\hardg\Documents\Visual Studio 2019\Libraries\glm;$(SolutionDir)\lib\ImageLoader;$(SolutionDir)\ImageLoader;$(SolutionDir)\assimp\assimp;C:\VulkanSDK\1.3.261.1\Include;$(SolutionDir)/../../externals/glfw/include;$(SolutionDir)/../../externals/glm/;C:\VulkanSDK\1.3.296.0\Lib;C:\VulkanSDK\1.3.296.0;C:\VulkanSDK\1.3.296.0\Include\vulkan;C:\VulkanSDK\1.3.296.0\Include</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
@@ -114,7 +114,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\Users\hardg\Documents\Visual Studio 2019\Libraries\glfw-3.3.8\lib-vc2019;D:\vulkan\Lib;;C:\Users\hardg\Documents\Visual Studio 2019\Libraries\glfw-3.3.8\lib-vc2019;D:\vulkan\Lib</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\Users\hardg\Documents\Visual Studio 2019\Libraries\glfw-3.3.8\lib-vc2019;D:\vulkan\Lib;;C:\Users\hardg\Documents\Visual Studio 2019\Libraries\glfw-3.3.8\lib-vc2019;D:\vulkan\Lib;C:\VulkanSDK\1.3.296.0\Lib;C:\Users\anton\source\externals\glfw\lib-vc2022</AdditionalLibraryDirectories>
       <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies);vulkan-1.lib;glfw3.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
@@ -124,13 +124,13 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\VulkanSDK\1.3.261.1\Include;C:\Users\anton\OneDrive\Documents\Visual Studio 2019\Libraries\glfw-3.3.8\include;C:\Users\anton\OneDrive\Documents\Visual Studio 2019\Libraries\glm;D:\vulkan\Include;C:\Users\hardg\Documents\Visual Studio 2019\Libraries\glfw-3.3.8\include;C:\Users\hardg\Documents\Visual Studio 2019\Libraries\glm;C:\Users\hardg\Documents\Visual Studio 2019\Libraries\tinyobjectloader;E:\VulkanEngine\Vulkan\lib\imgui;E:\VulkanEngine\Vulkan\lib\imageLoader;$(SolutionDir)\lib\assimp;$(SolutionDir)\lib\ImageLoader;$(SolutionDir)\ImageLoader;$(SolutionDir)\assimp\assimp;C:\VulkanSDK\1.3.261.1\Include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\VulkanSDK\1.3.261.1\Include;C:\Users\anton\OneDrive\Documents\Visual Studio 2019\Libraries\glfw-3.3.8\include;C:\Users\anton\OneDrive\Documents\Visual Studio 2019\Libraries\glm;D:\vulkan\Include;C:\Users\hardg\Documents\Visual Studio 2019\Libraries\glfw-3.3.8\include;C:\Users\hardg\Documents\Visual Studio 2019\Libraries\glm;C:\Users\hardg\Documents\Visual Studio 2019\Libraries\tinyobjectloader;E:\VulkanEngine\Vulkan\lib\imgui;E:\VulkanEngine\Vulkan\lib\imageLoader;$(SolutionDir)\lib\assimp;$(SolutionDir)\lib\ImageLoader;$(SolutionDir)\ImageLoader;$(SolutionDir)\assimp\assimp;C:\VulkanSDK\1.3.261.1\Include;$(SolutionDir)/../../externals/glfw/include;$(SolutionDir)/../../externals/glm/;C:\VulkanSDK\1.3.296.0\Lib;C:\VulkanSDK\1.3.296.0;C:\VulkanSDK\1.3.296.0\Include\vulkan;C:\VulkanSDK\1.3.296.0\Include</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\Users\anton\OneDrive\Documents\Visual Studio 2019\Libraries\glfw-3.3.8\lib-vc2019;C:\VulkanSDK\1.3.261.1\Lib;C:\VulkanSDK\1.3.250.1\Lib;C:\Users\anton\OneDrive\Documents\Visual Studio 2019\Libraries\glfw-3.3.8.bin.WIN64\lib-vc2019;%(AdditionalLibraryDirectories);C:\Users\hardg\Documents\Visual Studio 2019\Libraries\glfw-3.3.8\lib-vc2019;$(SolutionDir)\lib\assimp</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\Users\anton\OneDrive\Documents\Visual Studio 2019\Libraries\glfw-3.3.8\lib-vc2019;C:\VulkanSDK\1.3.261.1\Lib;C:\VulkanSDK\1.3.250.1\Lib;C:\Users\anton\OneDrive\Documents\Visual Studio 2019\Libraries\glfw-3.3.8.bin.WIN64\lib-vc2019;%(AdditionalLibraryDirectories);C:\Users\hardg\Documents\Visual Studio 2019\Libraries\glfw-3.3.8\lib-vc2019;$(SolutionDir)\lib\assimp;C:\VulkanSDK\1.3.296.0\Lib;C:\Users\anton\source\externals\glfw\lib-vc2022</AdditionalLibraryDirectories>
       <AdditionalDependencies>vulkan-1.lib;glfw3.lib;assimp-vc142-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
@@ -142,7 +142,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\VulkanSDK\1.3.250.1\Include;C:\Users\anton\OneDrive\Documents\Visual Studio 2019\Libraries\glfw-3.3.8\include;C:\Users\anton\OneDrive\Documents\Visual Studio 2019\Libraries\glm;D:\vulkan\Include;C:\Users\hardg\Documents\Visual Studio 2019\Libraries\glfw-3.3.8\include;C:\Users\hardg\Documents\Visual Studio 2019\Libraries\glm;$(SolutionDir)\lib\ImageLoader;$(SolutionDir)\ImageLoader;$(SolutionDir)\assimp\assimp;C:\VulkanSDK\1.3.261.1\Include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\VulkanSDK\1.3.250.1\Include;C:\Users\anton\OneDrive\Documents\Visual Studio 2019\Libraries\glfw-3.3.8\include;C:\Users\anton\OneDrive\Documents\Visual Studio 2019\Libraries\glm;D:\vulkan\Include;C:\Users\hardg\Documents\Visual Studio 2019\Libraries\glfw-3.3.8\include;C:\Users\hardg\Documents\Visual Studio 2019\Libraries\glm;$(SolutionDir)\lib\ImageLoader;$(SolutionDir)\ImageLoader;$(SolutionDir)\assimp\assimp;C:\VulkanSDK\1.3.261.1\Include;$(SolutionDir)/../../externals/glfw/include;$(SolutionDir)/../../externals/glm/;C:\VulkanSDK\1.3.296.0\Lib;C:\VulkanSDK\1.3.296.0;C:\VulkanSDK\1.3.296.0\Include\vulkan;C:\VulkanSDK\1.3.296.0\Include</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
@@ -150,7 +150,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\Users\anton\OneDrive\Documents\Visual Studio 2019\Libraries\glfw-3.3.8\lib-vc2019;D:\vulkan\Lib;C:\VulkanSDK\1.3.250.1\Lib;C:\Users\anton\OneDrive\Documents\Visual Studio 2019\Libraries\glfw-3.3.8.bin.WIN64\lib-vc2019;%(AdditionalLibraryDirectories);C:\Users\hardg\Documents\Visual Studio 2019\Libraries\glfw-3.3.8\lib-vc2019;D:\vulkan\Lib</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\Users\anton\OneDrive\Documents\Visual Studio 2019\Libraries\glfw-3.3.8\lib-vc2019;D:\vulkan\Lib;C:\VulkanSDK\1.3.250.1\Lib;C:\Users\anton\OneDrive\Documents\Visual Studio 2019\Libraries\glfw-3.3.8.bin.WIN64\lib-vc2019;%(AdditionalLibraryDirectories);C:\Users\hardg\Documents\Visual Studio 2019\Libraries\glfw-3.3.8\lib-vc2019;D:\vulkan\Lib;C:\VulkanSDK\1.3.296.0\Lib;C:\Users\anton\source\externals\glfw\lib-vc2022</AdditionalLibraryDirectories>
       <AdditionalDependencies>vulkan-1.lib;glfw3.lib;%(AdditionalDependencies);vulkan-1.lib;glfw3.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>

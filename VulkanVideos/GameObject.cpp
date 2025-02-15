@@ -9,7 +9,21 @@ namespace lve {
         m_id = ++s_maxId;
     }
 
-    glm::mat4 TransformComponent::mat4() {//need to be imrpove bc use by frames for all bojects
+    bool GameObject::callUpdateFunction(float p_dt)
+    {
+        if (m_updateFunction) {
+            m_updateFunction(this,p_dt);
+            return true;
+        }
+        return false;
+    }
+
+    void TransformComponent::rotate(glm::vec3 p_rot, float p_dt)
+    {
+        rotation += p_rot*p_dt;
+    }
+
+    glm::mat4 TransformComponent::mat4() const {//need to be imrpove bc use by frames for all bojects
         const float c3 = glm::cos(rotation.z);
         const float s3 = glm::sin(rotation.z);
         const float c2 = glm::cos(rotation.x);
@@ -38,7 +52,7 @@ namespace lve {
             {translation.x, translation.y, translation.z, 1.0f} };
     }
 
-    glm::mat3 TransformComponent::normalMatrix()
+    glm::mat3 TransformComponent::normalMatrix() const
     {
 
         const float c3 = glm::cos(rotation.z);

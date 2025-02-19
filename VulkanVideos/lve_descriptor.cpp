@@ -125,7 +125,6 @@ namespace lve {
         // Might want to create a "DescriptorPoolManager" class that handles this case, and builds
         // a new pool whenever an old pool fills up. But this is beyond our current scope
         auto result = vkAllocateDescriptorSets(LveDevice::getInstance()->getDevice(), &allocInfo, &descriptor);
-        std::cout << "result:" << result << std::endl;
         if (result != VK_SUCCESS) {// need to have descriptor remaining in the pool to create one, to avoid that we can have a pool manageer 
             return false;
         }

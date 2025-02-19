@@ -155,7 +155,7 @@ namespace lve {
 	}
 
 	void FirstApp::loadGameObjects() {
-		SceneManager::getInstance()->addTextureElement("C:/Users/anton/source/repos/VulkanEngine/VulkanVideos/models/debugTex.png", new LveTexture("C:/Users/anton/source/repos/VulkanEngine/VulkanVideos/models/debugTex.png"));
+		SceneManager::getInstance()->addTextureElement("E:/Prog/VulkanEngine/VulkanVideos/models/debugTex.png", new LveTexture("E:/Prog/VulkanEngine/VulkanVideos/models/debugTex.png"));
 
 
 

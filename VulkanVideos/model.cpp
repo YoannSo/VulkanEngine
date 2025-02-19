@@ -206,6 +206,8 @@ namespace lve {
 		}
 		else if (p_mtl->Get(AI_MATKEY_COLOR_DIFFUSE, color) == AI_SUCCESS) // else Material ?
 		{
+			if (VERBOSE)
+				std::cout << "DIFFUSE COLOR " << color.r<< color.b<< color.g<< std::endl;
 			material.setMaterialParameter(Material::EMaterialParameter::DIFFUSECOLOR, glm::vec4(color.r, color.g, color.b,0.f));
 		}
 
@@ -225,7 +227,7 @@ namespace lve {
 		}
 		else if (p_mtl->Get(AI_MATKEY_COLOR_SPECULAR, color) == AI_SUCCESS) // else Material ?
 		{
-			//material._specular = glm::vec3(color.r, color.g, color.b);
+			material.setMaterialParameter(Material::EMaterialParameter::SPECULARCOLOR, glm::vec4(color.r, color.g, color.b, 0.f));
 		}
 		// =====================================================
 

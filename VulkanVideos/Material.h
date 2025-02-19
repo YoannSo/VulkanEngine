@@ -17,7 +17,7 @@ namespace lve {
 
 		struct MaterialUBO {
 			glm::vec4 ambientColor{ 0.f,0.f,0.f,0.f }; //vec4 to aligment
-			glm::vec4 diffuseColor{ 0.f,0.f,0.f,0.f };
+			glm::vec4 diffuseColor{ 1.f,0.f,0.f,0.f };
 			glm::vec4 m_specular{ 0.f,0.f,0.f,0.f };
 			float m_shininess{ 0.f };
 			int idDiffuseMap{ -1 };
@@ -34,7 +34,8 @@ namespace lve {
 			DIFFUSEMAP,
 			AMBIENTMAP,
 			SPECULARMAP,
-			DIFFUSECOLOR
+			DIFFUSECOLOR,
+			SPECULARCOLOR
 		};
 
 

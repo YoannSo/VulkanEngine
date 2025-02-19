@@ -1,3 +1,22 @@
-﻿  simple_render_system.cpp
-C:\Users\anton\source\repos\VulkanEngine\VulkanVideos\simple_render_system.cpp(40,63): warning C4267: '=' : conversion de 'size_t' en 'uint32_t', perte possible de données
-  VulkanVideos.vcxproj -> C:\Users\anton\source\repos\VulkanEngine\x64\Debug\VulkanVideos.exe
+﻿  Material.cpp
+  SceneManager.cpp
+E:\Prog\VulkanEngine\VulkanVideos\SceneManager.cpp(70,29): warning C4267: 'return': conversion from 'size_t' to 'int', possible loss of data
+  TriangleMesh.cpp
+E:\Prog\VulkanEngine\VulkanVideos\TriangleMesh.cpp(17,29): warning C4267: '=': conversion from 'size_t' to 'uint32_t', possible loss of data
+E:\Prog\VulkanEngine\VulkanVideos\TriangleMesh.cpp(18,31): warning C4267: '=': conversion from 'size_t' to 'uint32_t', possible loss of data
+  first_app.cpp
+E:\Prog\VulkanEngine\VulkanVideos\lve_renderer.hpp(44,76): warning C4267: 'return': conversion from 'size_t' to 'uint32_t', possible loss of data
+  (compiling source file 'first_app.cpp')
+  
+  main.cpp
+E:\Prog\VulkanEngine\VulkanVideos\lve_renderer.hpp(44,76): warning C4267: 'return': conversion from 'size_t' to 'uint32_t', possible loss of data
+  (compiling source file 'main.cpp')
+  
+  model.cpp
+E:\Prog\VulkanEngine\VulkanVideos\model.cpp(265,25): warning C4244: 'return': conversion from '__int64' to 'int', possible loss of data
+  point_light_system.cpp
+  simple_render_system.cpp
+E:\Prog\VulkanEngine\VulkanVideos\simple_render_system.cpp(40,63): warning C4267: '=': conversion from 'size_t' to 'uint32_t', possible loss of data
+  Generating Code...
+LINK : warning LNK4098: defaultlib 'MSVCRT' conflicts with use of other libs; use /NODEFAULTLIB:library
+  VulkanVideos.vcxproj -> E:\Prog\VulkanEngine\x64\Debug\VulkanVideos.exe

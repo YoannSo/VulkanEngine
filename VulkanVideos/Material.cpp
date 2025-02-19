@@ -28,7 +28,9 @@ namespace lve {
 		case EMaterialParameter::DIFFUSECOLOR:
 			m_ubo.diffuseColor = p_color;
 			break;
-
+		case EMaterialParameter::SPECULARCOLOR:
+			m_ubo.m_specular = p_color;
+			break;
 		}
 	}
 	std::vector<VkDescriptorImageInfo> getVkDescriptorImages();

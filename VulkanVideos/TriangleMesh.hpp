@@ -69,6 +69,7 @@ namespace lve {
 		void setupObjectDescriptor();
 
 		inline std::vector<VkDescriptorSet> getDescriptorSet() { return m_objectDescriptorSet; }
+		inline const glm::vec3 getPosition() const {return _vertices[0]._position;}
 
 		inline const Model* getModel() const { return m_modelRef; };
 

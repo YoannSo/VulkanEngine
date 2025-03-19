@@ -15,7 +15,6 @@ namespace lve {
         VkShaderStageFlags stageFlags,
         uint32_t count) {
         assert(bindings.count(binding) == 0 && "Binding already in use");
-        std::cout << "NB BINDING HERE" << count << std::endl;
         VkDescriptorSetLayoutBinding layoutBinding{};
         layoutBinding.binding = binding;
         layoutBinding.descriptorType = descriptorType;
@@ -44,7 +43,6 @@ namespace lve {
 
 
         descriptorSetLayoutInfo.bindingCount = static_cast<uint32_t>(setLayoutBindings.size());
-        std::cout << "NB BINDING HERE2" << descriptorSetLayoutInfo.bindingCount<<std::endl;
 
         descriptorSetLayoutInfo.pBindings = setLayoutBindings.data();
 
@@ -90,9 +88,6 @@ namespace lve {
         VkDescriptorPoolCreateFlags poolFlags,
         const std::vector<VkDescriptorPoolSize>& poolSizes)
         {
-
-
-        std::cout << "CREATE DESCRIPTOR POOL" << poolSizes.data() << " " << static_cast<uint32_t>(poolSizes.size()) << std::endl;
         VkDescriptorPoolCreateInfo descriptorPoolInfo{}; //create info struct with information
         descriptorPoolInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
         descriptorPoolInfo.poolSizeCount = static_cast<uint32_t>(poolSizes.size());

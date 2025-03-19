@@ -22,16 +22,27 @@ layout(set=0, binding=0)uniform GlobalUbo{
 layout(set = 1, binding = 0) uniform sampler2D textures[];
 
 layout(set = 2, binding = 0) uniform MaterialData {
-    vec4 ambient;      // 12 bytes
-    vec4 diffuseColor;      // 12 bytes
-    vec4 specular;     // 12 bytes
-    float shininess;   // 4 bytes
-	int hasDiffuseMap; // 4 bytes
-	int hasNormalMap; // 4 bytes
-	int hasSpecularMap;// 4 bytes
-	int hasShininessMap;// 4 bytes
-    int hasAmbientMap; // 4 bytes
-}materialUbo;
+    vec4 ambient;          // Ka (Ambient Color) - 16 bytes
+    vec4 diffuseColor;     // Kd (Diffuse Color) - 16 bytes
+    vec4 specular;         // Ks (Specular Color) - 16 bytes
+    vec4 emission;         // Ke (Emission Color) - 16 bytes
+    vec4 transmissionFilter; // Tf (Transmission Filter) - 16 bytes
+
+    float shininess;       // Ns (Shininess) - 4 bytes
+    float opacity;         // d (Opacity) - 4 bytes
+    float transparency;    // Tr (Transparency) - 4 bytes
+    float indexOfRefraction; // Ni (IOR) - 4 bytes
+
+    int hasDiffuseMap;     // -1 if no texture, else 1
+    int hasNormalMap;
+    int hasSpecularMap;
+    int hasShininessMap;
+    int hasAmbientMap;
+    int hasEmissionMap;
+    int hasTransmissionMap;
+    int illuminationModel; // illum value from MTL
+
+} materialUbo;
 
 layout(push_constant) uniform Push{
 	mat4 modelMatrix;
@@ -49,8 +60,10 @@ layout (location=0) out vec4 outColor;
 //layout => location value,  multiple location, now only locatio0, ut => output
 
 void main(){
-
-
+	if(materialUbo.opacity<0.5){
+    outColor = vec4(materialUbo.diffuseColor.xyz,0.5);
+	return;
+	}
     vec3 diffuseColor = materialUbo.diffuseColor.xyz;
     if (materialUbo.hasDiffuseMap != -1) {
         diffuseColor = texture(textures[materialUbo.hasDiffuseMap], inUV).xyz;
@@ -73,10 +86,9 @@ void main(){
 	vec3 surfaceNormal=normalize(inFragNormalWorld);
 
 	vec3 cameraPosWorld=ubo.inverseView[3].xyz;
-	vec3 viewDir=normalize(cameraPosWorld-inFragPosWorld);
 
 
-	for(int i=0;i<ubo.numLights;i++){
+	/*for(int i=0;i<ubo.numLights;i++){
 		PointLight currentLight=ubo.pointLights[i];
 
 		vec3 directionToLight=currentLight.position.xyz-inFragPosWorld;
@@ -90,7 +102,7 @@ void main(){
 
 
 
-		diffuseLight+=intensity*cosAngIncidence*diffuseColor;
+		diffuseLight+=1*diffuseColor;
 
 
 		//specular part
@@ -104,7 +116,7 @@ void main(){
 		//specularLight+= currentLight.color.xyz*attenuation*blinnTerm;
 		specularLight+= intensity*blinnTerm*specularColor;
 
-	}
+	}*/
 	
 	//outColor=vec4(inUV,0.0,1.0);
 	//if(objectUbo.idText!=1)
@@ -115,8 +127,12 @@ void main(){
 	//		outColor = texture(textures[materialUbo.hasSpecularMap], inUV);
 	//	else
 	//		outColor=vec4(materialUbo.diffuseColor.xyz,1.0);
+	vec3 viewDir=normalize(cameraPosWorld-inFragPosWorld);
 
-    outColor = vec4(diffuseLight + specularLight, 1.0);
+	float dotProduct = dot(surfaceNormal, viewDir);
+	dotProduct-=0.5;
+
+    outColor = vec4(dotProduct,0.0,0.0, 1.0);
 
 
 }

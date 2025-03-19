@@ -1,10 +1,4 @@
-﻿  Material.cpp
-  SceneManager.cpp
-E:\Prog\VulkanEngine\VulkanVideos\SceneManager.cpp(70,29): warning C4267: 'return': conversion from 'size_t' to 'int', possible loss of data
-  TriangleMesh.cpp
-E:\Prog\VulkanEngine\VulkanVideos\TriangleMesh.cpp(17,29): warning C4267: '=': conversion from 'size_t' to 'uint32_t', possible loss of data
-E:\Prog\VulkanEngine\VulkanVideos\TriangleMesh.cpp(18,31): warning C4267: '=': conversion from 'size_t' to 'uint32_t', possible loss of data
-  first_app.cpp
+﻿  first_app.cpp
 E:\Prog\VulkanEngine\VulkanVideos\lve_renderer.hpp(44,76): warning C4267: 'return': conversion from 'size_t' to 'uint32_t', possible loss of data
   (compiling source file 'first_app.cpp')
   
@@ -12,11 +6,20 @@ E:\Prog\VulkanEngine\VulkanVideos\lve_renderer.hpp(44,76): warning C4267: 'retur
 E:\Prog\VulkanEngine\VulkanVideos\lve_renderer.hpp(44,76): warning C4267: 'return': conversion from 'size_t' to 'uint32_t', possible loss of data
   (compiling source file 'main.cpp')
   
+  Material.cpp
+E:\Prog\VulkanEngine\VulkanVideos\Material.cpp(55,30): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
   model.cpp
-E:\Prog\VulkanEngine\VulkanVideos\model.cpp(265,25): warning C4244: 'return': conversion from '__int64' to 'int', possible loss of data
+E:\Prog\VulkanEngine\VulkanVideos\model.cpp(288,25): warning C4244: 'return': conversion from '__int64' to 'int', possible loss of data
+  PointLight.cpp
   point_light_system.cpp
+  SceneManager.cpp
+E:\Prog\VulkanEngine\VulkanVideos\SceneManager.cpp(81,29): warning C4267: 'return': conversion from 'size_t' to 'int', possible loss of data
   simple_render_system.cpp
-E:\Prog\VulkanEngine\VulkanVideos\simple_render_system.cpp(40,63): warning C4267: '=': conversion from 'size_t' to 'uint32_t', possible loss of data
+E:\Prog\VulkanEngine\VulkanVideos\simple_render_system.cpp(40,69): warning C4267: '=': conversion from 'size_t' to 'uint32_t', possible loss of data
+  TriangleMesh.cpp
+E:\Prog\VulkanEngine\VulkanVideos\TriangleMesh.cpp(16,29): warning C4267: '=': conversion from 'size_t' to 'uint32_t', possible loss of data
+E:\Prog\VulkanEngine\VulkanVideos\TriangleMesh.cpp(17,31): warning C4267: '=': conversion from 'size_t' to 'uint32_t', possible loss of data
   Generating Code...
 LINK : warning LNK4098: defaultlib 'MSVCRT' conflicts with use of other libs; use /NODEFAULTLIB:library
-  VulkanVideos.vcxproj -> E:\Prog\VulkanEngine\x64\Debug\VulkanVideos.exe
+SceneManager.obj : error LNK2019: unresolved external symbol "public: __cdecl lve::PointLight::PointLight(void)" (??0PointLight@lve@@QEAA@XZ) referenced in function "public: class lve::PointLight * __cdecl lve::SceneManager::createLigthObject(void)" (?createLigthObject@SceneManager@lve@@QEAAPEAVPointLight@2@XZ)
+E:\Prog\VulkanEngine\x64\Debug\VulkanVideos.exe : fatal error LNK1120: 1 unresolved externals

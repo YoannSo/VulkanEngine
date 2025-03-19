@@ -7,6 +7,8 @@ namespace lve {
 	{
 	}
 	void Material::setMaterialParameter(EMaterialParameter p_materialParameter, std::shared_ptr<LveTexture> p_texture) {
+		if (p_texture->getPath() == "models/Helicopter/Textures\\TEX_OSCL.jpg")
+			int i = 0;
 		switch (p_materialParameter) {
 			case EMaterialParameter::DIFFUSEMAP:
 				m_diffuseMap = p_texture;
@@ -14,11 +16,11 @@ namespace lve {
 				break;
 			case EMaterialParameter::SPECULARMAP:
 				m_specularMap = p_texture;
-				m_ubo.m_idSpecularMap = SceneManager::getInstance()->_currentIdTexture;
+				m_ubo.idSpecularMap = SceneManager::getInstance()->_currentIdTexture;
 				break;
 			case EMaterialParameter::AMBIENTMAP:
 				m_ambientMap = p_texture;
-				m_ubo.m_idAmbientMap = SceneManager::getInstance()->_currentIdTexture;
+				m_ubo.idAmbientMap = SceneManager::getInstance()->_currentIdTexture;
 				break;
 		}
 		++SceneManager::getInstance()->_currentIdTexture;
@@ -29,23 +31,44 @@ namespace lve {
 			m_ubo.diffuseColor = p_color;
 			break;
 		case EMaterialParameter::SPECULARCOLOR:
-			m_ubo.m_specular = p_color;
+			m_ubo.specularColor = p_color;
 			break;
+		}
+	}
+	void Material::setMaterialParameter(EMaterialParameter p_materialParameter, float p_value) {
+		switch (p_materialParameter) {
+		case EMaterialParameter::SHININESS:
+			m_ubo.shininess = p_value;
+			break;
+		case EMaterialParameter::OPACITY:
+			if(p_value <1.f)
+				m_isTransparent = true;
+			m_ubo.opacity = p_value;
+			break;
+		case EMaterialParameter::REFRACTION:
+			m_ubo.indexOfRefraction = p_value;
+			break;
+		case EMaterialParameter::TRANSPARENCY:
+			m_ubo.transparency = p_value;
+			break;
+		case EMaterialParameter::ILLUMINATIONMODEL:
+			m_ubo.illuminationModel = p_value;
+			break;
+			
 		}
 	}
 	std::vector<VkDescriptorImageInfo> getVkDescriptorImages();
 
 	std::vector<VkDescriptorImageInfo> Material::getVkDescriptorImages() {
 		std::vector<VkDescriptorImageInfo> imageInfos;
-
-		if (m_diffuseMap)
-			imageInfos.emplace_back(m_diffuseMap->getDescriptorImageInfo());
-		if (m_normalMap)
-			imageInfos.emplace_back(m_normalMap->getDescriptorImageInfo());
-		if (m_specularMap)
-			imageInfos.emplace_back(m_specularMap->getDescriptorImageInfo());
 		if (m_ambientMap)
 			imageInfos.emplace_back(m_ambientMap->getDescriptorImageInfo());
+		if (m_normalMap)
+			imageInfos.emplace_back(m_normalMap->getDescriptorImageInfo());
+		if (m_diffuseMap)
+			imageInfos.emplace_back(m_diffuseMap->getDescriptorImageInfo());
+		if (m_specularMap)
+			imageInfos.emplace_back(m_specularMap->getDescriptorImageInfo());
 		if (m_shininessMap)
 			imageInfos.emplace_back(m_shininessMap->getDescriptorImageInfo());
 	

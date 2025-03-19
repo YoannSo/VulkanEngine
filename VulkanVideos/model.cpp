@@ -149,7 +149,6 @@ namespace lve {
 		aiString materialName;
 			
 		p_mtl->Get(AI_MATKEY_NAME, materialName);
-			std::cout << "DEBUG" << materialName.C_Str() << std::endl;
 
 		Material material{ materialName.C_Str() };
 
@@ -243,7 +242,31 @@ namespace lve {
 		}
 		else if (p_mtl->Get(AI_MATKEY_SHININESS, shininess) == AI_SUCCESS) // else Material ?
 		{
-			//material._shininess = shininess;
+			material.setMaterialParameter(Material::EMaterialParameter::SHININESS, shininess);
+		}
+
+		float opacity;
+		if (p_mtl->Get(AI_MATKEY_OPACITY, opacity) == AI_SUCCESS)
+		{
+			material.setMaterialParameter(Material::EMaterialParameter::OPACITY, opacity);
+		}
+
+		float indexOfRefraction;
+		if (p_mtl->Get(AI_MATKEY_REFRACTI, indexOfRefraction) == AI_SUCCESS)
+		{
+			material.setMaterialParameter(Material::EMaterialParameter::REFRACTION, indexOfRefraction);
+		}
+
+		float transparency;
+		if (p_mtl->Get(AI_MATKEY_TRANSPARENCYFACTOR, transparency) == AI_SUCCESS)
+		{
+			material.setMaterialParameter(Material::EMaterialParameter::TRANSPARENCY, transparency);
+		}
+
+		float illuminationModel;
+		if (p_mtl->Get(AI_MATKEY_SHADING_MODEL, illuminationModel) == AI_SUCCESS)
+		{
+			material.setMaterialParameter(Material::EMaterialParameter::ILLUMINATIONMODEL, illuminationModel);
 		}
 
 		material.setupDescriptorSet();

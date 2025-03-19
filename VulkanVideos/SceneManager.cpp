@@ -8,8 +8,9 @@ namespace lve {
 		m_objectMap = Map();
 		m_textureMap = TextureMap();
 		m_materialMap = MaterialMap();
-		m_renderingBatch = RenderingBatch();
-
+		m_opaqueRenderingBatch = RenderingBatch();
+		m_transparentRenderingBatch = TransparentRenderingBatch();
+		m_ligthMap = LigthMap();
 		m_shaderTextureId = std::vector<std::string>();
 
 
@@ -52,6 +53,16 @@ namespace lve {
 
 		Model* obj = new Model(p_meshName, p_path);
 		m_objectMap.emplace(obj->getId(), obj);
+		return obj;
+	}
+	PointLight* SceneManager::createLigthObject()
+	{
+		if (VERBOSE)
+			std::cout << "-*-" << " Create Light Game Object" << std::endl;
+
+		PointLight* obj = new PointLight();
+		m_objectMap.emplace(obj->getId(), obj);
+		m_ligthMap.emplace_back(obj);
 		return obj;
 	}
 	void SceneManager::addGameObject(GameObject* p_newGameObject)
@@ -105,11 +116,18 @@ namespace lve {
 	}
 	void SceneManager::setupRenderingBatch()
 	{
+		std::vector<std::pair<std::string,TriangleMesh>> transparentTemp;
 		for (auto& material : m_materialMap) {
 			const std::string name = material.first;
 			for (auto& gameObject : m_objectMap) {
 				if (Model* model = dynamic_cast<Model*>(gameObject.second)) {
-					m_renderingBatch.emplace_back(std::make_pair(name, model->getAllMeshesFromMaterial(name)));
+					if (material.second->isTransparent()) {
+						std::vector<lve::TriangleMesh*> meshes = model->getAllMeshesFromMaterial(name);
+						for (auto& mesh : meshes)
+							m_transparentRenderingBatch.emplace_back(std::make_pair(name, mesh));
+					}
+					else
+						m_opaqueRenderingBatch.emplace_back(std::make_pair(name, model->getAllMeshesFromMaterial(name)));
 				}
 			}
 		}

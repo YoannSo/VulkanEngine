@@ -13,7 +13,6 @@ lve::TriangleMesh::TriangleMesh(const std::string& p_name, const std::vector<Ver
 	: _name{ p_name }, _vertices{ p_vertices }, m_materialName{ p_material }, _indices{ p_indices },m_modelRef{ p_parent }
 {
 
-	std::cout << "DEBUG3" << m_materialName << std::endl;
 	_indexCount = _indices.size();
 	_vertexCount = _vertices.size();
 	_positions.reserve(_vertexCount);

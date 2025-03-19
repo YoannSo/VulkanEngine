@@ -99,6 +99,9 @@
     <ClCompile Include="Camera.cpp">
       <Filter>Source Files\Objects</Filter>
     </ClCompile>
+    <ClCompile Include="PointLight.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="window.hpp">
@@ -170,6 +173,9 @@
     <ClInclude Include="Camera.h">
       <Filter>Header Files\Objects</Filter>
     </ClInclude>
+    <ClInclude Include="PointLight.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="simple_shader.vert">
@@ -185,6 +191,12 @@
       <Filter>shader</Filter>
     </None>
     <None Include="point_light.frag">
+      <Filter>shader</Filter>
+    </None>
+    <None Include="shaders\simple_shader.frag">
+      <Filter>shader</Filter>
+    </None>
+    <None Include="shaders\simple_shader.vert">
       <Filter>shader</Filter>
     </None>
   </ItemGroup>

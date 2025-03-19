@@ -10,16 +10,21 @@
 #include "model.hpp"
 #include "GameObject.hpp"
 #include "Camera.h"
+#include "PointLight.h"
 
 #include "define.hpp"
 namespace lve {
 
 	class SceneManager
 	{
+	public:
 		using TextureMap = std::unordered_map<std::string, LveTexture*>; //effienclty look up object
 		using Map = std::unordered_map<uint32_t, GameObject*>; //effienclty look up object
-		using MaterialMap = std::unordered_map<std::string, std::shared_ptr<Material>>; //effienclty look up object
 		using RenderingBatch= std::vector<std::pair<std::string,std::vector<TriangleMesh*>>>;
+		using TransparentRenderingBatch = std::vector<std::pair<std::string,TriangleMesh*>>;
+
+		using MaterialMap = std::unordered_map<std::string, std::shared_ptr<Material>>; //effienclty look up object
+		using LigthMap = std::vector<PointLight*>;
 
 	public:
 		SceneManager();
@@ -27,6 +32,7 @@ namespace lve {
 
 		GameObject* appendGameObject();
 		Model* createModelObject(std::string p_meshName, std::string p_path);
+		PointLight* createLigthObject();
 		Camera* createCameraObject();
 
 		void addGameObject(GameObject* p_newGameObject);
@@ -46,7 +52,9 @@ namespace lve {
 
 		inline LveDescriptorPool& getPool() { return *m_descriptorPool; };
 
-		inline RenderingBatch& getRenderingBatch() { return m_renderingBatch; };
+		inline RenderingBatch& getOpaqueRenderingBatch() { return m_opaqueRenderingBatch; };
+		inline TransparentRenderingBatch& getTransparentRenderingBatch() { return m_transparentRenderingBatch; };
+
 		inline MaterialMap& getMaterialMap() { return m_materialMap; };
 
 
@@ -101,7 +109,10 @@ namespace lve {
 		TextureMap m_textureMap;
 		Map m_objectMap;
 		MaterialMap m_materialMap;
-		RenderingBatch m_renderingBatch;
+		RenderingBatch m_opaqueRenderingBatch;
+		TransparentRenderingBatch m_transparentRenderingBatch;
+		LigthMap m_ligthMap;
+
 		std::vector<std::string> m_shaderTextureId;
 
 

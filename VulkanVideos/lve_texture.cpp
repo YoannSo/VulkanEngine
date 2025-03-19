@@ -12,7 +12,7 @@ namespace lve {
 
 	uint32_t LveTexture::_nextAvailbleId = 0;
 
-	LveTexture::LveTexture( const std::string& filepath)
+	LveTexture::LveTexture(const std::string& filepath) : _path{ filepath }
 	{
 
 		m_deviceRef = LveDevice::getInstance();
@@ -103,7 +103,7 @@ namespace lve {
 		stbi_image_free(data);
 	}
 
-	LveTexture::LveTexture( const std::string& filepath, const std::string p_type ) : _type{p_type}
+	LveTexture::LveTexture( const std::string& filepath, const std::string p_type ) :_path{ filepath }, _type{p_type}
 	{
 
 		int channels;

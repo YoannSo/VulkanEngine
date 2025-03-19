@@ -27,6 +27,8 @@ namespace lve {
 	private:
 		void createPipelineLayout(VkDescriptorSetLayout globalSetLayout);
 		void createPipeline(VkRenderPass renderPass);//just to create the pipeline
+		void drawBatch(FrameInfo& frameInfo, SceneManager::RenderingBatch& batch);//draw all game objects
+		void drawTransparentBatch(FrameInfo& frameInfo, SceneManager::TransparentRenderingBatch& batch);//draw all game objects
 
 		//LveWindow _window{ WIDTH,HEIGHT,"SimpleRenderSystem" };// first app created auto creat window destroy auto destroy
 		//std::unique_ptr<LveSwapChain> lveSwapChain;//using pointer small performance cost

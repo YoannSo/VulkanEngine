@@ -171,6 +171,7 @@
     <ClCompile Include="Material.cpp" />
     <ClCompile Include="model.cpp" />
     <ClCompile Include="pipeline.cpp" />
+    <ClCompile Include="PointLight.cpp" />
     <ClCompile Include="point_light_system.cpp" />
     <ClCompile Include="SceneManager.cpp" />
     <ClCompile Include="simple_render_system.cpp" />
@@ -196,6 +197,7 @@
     <ClInclude Include="Material.h" />
     <ClInclude Include="model.hpp" />
     <ClInclude Include="pipeline.hpp" />
+    <ClInclude Include="PointLight.h" />
     <ClInclude Include="point_light_system.hpp" />
     <ClInclude Include="SceneManager.h" />
     <ClInclude Include="simple_render_system.hpp" />
@@ -208,6 +210,8 @@
       <FileType>Document</FileType>
     </None>
     <None Include="point_light.vert" />
+    <None Include="shaders\simple_shader.frag" />
+    <None Include="shaders\simple_shader.vert" />
     <None Include="simple_shader.frag" />
     <None Include="simple_shader.vert" />
   </ItemGroup>

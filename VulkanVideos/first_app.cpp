@@ -2,6 +2,7 @@
 #include <stdexcept>
 #include "lve_camera.hpp"
 #include "model.hpp"
+#include "PointLight.h"
 #include <array>
 #include "simple_render_system.hpp"
 #include "point_light_system.hpp"
@@ -18,6 +19,7 @@
 #include "lve_frame_info.hpp"
 #include "simple_render_system.hpp"
 #include <iostream>
+#include <cstdlib>
 
 //#include "lve_texture.hpp"
 
@@ -35,6 +37,9 @@ namespace lve {
 
 
 	FirstApp::FirstApp() {
+
+		system("E:/Prog/VulkanEngine/VulkanVideos/compile_shader.bat");
+
 				_globalPool =
 			LveDescriptorPool::Builder()
 			.setMaxSets(LveSwapChain::MAX_FRAMES_IN_FLIGHT)
@@ -194,9 +199,9 @@ namespace lve {
 		bunny2->transform.scale = { 0.1f, 0.1f, 0.1f };
 		bunny2->transform.rotation = { 0.f,  glm::pi<float>(),  glm::pi<float>() };
 
-		bunny2->setUpdateFunction([](GameObject* gameObject,float deltaTime) {
-			gameObject->transform.rotate(glm::vec3(0.f,1.f,0.f),deltaTime);
-			});
+		//bunny2->setUpdateFunction([](GameObject* gameObject,float deltaTime) {
+		//	gameObject->transform.rotate(glm::vec3(0.f,1.f,0.f),deltaTime);
+		//	});
 
 
 
@@ -213,8 +218,11 @@ namespace lve {
 		 {1.f, 1.f, 1.f}  //
 	};
 
- /* for (int i = 0; i < lightColors.size(); i++) {
-    auto pointLight = LveGameObject::makePointLight(0.2f);
+	PointLight* test = SceneManager::getInstance()->createLigthObject();
+
+
+  /*for (int i = 0; i < lightColors.size(); i++) {
+    auto pointLight = GameObject::makePointLight(0.2f);
     pointLight->color = lightColors[i];
     auto rotateLight = glm::rotate(
         glm::mat4(1.f),

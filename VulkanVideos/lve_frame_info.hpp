@@ -8,7 +8,7 @@
 namespace lve {
 #define MAX_LIGHTS 10
 
-	struct PointLight {
+	struct ligthTemp {
 		glm::vec4 positions{};//ingore w, w just for aligment
 		glm::vec4 color{};//w inteisty
 		};
@@ -17,7 +17,7 @@ namespace lve {
 		glm::mat4 view{ 1.f };
 		glm::mat4 inverseView{ 1.f };//cam pos last colum
 		glm::vec4 ambientLightColor{ 1.f,1.f,1.f,0.02f };
-		PointLight pointsLights[MAX_LIGHTS];
+		ligthTemp pointsLights[MAX_LIGHTS];
 		int numLights;
 	};
 

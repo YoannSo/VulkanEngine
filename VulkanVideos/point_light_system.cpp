@@ -80,7 +80,7 @@ namespace lve {
 			//update light pos
 			obj->transform.translation = glm::vec3(rotateLight * glm::vec4(obj->transform.translation, 1.f));
 
-			ubo.pointsLights[lightIndex].positions = glm::vec4(obj->transform.translation, 1.f);
+			ubo.pointsLights[lightIndex].position = glm::vec4(obj->transform.translation, 1.f);
 			//ubo.pointsLights[lightIndex].color = glm::vec4(obj->color, obj->pointLight->lightIntensity);
 			lightIndex++;
 		}
@@ -90,16 +90,12 @@ namespace lve {
 	void PointLighRenderSystem::render(FrameInfo& frameInfo)
 	{
 
-		std::map<float, uint32_t> sorted;
+		std::map<float, PointLight*> sorted;
 
-		for (auto& kv : SceneManager::getInstance()->getSceneObjects()) {
-			auto& obj = kv.second;
-
-		//	if (obj->pointLight == nullptr) continue;
-
-			auto offset = frameInfo.camera.getPosition() - obj->transform.translation;
+		for (PointLight* pointLight : SceneManager::getInstance()->getLightMap()) {
+			auto offset = frameInfo.camera.getPosition() - pointLight->transform.translation;
 			float distSquared = glm::dot(offset, offset);
-			sorted[distSquared] = obj->getId();
+			sorted[distSquared] = pointLight;
 		}
 
 		lvePipeline->bind(frameInfo.commandBuffer);
@@ -117,14 +113,13 @@ namespace lve {
 		// iterate through sorted lights in reverse order
 		for (auto it = sorted.rbegin(); it != sorted.rend(); ++it) {
 			// use game obj id to find light object
-			auto obj = SceneManager::getInstance()->getSceneObjects().at(it->second);
+			PointLight* obj = it->second;
 			//if (obj->pointLight == nullptr) continue;
-
 
 			PointLightPushConstants push{};
 
 			push.position = glm::vec4(obj->transform.translation, 1.f);
-			//push.color = glm::vec4(obj->color, obj->pointLight->lightIntensity);
+			push.color = glm::vec4(obj->getColor(), obj->getIntensity());
 			push.radius = obj->transform.scale.x;
 			vkCmdPushConstants(frameInfo.commandBuffer, pipelineLayout, VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT, 0, sizeof(PointLightPushConstants), &push);
 			vkCmdDraw(frameInfo.commandBuffer, 6, 1, 0, 0);

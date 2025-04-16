@@ -86,9 +86,10 @@ void main(){
 	vec3 surfaceNormal=normalize(inFragNormalWorld);
 
 	vec3 cameraPosWorld=ubo.inverseView[3].xyz;
+	vec3 viewDir=normalize(cameraPosWorld-inFragPosWorld);
 
 
-	/*for(int i=0;i<ubo.numLights;i++){
+	for(int i=0;i<ubo.numLights;i++){
 		PointLight currentLight=ubo.pointLights[i];
 
 		vec3 directionToLight=currentLight.position.xyz-inFragPosWorld;
@@ -102,7 +103,7 @@ void main(){
 
 
 
-		diffuseLight+=1*diffuseColor;
+		diffuseLight+=intensity*cosAngIncidence*diffuseColor;
 
 
 		//specular part
@@ -116,8 +117,12 @@ void main(){
 		//specularLight+= currentLight.color.xyz*attenuation*blinnTerm;
 		specularLight+= intensity*blinnTerm*specularColor;
 
-	}*/
-	
+	}
+
+    outColor = vec4(diffuseLight + specularLight, 1.0);
+
+
+
 	//outColor=vec4(inUV,0.0,1.0);
 	//if(objectUbo.idText!=1)
    		//outColor = texture(textures[objectUbo.idText], inUV);
@@ -127,12 +132,15 @@ void main(){
 	//		outColor = texture(textures[materialUbo.hasSpecularMap], inUV);
 	//	else
 	//		outColor=vec4(materialUbo.diffuseColor.xyz,1.0);
-	vec3 viewDir=normalize(cameraPosWorld-inFragPosWorld);
+	//vec3 viewDir=normalize(cameraPosWorld-inFragPosWorld);
 
-	float dotProduct = dot(surfaceNormal, viewDir);
-	dotProduct-=0.5;
+	//float dotProduct = dot(surfaceNormal, viewDir);
+	//dotProduct-=0.5;
 
-    outColor = vec4(dotProduct,0.0,0.0, 1.0);
+   // outColor = vec4(dotProduct,0.0,0.0, 1.0);
+
+
+
 
 
 }

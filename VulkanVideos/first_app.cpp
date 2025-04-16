@@ -32,7 +32,6 @@
 namespace lve {
 	
 
-	SceneManager* SceneManager::s_sceneSingleton = nullptr;
 	LveDevice* LveDevice::s_device = nullptr;
 
 
@@ -99,7 +98,7 @@ namespace lve {
 		viewerObject->transform.translation.z = -2.5f;
 
 		SimpleRenderSystem simpleRenderSystem{ lveRenderer.getSwapChainRenderPass(),globalSetLayout->getDescriptorSetLayout() };
-		//PointLighRenderSystem pointLightSystem{ lveRenderer.getSwapChainRenderPass(),globalSetLayout->getDescriptorSetLayout() };
+		PointLighRenderSystem pointLightSystem{ lveRenderer.getSwapChainRenderPass(),globalSetLayout->getDescriptorSetLayout() };
 
 
         KeyBoardMovementController cameraController{};
@@ -134,8 +133,15 @@ namespace lve {
 				   GlobalUbo ubo{};
 				   ubo.projection = camera.getProjection();
 					ubo.view=camera.getView();
-				//	pointLightSystem.update(frameInfo, ubo);
+					pointLightSystem.update(frameInfo, ubo);
 					ubo.inverseView = camera.getInverseView();
+
+					ubo.numLights = SceneManager::getInstance()->getLightMap().size();
+					for (size_t i = 0; i < SceneManager::getInstance()->getLightMap().size() && i < MAX_LIGHTS; ++i) {
+						ubo.pointsLights[i].position = glm::vec4(SceneManager::getInstance()->getLightMap()[i]->transform.translation, 1.0f);
+						ubo.pointsLights[i].color = glm::vec4(SceneManager::getInstance()->getLightMap()[i]->getColor(), SceneManager::getInstance()->getLightMap()[i]->getIntensity());
+					}
+
 				   uboBuffers[frameIndex]->writeToBuffer(&ubo);
 				   uboBuffers[frameIndex]->flush();
 
@@ -147,7 +153,7 @@ namespace lve {
 				   //render first solid object 
 				   simpleRenderSystem.renderGameObjects(frameInfo);
 
-				 //  pointLightSystem.render(frameInfo);
+				   pointLightSystem.render(frameInfo);
 
 
 
@@ -218,20 +224,24 @@ namespace lve {
 		 {1.f, 1.f, 1.f}  //
 	};
 
-	PointLight* test = SceneManager::getInstance()->createLigthObject();
+	;
 
 
-  /*for (int i = 0; i < lightColors.size(); i++) {
-    auto pointLight = GameObject::makePointLight(0.2f);
-    pointLight->color = lightColors[i];
-    auto rotateLight = glm::rotate(
+  for (int i = 0; i < lightColors.size(); i++) {
+	 PointLight* light = SceneManager::getInstance()->createLightObject();
+	 light->setColor(lightColors[i]);
+		auto rotateLight = glm::rotate(
         glm::mat4(1.f),
         (i * glm::two_pi<float>()) / lightColors.size(),
         {0.f, -1.f, 0.f});
-    pointLight->transform.translation = glm::vec3(rotateLight * glm::vec4(-1.f, -1.f, -1.f, 1.f));
-	SceneManager::getInstance()->addGameObject(pointLight);
+		light->transform.translation = glm::vec3(rotateLight * glm::vec4(-1.f, 1.f, -1.f, 1.f));
+		light->transform.scale = { 0.2f, 0.2f, 0.2f };
+
+		light->setUpdateFunction([](GameObject* gameObject, float deltaTime) {
+			gameObject->transform.rotate(glm::vec3(0.f, 1.f, 0.f), deltaTime);
+			});
 	
-  }*/
+  }
 
   SceneManager::getInstance()->setMaterialDescriptorSet();
   SceneManager::getInstance()->setupRenderingBatch();

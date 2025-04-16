@@ -13,7 +13,11 @@ namespace lve
 		PointLight(glm::vec3 p_color, float p_intensity, glm::vec3 p_position);
 		~PointLight();
 
+		glm::vec3 getColor() const { return m_color; }
+		float getIntensity() const { return m_intensity; }
 
+		void setColor(glm::vec3 p_color) { m_color = p_color; }
+		void setIntensity(float p_intensity) { m_intensity = p_intensity; }
 
 	private:
 		glm::vec3 m_color{glm::vec3(1.0,1.0,1.0)};

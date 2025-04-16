@@ -1,9 +1,14 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.33801.447
+# Visual Studio Version 17
+VisualStudioVersion = 17.12.35707.178 d17.12
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "VulkanVideos", "VulkanVideos\VulkanVideos.vcxproj", "{F22941B4-CEAD-49DE-9176-A1FD69137878}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{D3B5CA7F-508D-4A97-A4E8-E2972261184C}"
+	ProjectSection(SolutionItems) = preProject
+		external\Tracy\public\TracyClient.cpp = external\Tracy\public\TracyClient.cpp
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

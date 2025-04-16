@@ -9,7 +9,7 @@ namespace lve {
 #define MAX_LIGHTS 10
 
 	struct ligthTemp {
-		glm::vec4 positions{};//ingore w, w just for aligment
+		glm::vec4 position{};//ingore w, w just for aligment
 		glm::vec4 color{};//w inteisty
 		};
 	struct GlobalUbo {

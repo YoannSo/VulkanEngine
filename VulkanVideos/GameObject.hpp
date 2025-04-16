@@ -32,7 +32,6 @@ namespace lve {
        bool callUpdateFunction(float p_dt);
 
 
-        glm::vec3 color{};
         TransformComponent transform;
     protected:
 

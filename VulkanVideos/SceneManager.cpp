@@ -90,8 +90,12 @@ namespace lve {
                     imageInfos.insert(imageInfos.end(), std::make_move_iterator(getImageInfo.begin()), std::make_move_iterator(getImageInfo.end()));
             }
 
-            LveDescriptorWriter(*m_globalSetLayout, *m_descriptorPool)
-                .writeImages(0, imageInfos)
+            if (imageInfos.size() > 0)
+                LveDescriptorWriter(*m_globalSetLayout, *m_descriptorPool)
+                    .writeImages(0, imageInfos)
+                    .build(m_globalDescriptorSet[i]);
+            else
+                LveDescriptorWriter(*m_globalSetLayout, *m_descriptorPool)
                 .build(m_globalDescriptorSet[i]);
         }
     }

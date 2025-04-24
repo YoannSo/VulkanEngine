@@ -71,8 +71,7 @@ namespace lve {
 			{ 0.f, -1.f, 0.f });//up vector
 
 		int lightIndex = 0;
-		for (auto& kv : SceneManager::getInstance()->getSceneObjects()) {
-			auto& obj = kv.second;
+		for (auto& obj : SceneManager::getInstance()->getLightMap()) {
 			//if (obj->pointLight == nullptr) continue;
 
 

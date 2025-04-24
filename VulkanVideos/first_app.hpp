@@ -12,10 +12,6 @@
 
 #include "SceneManager.h"
 
-
-#include "../external/Tracy/public/TracyClient.cpp"
-#include "../external/Tracy/public/tracy/Tracy.hpp"
-
 namespace lve {
 
 	class FirstApp {

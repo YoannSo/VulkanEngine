@@ -166,7 +166,7 @@ namespace lve {
 	}
 
 	void FirstApp::loadGameObjects() {
-		SceneManager::getInstance()->addTextureElement("E:/Prog/VulkanEngine/VulkanVideos/models/debugTex.png", new LveTexture("E:/Prog/VulkanEngine/VulkanVideos/models/debugTex.png"));
+		SceneManager::getInstance()->addTextureElement("C:/Users/anton/source/repos/VulkanEngine/VulkanVideos/models/debugTex.png", new LveTexture("C:/Users/anton/source/repos/VulkanEngine/VulkanVideos/models/debugTex.png"));
 
 
 
@@ -194,17 +194,18 @@ namespace lve {
 	bunny->transform.translation = { 0.f, .5f, 0.f };
 	bunny->transform.scale = { 3.f, 1.f, 3.f };*/
 
-		Model* floor = SceneManager::getInstance()->createModelObject("bunny", "models/quad.obj");
-		floor->transform.translation = { 0.f, 1.5f, 0.f };
-		floor->transform.scale = { 3.f,  3.f, 3.f }; 
+		Model* floor = SceneManager::getInstance()->createModelObject("room", "models/models/conference.obj");
+		floor->transform.translation = { 2.f, 0.f, 0.f };
+		floor->transform.rotation = { 0.f, 0.f, glm::pi<float>()};
+		floor->transform.scale = { 0.01f,  0.01f, 0.01f }; 
 
 	
 
-		Model* bunny2 = SceneManager::getInstance()->createModelObject("Helicopter", "models/Helicopter/Seahawk.obj");
+	/*	Model* bunny2 = SceneManager::getInstance()->createModelObject("Helicopter", "models/Helicopter/Seahawk.obj");
 		bunny2->transform.translation = { 0.f,0.0f, 0.f };
 		bunny2->transform.scale = { 0.1f, 0.1f, 0.1f };
 		bunny2->transform.rotation = { 0.f,  glm::pi<float>(),  glm::pi<float>() };
-
+		*/
 		//bunny2->setUpdateFunction([](GameObject* gameObject,float deltaTime) {
 		//	gameObject->transform.rotate(glm::vec3(0.f,1.f,0.f),deltaTime);
 		//	});
@@ -227,20 +228,21 @@ namespace lve {
 	;
 
 
-  for (int i = 0; i < lightColors.size(); i++) {
-	 PointLight* light = SceneManager::getInstance()->createLightObject();
-	 light->setColor(lightColors[i]);
-		auto rotateLight = glm::rotate(
-        glm::mat4(1.f),
-        (i * glm::two_pi<float>()) / lightColors.size(),
-        {0.f, -1.f, 0.f});
-		light->transform.translation = glm::vec3(rotateLight * glm::vec4(-1.f, 1.f, -1.f, 1.f));
-		light->transform.scale = { 0.2f, 0.2f, 0.2f };
+  for (int i = 0; i < lightColors.size(); i++) {  
+     PointLight* light = SceneManager::getInstance()->createLightObject();  
+     light->setColor(lightColors[i]);  
+     auto rotateLight = glm::rotate(  
+         glm::mat4(1.f),  
+         (i * glm::two_pi<float>()) / lightColors.size(),  
+         {0.f, 1.f, 0.f});  
 
-		light->setUpdateFunction([](GameObject* gameObject, float deltaTime) {
-			gameObject->transform.rotate(glm::vec3(0.f, 1.f, 0.f), deltaTime);
-			});
-	
+     // Increase the Y component (height) to make the light higher  
+     light->transform.translation = glm::vec3(rotateLight * glm::vec4(4.f, -3.f, -2.f, 1.f));  
+     light->transform.scale = { 0.2f, 0.2f, 0.2f };  
+
+     light->setUpdateFunction([](GameObject* gameObject, float deltaTime) {  
+         gameObject->transform.rotate(glm::vec3(0.f, 1.f, 0.f), deltaTime);  
+     });  
   }
 
   SceneManager::getInstance()->setMaterialDescriptorSet();

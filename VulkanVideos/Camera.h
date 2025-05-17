@@ -3,7 +3,7 @@
 #ifndef CAMERA_HPP
 #define CAMERA_HPP
 
-#include <glm/glm.hpp>
+#include <glm.hpp>
 
 #include "define.hpp"
 #include "GameObject.hpp"

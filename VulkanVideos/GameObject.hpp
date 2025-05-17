@@ -3,7 +3,7 @@
 #define GAMEOBJECT_HPP
 
 #include "lve_model.hpp"
-#include <glm/gtc/matrix_transform.hpp>
+#include <gtc/matrix_transform.hpp>
 #include <memory>
 #include <functional>
 namespace lve {

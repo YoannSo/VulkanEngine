@@ -1,6 +1,6 @@
 #pragma once
 #define GLFW_INCLUDE_VULKAN //said that we want to include vulkan
-#include <GLFW/glfw3.h>
+#include <glfw3.h>
 #include <string>
 namespace lve{
 

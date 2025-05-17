@@ -2,7 +2,7 @@
 #ifndef TRIANGLE_MESH_HPP
 #define TRIANGLE_MESH_HPP
 #include <vector>
-#include <glm/glm.hpp>
+#include <glm.hpp>
 #include <iostream>
 #include "lve_buffer.hpp"
 #include <string>

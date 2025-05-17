@@ -6,12 +6,12 @@
 #include <array>
 #include "simple_render_system.hpp"
 #include "point_light_system.hpp"
-#include <glm/gtc/constants.hpp>
+#include <gtc/constants.hpp>
 #include "keyboard_movement_controller.hpp"
 #include <chrono>
 #define GLM_FORCE_RADIANS//force use radian 
 #define GLM_FORCE_DEPTH_ZERO_TO_ONE //depth value to 0 to 1
-#include <glm/glm.hpp>
+#include <glm.hpp>
 #include "lve_buffer.hpp"
 
 #include <fstream>
@@ -166,7 +166,7 @@ namespace lve {
 	}
 
 	void FirstApp::loadGameObjects() {
-		SceneManager::getInstance()->addTextureElement("C:/Users/anton/source/repos/VulkanEngine/VulkanVideos/models/debugTex.png", new LveTexture("C:/Users/anton/source/repos/VulkanEngine/VulkanVideos/models/debugTex.png"));
+		SceneManager::getInstance()->addTextureElement("C:/prog/git/VulkanEngine/VulkanVideos/models/debugTex.png", new LveTexture("C:/prog/git/VulkanEngine/VulkanVideos/models/debugTex.png"));
 
 
 

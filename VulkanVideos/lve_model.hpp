@@ -2,7 +2,7 @@
 #include "lve_device.hpp"
 #define GLM_FORCE_RADIANS//force use radian 
 #define GLM_FORCE_DEPTH_ZERO_TO_ONE //depth value to 0 to 1
-#include <glm/glm.hpp>
+#include <glm.hpp>
 #include "lve_buffer.hpp"
 #include <memory>
 #include <vector>

@@ -1,10 +1,10 @@
 #include "point_light_system.hpp"
 #include <stdexcept>
 #include <array>
-#include <glm/gtc/constants.hpp>
+#include <gtc/constants.hpp>
 #define GLM_FORCE_RADIANS//force use radian 
 #define GLM_FORCE_DEPTH_ZERO_TO_ONE //depth value to 0 to 1
-#include <glm/glm.hpp>
+#include <glm.hpp>
 #include <map>
 namespace lve {
 	struct PointLightPushConstants {//couble be rremplaced by indexed value in the globalUbo => only 1 draw call

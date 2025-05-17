@@ -3,7 +3,7 @@
 #include <iostream>
 #include "lve_utils.hpp"
 #define GLM_ENABLE_EXPERIMENTAL
-#include <glm/gtx/hash.hpp>
+#include <gtx/hash.hpp>
 #include <unordered_map>
 
 namespace std {

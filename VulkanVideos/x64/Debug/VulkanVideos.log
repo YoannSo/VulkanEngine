@@ -1,3 +1,6 @@
-﻿  SceneManager.cpp
-C:\Users\anton\source\repos\VulkanEngine\VulkanVideos\SceneManager.cpp(66,36): warning C4267: 'return': conversion from 'size_t' to 'int', possible loss of data
-  VulkanVideos.vcxproj -> C:\Users\anton\source\repos\VulkanEngine\x64\Debug\VulkanVideos.exe
+﻿  first_app.cpp
+C:\prog\git\VulkanEngine\VulkanVideos\lve_renderer.hpp(44,76): warning C4267: 'return': conversion from 'size_t' to 'uint32_t', possible loss of data
+  (compiling source file 'first_app.cpp')
+  
+C:\prog\git\VulkanEngine\VulkanVideos\first_app.cpp(139,69): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+  VulkanVideos.vcxproj -> C:\prog\git\VulkanEngine\x64\Debug\VulkanVideos.exe

@@ -11,7 +11,7 @@
 
 #include "lve_swap_chain.hpp"
 #include "define.hpp"
-#include <glm/glm.hpp>
+#include <glm.hpp>
 #include "Material.h"
 #include <map>
 

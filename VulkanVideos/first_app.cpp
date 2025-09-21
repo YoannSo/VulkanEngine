@@ -151,7 +151,7 @@ namespace lve {
 				   lveRenderer.beginSwapChainRenderPass(commandBuffer);
 
 				   //render first solid object 
-				   simpleRenderSystem.renderGameObjects(frameInfo);
+				   simpleRenderSystem.render(frameInfo);
 
 				   pointLightSystem.render(frameInfo);
 

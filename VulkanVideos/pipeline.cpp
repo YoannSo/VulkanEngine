@@ -59,7 +59,7 @@ namespace lve {
   configInfo.rasterizationInfo.rasterizerDiscardEnable = VK_FALSE;//discard all primitive before tasterization, when you only wnana see the first stage of the pipeline 
   configInfo.rasterizationInfo.polygonMode = VK_POLYGON_MODE_FILL;//triangle ? just corner ? filled ? 
   configInfo.rasterizationInfo.lineWidth = 1.0f;
-  configInfo.rasterizationInfo.cullMode = VK_CULL_MODE_NONE; //discard triangle by their facing ? front to camera ? back ?
+  configInfo.rasterizationInfo.cullMode = VK_CULL_MODE_FRONT_BIT; //discard triangle by their facing ? front to camera ? back ?
   configInfo.rasterizationInfo.frontFace = VK_FRONT_FACE_CLOCKWISE; // which is facing ? 
   configInfo.rasterizationInfo.depthBiasEnable = VK_FALSE; //alter deapth value, by ading value
   configInfo.rasterizationInfo.depthBiasConstantFactor = 0.0f;  // Optional

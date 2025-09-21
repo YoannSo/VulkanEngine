@@ -1,10 +1,4 @@
 #include "simple_render_system.hpp"
-#include <stdexcept>
-#include <array>
-#include <gtc/constants.hpp>
-#define GLM_FORCE_RADIANS // force use radian 
-#define GLM_FORCE_DEPTH_ZERO_TO_ONE // depth value to 0 to 1
-#include <glm.hpp>
 
 namespace lve {
     struct SimplePushConstantData {
@@ -12,29 +6,34 @@ namespace lve {
         glm::mat4 normalMatrix{ 1.f };
     };
 
-    SimpleRenderSystem::SimpleRenderSystem(VkRenderPass renderPass, VkDescriptorSetLayout globalSetLayout) {
-        createPipelineLayout(globalSetLayout);
-        createPipeline(renderPass);
+    SimpleRenderSystem::SimpleRenderSystem(VkRenderPass renderPass, VkDescriptorSetLayout globalSetLayout)
+    : RenderSystem(renderPass, buildLayouts(globalSetLayout), sizeof(SimplePushConstantData), "shaders/simple_shader.vert.spv", "shaders/simple_shader.frag.spv")
+    {
     }
 
     SimpleRenderSystem::~SimpleRenderSystem() {
-        vkDestroyPipelineLayout(LveDevice::getInstance()->getDevice(), pipelineLayout, nullptr);
     }
 
-    void SimpleRenderSystem::createPipelineLayout(VkDescriptorSetLayout globalSetLayout) {
+    std::vector<VkDescriptorSetLayout> SimpleRenderSystem::buildLayouts(VkDescriptorSetLayout globalSetLayout) {
+
+        std::vector<VkDescriptorSetLayout> descriptorSetLayouts{ globalSetLayout };
+
+        if (SceneManager::getInstance()->getTextureMap().size() > 0) {
+            descriptorSetLayouts.push_back(SceneManager::getInstance()->getDescriptorSetLayout().getDescriptorSetLayout());
+        }
+
+        descriptorSetLayouts.push_back(SceneManager::getInstance()->getMaterialDescriptorSetLayout().getDescriptorSetLayout());
+
+		return descriptorSetLayouts;
+	}
+
+   /* void createPipelineLayout(VkDescriptorSetLayout globalSetLayout) {
         VkPushConstantRange pushConstantRange{};
         pushConstantRange.stageFlags = VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT;
         pushConstantRange.offset = 0;
         pushConstantRange.size = sizeof(SimplePushConstantData);
 
-        std::vector<VkDescriptorSetLayout> descriptorSetLayout{ globalSetLayout };
-
-        if (SceneManager::getInstance()->getTextureMap().size() > 0) {
-            descriptorSetLayout.push_back(SceneManager::getInstance()->getDescriptorSetLayout().getDescriptorSetLayout());
-        }
-
-        descriptorSetLayout.push_back(SceneManager::getInstance()->getMaterialDescriptorSetLayout().getDescriptorSetLayout());
-
+     
         VkPipelineLayoutCreateInfo pipelineLayoutInfo{};
         pipelineLayoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
         pipelineLayoutInfo.setLayoutCount = descriptorSetLayout.size();
@@ -54,7 +53,7 @@ namespace lve {
         pipelineConfig.renderPass = renderPass;
         pipelineConfig.pipelineLayout = pipelineLayout;
         lvePipeline = std::make_unique<LvePipeline>("shaders/simple_shader.vert.spv", "shaders/simple_shader.frag.spv", pipelineConfig);
-    }
+    }*/
 
     void SimpleRenderSystem::drawBatch(FrameInfo& frameInfo, SceneManager::RenderingBatch& batchs)
     {
@@ -118,7 +117,7 @@ namespace lve {
             }
     }
 
-    void SimpleRenderSystem::renderGameObjects(FrameInfo& frameInfo) {
+    void SimpleRenderSystem::render(FrameInfo& frameInfo) {
         lvePipeline->bind(frameInfo.commandBuffer);
 
         vkCmdBindDescriptorSets(frameInfo.commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout,

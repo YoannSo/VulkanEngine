@@ -1,7 +1,7 @@
 c:\prog\git\vulkanengine\vulkanvideos\x64\debug\vc143.pdb
 c:\prog\git\vulkanengine\vulkanvideos\x64\debug\vc143.idb
-c:\prog\git\vulkanengine\vulkanvideos\x64\debug\simple_render_system.obj
 c:\prog\git\vulkanengine\vulkanvideos\x64\debug\scenemanager.obj
+c:\prog\git\vulkanengine\vulkanvideos\x64\debug\rendersystem.obj
 c:\prog\git\vulkanengine\vulkanvideos\x64\debug\point_light_system.obj
 c:\prog\git\vulkanengine\vulkanvideos\x64\debug\pointlight.obj
 c:\prog\git\vulkanengine\vulkanvideos\x64\debug\pipeline.obj
@@ -22,9 +22,15 @@ c:\prog\git\vulkanengine\vulkanvideos\x64\debug\first_app.obj
 c:\prog\git\vulkanengine\vulkanvideos\x64\debug\camera.obj
 c:\prog\git\vulkanengine\vulkanvideos\x64\debug\window.obj
 c:\prog\git\vulkanengine\vulkanvideos\x64\debug\trianglemesh.obj
+c:\prog\git\vulkanengine\vulkanvideos\x64\debug\simple_render_system.obj
+c:\prog\git\vulkanengine\x64\debug\vulkanvideos.exe
+c:\prog\git\vulkanengine\x64\debug\vulkanvideos.pdb
+c:\prog\git\vulkanengine\vulkanvideos\x64\debug\vulkanvideos.ilk
 c:\prog\git\vulkanengine\vulkanvideos\x64\debug\vulkanvideos.tlog\cl.command.1.tlog
+c:\prog\git\vulkanengine\vulkanvideos\x64\debug\vulkanvideos.tlog\cl.items.tlog
 c:\prog\git\vulkanengine\vulkanvideos\x64\debug\vulkanvideos.tlog\cl.read.1.tlog
 c:\prog\git\vulkanengine\vulkanvideos\x64\debug\vulkanvideos.tlog\cl.write.1.tlog
 c:\prog\git\vulkanengine\vulkanvideos\x64\debug\vulkanvideos.tlog\link.command.1.tlog
 c:\prog\git\vulkanengine\vulkanvideos\x64\debug\vulkanvideos.tlog\link.read.1.tlog
+c:\prog\git\vulkanengine\vulkanvideos\x64\debug\vulkanvideos.tlog\link.secondary.1.tlog
 c:\prog\git\vulkanengine\vulkanvideos\x64\debug\vulkanvideos.tlog\link.write.1.tlog

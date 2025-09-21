@@ -19,9 +19,6 @@
     <Filter Include="Source Files\systems">
       <UniqueIdentifier>{d4516ede-5a5f-44ae-a62c-b6a8b0069910}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\systems\systems">
-      <UniqueIdentifier>{b4da41a5-622e-4e10-a46c-3f2d3df203b2}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\VulkanUtils">
       <UniqueIdentifier>{84bb214f-c4f9-408e-95a4-beceeae59d78}</UniqueIdentifier>
     </Filter>
@@ -33,6 +30,9 @@
     </Filter>
     <Filter Include="Source Files\Objects">
       <UniqueIdentifier>{964b4edd-7342-4f4f-b972-5cf3e268a446}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\systems">
+      <UniqueIdentifier>{b4da41a5-622e-4e10-a46c-3f2d3df203b2}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -102,6 +102,12 @@
     <ClCompile Include="PointLight.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="RenderSystem.cpp">
+      <Filter>Source Files\systems</Filter>
+    </ClCompile>
+    <ClCompile Include="geometry_pass_render_system.cpp">
+      <Filter>Source Files\systems</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="window.hpp">
@@ -114,10 +120,10 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="simple_render_system.hpp">
-      <Filter>Source Files\systems\systems</Filter>
+      <Filter>Header Files\systems</Filter>
     </ClInclude>
     <ClInclude Include="point_light_system.hpp">
-      <Filter>Source Files\systems\systems</Filter>
+      <Filter>Header Files\systems</Filter>
     </ClInclude>
     <ClInclude Include="TriangleMesh.hpp">
       <Filter>Header Files</Filter>
@@ -175,6 +181,12 @@
     </ClInclude>
     <ClInclude Include="PointLight.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderSystem.h">
+      <Filter>Header Files\systems</Filter>
+    </ClInclude>
+    <ClInclude Include="geometry_pass_render_system.h">
+      <Filter>Header Files\systems</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -14,4 +14,8 @@ namespace lve {
     GeometryPassRenderSystem::~GeometryPassRenderSystem() {
     }
 
+    void GeometryPassRenderSystem::render(FrameInfo& frameInfo)
+    {
+    }
+
 }

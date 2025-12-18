@@ -1,10 +1,3 @@
-﻿  first_app.cpp
-C:\prog\git\VulkanEngine\VulkanVideos\lve_renderer.hpp(44,76): warning C4267: 'return': conversion from 'size_t' to 'uint32_t', possible loss of data
-  (compiling source file 'first_app.cpp')
-  
-C:\prog\git\VulkanEngine\VulkanVideos\first_app.cpp(139,69): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
-  point_light_system.cpp
-  RenderSystem.cpp
-  simple_render_system.cpp
-  Generating Code...
+﻿  geometry_pass_render_system.cpp
+LINK : warning LNK4098: defaultlib 'MSVCRT' conflicts with use of other libs; use /NODEFAULTLIB:library
   VulkanVideos.vcxproj -> C:\prog\git\VulkanEngine\x64\Debug\VulkanVideos.exe

@@ -1,5 +1,10 @@
 #pragma once
 
+
+#include <memory>
+#include <vector>
+
+#include "SceneManager.h"
 #include "window.hpp"
 #include "GameObject.hpp"
 #include "lve_device.hpp"
@@ -7,11 +12,7 @@
 #include "lve_model.hpp"
 #include "model.hpp"
 #include "lve_descriptor.hpp"
-#include <memory>
-#include <vector>
-
-#include "SceneManager.h"
-
+#include "GuiManager.h"
 namespace lve {
 
 	class FirstApp {
@@ -37,6 +38,14 @@ namespace lve {
 		LveWindow _window{ WIDTH,HEIGHT,"FirstApp" };// first app created auto creat window destroy auto destroy
 		LveRenderer lveRenderer{ _window };
 		std::unique_ptr<LveDescriptorPool> _globalPool{};
+		std::unique_ptr<GuiManager> m_guiManager;
+
+#ifndef NDEBUG
+        // GPU timestamp query pool for profiling (only in debug builds)
+        VkQueryPool m_queryPool{ VK_NULL_HANDLE };
+        bool m_enableProfiling{ true };
+        int m_frameLogCounter{ 0 };
+#endif
 		//std::unique_ptr<LveTexture> texture{};
 
 		std::shared_ptr<SceneManager> m_sceneManager;

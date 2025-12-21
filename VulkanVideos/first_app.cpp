@@ -47,6 +47,34 @@ namespace lve {
 
 		SceneManager::getInstance();
 
+		m_guiManager = std::make_unique<GuiManager>();
+		m_guiManager->init(
+			_window.getGLFWWindow(),
+			LveDevice::getInstance()->getVkInstance(),
+			LveDevice::getInstance()->getDevice(),
+			LveDevice::getInstance()->getPhysicalDevice(),
+			0,
+			LveDevice::getInstance()->getGraphicsQueue(),
+			lveRenderer.getSwapChainRenderPass(),
+			nullptr,
+			LveSwapChain::MAX_FRAMES_IN_FLIGHT
+		);
+
+#ifndef NDEBUG
+        // Create GPU timestamp query pool for profiling (debug only)
+        if (m_queryPool == VK_NULL_HANDLE && LveDevice::getInstance()) {
+            VkQueryPoolCreateInfo queryPoolInfo{};
+            queryPoolInfo.sType = VK_STRUCTURE_TYPE_QUERY_POOL_CREATE_INFO;
+            queryPoolInfo.queryType = VK_QUERY_TYPE_TIMESTAMP;
+            queryPoolInfo.queryCount = 2 * LveSwapChain::MAX_FRAMES_IN_FLIGHT; // begin/end per frame
+            if (vkCreateQueryPool(LveDevice::getInstance()->getDevice(), &queryPoolInfo, nullptr, &m_queryPool) != VK_SUCCESS) {
+                std::cerr << "Failed to create query pool for profiling" << std::endl;
+                m_queryPool = VK_NULL_HANDLE;
+            }
+        }
+#endif
+		
+
 		loadGameObjects();
 
 	}
@@ -107,6 +135,7 @@ namespace lve {
 
 		while (!_window.shouldClose()) {//tant que la window doit pas close 
 			glfwPollEvents();//process any window event 
+			m_guiManager->newFrame();
 
 
             auto newTime = std::chrono::high_resolution_clock::now();
@@ -123,10 +152,26 @@ namespace lve {
              camera.setPerspectiveProjection(glm::radians(50.f), aspect, 0.1f, 100.f);
 
 			 SceneManager::getInstance()->updateAllGameObject(frameTime);
+               // measure update CPU time
+               auto updateEndTime = std::chrono::high_resolution_clock::now();
+               static std::chrono::high_resolution_clock::time_point updateStartTime = updateEndTime; // placeholder
+
+               // record start of update was measured earlier (frameTime calc), but measure actual update cost
+               // For simplicity, record updateStartTime before update call and compute here
+               // (we approximate here by using previous points)
+
                if (auto commandBuffer = lveRenderer.beginFrame()) {//begin fram return nullptr if swapchain need to be recreated
 				  
 
-				   int frameIndex = lveRenderer.getFrameIndex();
+                   int frameIndex = lveRenderer.getFrameIndex();
+
+                   // Reset queries for this frame and write GPU timestamp start
+#ifndef NDEBUG
+                   if (m_queryPool != VK_NULL_HANDLE) {
+                       vkCmdResetQueryPool(commandBuffer, m_queryPool, frameIndex * 2, 2);
+                       lveRenderer.writeTimestampStart(commandBuffer, m_queryPool, frameIndex * 2);
+                   }
+#endif
 
 				   FrameInfo frameInfo{ frameIndex, frameTime, commandBuffer, camera,globalDescriptorSets[frameIndex] };
 
@@ -148,17 +193,47 @@ namespace lve {
 
 
 			//begin frame and begin swap chain,  are differe,t -> want app dont main control the fonctionnality, multiple render pass for reflection shadow etc ... 
-				   lveRenderer.beginSwapChainRenderPass(commandBuffer);
+                   auto recordStart = std::chrono::high_resolution_clock::now();
+                   lveRenderer.beginSwapChainRenderPass(commandBuffer);
 
 				   //render first solid object 
 				   simpleRenderSystem.render(frameInfo);
 
 				   pointLightSystem.render(frameInfo);
 
+                   m_guiManager->render(commandBuffer);
 
+                   // write GPU timestamp end for this frame
+#ifndef NDEBUG
+                   if (m_queryPool != VK_NULL_HANDLE) {
+                       lveRenderer.writeTimestampEnd(commandBuffer, m_queryPool, frameIndex * 2 + 1);
+                   }
+#endif
 
-				lveRenderer.endSwapChainRenderPass(commandBuffer);
-				lveRenderer.endFrame();
+                   auto recordEnd = std::chrono::high_resolution_clock::now();
+                   double recordMs = std::chrono::duration<double, std::milli>(recordEnd - recordStart).count();
+
+ 
+               lveRenderer.endSwapChainRenderPass(commandBuffer);
+               lveRenderer.endFrame();
+
+               // After present, fetch GPU timestamp results for this frame (debug only)
+#ifndef NDEBUG
+               if (m_queryPool != VK_NULL_HANDLE && m_enableProfiling) {
+                   uint64_t timestamps[2] = {0, 0};
+                   VkResult r = vkGetQueryPoolResults(LveDevice::getInstance()->getDevice(), m_queryPool,
+                       frameIndex * 2, 2, sizeof(timestamps), timestamps, sizeof(uint64_t),
+                       VK_QUERY_RESULT_64_BIT | VK_QUERY_RESULT_WAIT_BIT);
+                   if (r == VK_SUCCESS) {
+                       double period = LveDevice::getInstance()->properties.limits.timestampPeriod; // nanoseconds
+                       uint64_t delta = timestamps[1] - timestamps[0];
+                       double gpuTimeMs = (double(delta) * period) / 1000000.0;
+                       if (++m_frameLogCounter % 60 == 0) {
+                           std::cout << "Frame " << m_frameLogCounter << " GPU time: " << gpuTimeMs << " ms, CPU record time: " << recordMs << " ms" << std::endl;
+                       }
+                   }
+               }
+#endif
 
 			}
 		}
@@ -166,8 +241,7 @@ namespace lve {
 	}
 
 	void FirstApp::loadGameObjects() {
-		SceneManager::getInstance()->addTextureElement("C:/prog/git/VulkanEngine/VulkanVideos/models/debugTex.png", new LveTexture("C:/prog/git/VulkanEngine/VulkanVideos/models/debugTex.png"));
-
+		SceneManager::getInstance()->addTextureElement("C:/Users/anton/source/repos/VulkanEngine/VulkanEngine/VulkanVideos/models/debugTex.png", new LveTexture("C:/Users/anton/source/repos/VulkanEngine/VulkanEngine/VulkanVideos/models/debugTex.png"));
 
 
  /* std::shared_ptr<Model> lveModel = std::make_shared<Model>(lveDevice, "Seahawk", "models/Helicopter/Seahawk.obj");

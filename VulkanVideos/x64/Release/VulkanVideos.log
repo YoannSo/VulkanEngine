@@ -1,50 +1,66 @@
-﻿  first_app.cpp
-E:\Prog\VulkanEngine\VulkanVideos\model.hpp(7,10): error C1083: Cannot open include file: 'assimp/Importer.hpp': No such file or directory
+﻿  imgui_impl_glfw.cpp
+  imgui_impl_vulkan.cpp
+  imgui.cpp
+  imgui_draw.cpp
+  imgui_tables.cpp
+  imgui_widgets.cpp
+  Camera.cpp
+  first_app.cpp
+C:\Users\anton\source\repos\VulkanEngine\VulkanEngine\VulkanVideos\lve_renderer.hpp(46,76): warning C4267: 'return': conversion from 'size_t' to 'uint32_t', possible loss of data
   (compiling source file 'first_app.cpp')
   
+C:\Users\anton\source\repos\VulkanEngine\VulkanEngine\VulkanVideos\first_app.cpp(184,69): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+  geometry_pass_render_system.cpp
+  GuiManager.cpp
+  g_buffer.cpp
   keyboard_movement_controller.cpp
-E:\Prog\VulkanEngine\VulkanVideos\model.hpp(7,10): error C1083: Cannot open include file: 'assimp/Importer.hpp': No such file or directory
-  (compiling source file 'keyboard_movement_controller.cpp')
-  
   lve_buffer.cpp
   lve_camera.cpp
   lve_descriptor.cpp
-E:\Prog\VulkanEngine\VulkanVideos\lve_descriptor.cpp(198,68): warning C4267: 'argument': conversion from 'size_t' to 'uint32_t', possible loss of data
-  lve_game_object.cpp
-E:\Prog\VulkanEngine\VulkanVideos\model.hpp(7,10): error C1083: Cannot open include file: 'assimp/Importer.hpp': No such file or directory
-  (compiling source file 'lve_game_object.cpp')
-  
+C:\Users\anton\source\repos\VulkanEngine\VulkanEngine\VulkanVideos\lve_descriptor.cpp(222,82): warning C4267: 'argument': conversion from 'size_t' to 'uint32_t', possible loss of data
+  GameObject.cpp
   lve_model.cpp
-E:\Prog\VulkanEngine\VulkanVideos\lve_model.cpp(3,10): error C1083: Cannot open include file: 'tiny_obj_loader.h': No such file or directory
   lve_renderer.cpp
-E:\Prog\VulkanEngine\VulkanVideos\lve_renderer.hpp(45,76): warning C4267: 'return': conversion from 'size_t' to 'uint32_t', possible loss of data
+C:\Users\anton\source\repos\VulkanEngine\VulkanEngine\VulkanVideos\lve_renderer.hpp(46,76): warning C4267: 'return': conversion from 'size_t' to 'uint32_t', possible loss of data
   (compiling source file 'lve_renderer.cpp')
   
-E:\Prog\VulkanEngine\VulkanVideos\lve_renderer.cpp(111,110): warning C4244: 'argument': conversion from 'float' to 'uint32_t', possible loss of data
+C:\Users\anton\source\repos\VulkanEngine\VulkanEngine\VulkanVideos\lve_renderer.cpp(122,145): warning C4244: 'argument': conversion from 'float' to 'uint32_t', possible loss of data
+C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include\memory(3630,56): warning C4267: 'argument': conversion from 'size_t' to 'uint32_t', possible loss of data
+  (compiling source file 'lve_renderer.cpp')
+      C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include\memory(3630,56):
+      the template instantiation context (the oldest one first) is
+          C:\Users\anton\source\repos\VulkanEngine\VulkanEngine\VulkanVideos\lve_renderer.cpp(168,20):
+          see reference to function template instantiation 'std::unique_ptr<lve::GBuffer,std::default_delete<lve::GBuffer>> std::make_unique<lve::GBuffer,VkExtent2D,size_t,0>(VkExtent2D &&,size_t &&)' being compiled
+  
   lve_swap_chain.cpp
   lve_texture.cpp
-E:\Prog\VulkanEngine\VulkanVideos\lve_texture.cpp(17,7): warning C4101: 'channels': unreferenced local variable
-E:\Prog\VulkanEngine\VulkanVideos\lve_texture.cpp(105,7): warning C4101: 'channels': unreferenced local variable
-E:\Prog\VulkanEngine\VulkanVideos\lve_texture.cpp(268,26): warning C4018: '<': signed/unsigned mismatch
+C:\Users\anton\source\repos\VulkanEngine\VulkanEngine\VulkanVideos\lve_texture.cpp(20,7): warning C4101: 'channels': unreferenced local variable
+C:\Users\anton\source\repos\VulkanEngine\VulkanEngine\VulkanVideos\lve_texture.cpp(109,7): warning C4101: 'channels': unreferenced local variable
+C:\Users\anton\source\repos\VulkanEngine\VulkanEngine\VulkanVideos\lve_texture.cpp(280,26): warning C4018: '<': signed/unsigned mismatch
+  Compiling...
   main.cpp
-E:\Prog\VulkanEngine\VulkanVideos\model.hpp(7,10): error C1083: Cannot open include file: 'assimp/Importer.hpp': No such file or directory
+C:\Users\anton\source\repos\VulkanEngine\VulkanEngine\VulkanVideos\lve_renderer.hpp(46,76): warning C4267: 'return': conversion from 'size_t' to 'uint32_t', possible loss of data
   (compiling source file 'main.cpp')
   
   lve_device.cpp
+  Material.cpp
+C:\Users\anton\source\repos\VulkanEngine\VulkanEngine\VulkanVideos\Material.cpp(55,30): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
   model.cpp
-E:\Prog\VulkanEngine\VulkanVideos\model.hpp(7,10): error C1083: Cannot open include file: 'assimp/Importer.hpp': No such file or directory
-  (compiling source file 'model.cpp')
-  
+C:\Users\anton\source\repos\VulkanEngine\VulkanEngine\VulkanVideos\model.cpp(288,25): warning C4244: 'return': conversion from '__int64' to 'int', possible loss of data
   pipeline.cpp
+  PointLight.cpp
   point_light_system.cpp
-E:\Prog\VulkanEngine\VulkanVideos\model.hpp(7,10): error C1083: Cannot open include file: 'assimp/Importer.hpp': No such file or directory
-  (compiling source file 'point_light_system.cpp')
-  
+  RenderSystem.cpp
+  SceneManager.cpp
+C:\Users\anton\source\repos\VulkanEngine\VulkanEngine\VulkanVideos\SceneManager.cpp(66,36): warning C4267: 'return': conversion from 'size_t' to 'int', possible loss of data
   simple_render_system.cpp
-E:\Prog\VulkanEngine\VulkanVideos\model.hpp(7,10): error C1083: Cannot open include file: 'assimp/Importer.hpp': No such file or directory
-  (compiling source file 'simple_render_system.cpp')
-  
   TriangleMesh.cpp
-E:\Prog\VulkanEngine\VulkanVideos\TriangleMesh.cpp(11,29): warning C4267: '=': conversion from 'size_t' to 'uint32_t', possible loss of data
-E:\Prog\VulkanEngine\VulkanVideos\TriangleMesh.cpp(12,31): warning C4267: '=': conversion from 'size_t' to 'uint32_t', possible loss of data
+C:\Users\anton\source\repos\VulkanEngine\VulkanEngine\VulkanVideos\TriangleMesh.cpp(16,29): warning C4267: '=': conversion from 'size_t' to 'uint32_t', possible loss of data
+C:\Users\anton\source\repos\VulkanEngine\VulkanEngine\VulkanVideos\TriangleMesh.cpp(17,31): warning C4267: '=': conversion from 'size_t' to 'uint32_t', possible loss of data
   window.cpp
+  Generating code
+  0 of 5823 functions ( 0.0%) were compiled, the rest were copied from previous compilation.
+    0 functions were new in current compilation
+    0 functions had inline decision re-evaluated but remain unchanged
+  Finished generating code
+  VulkanVideos.vcxproj -> C:\Users\anton\source\repos\VulkanEngine\VulkanEngine\x64\Release\VulkanVideos.exe

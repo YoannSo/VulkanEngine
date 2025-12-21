@@ -1,4 +1,5 @@
 #include "lve_renderer.hpp"
+#include <iostream>
 #include <stdexcept>
 #include <array>
 #include <iostream>
@@ -9,6 +10,16 @@ namespace lve {
 		recreateSwapChain();
 		createCommandBuffers();
 	}
+
+void LveRenderer::writeTimestampStart(VkCommandBuffer cmd, VkQueryPool queryPool, uint32_t index) {
+    if (queryPool == VK_NULL_HANDLE) return;
+    vkCmdWriteTimestamp(cmd, VK_PIPELINE_STAGE_ALL_COMMANDS_BIT, queryPool, index);
+}
+
+void LveRenderer::writeTimestampEnd(VkCommandBuffer cmd, VkQueryPool queryPool, uint32_t index) {
+    if (queryPool == VK_NULL_HANDLE) return;
+    vkCmdWriteTimestamp(cmd, VK_PIPELINE_STAGE_ALL_COMMANDS_BIT, queryPool, index);
+}
 	LveRenderer::~LveRenderer() {
 		freeCommandBuffers();//renderer destroy but app will continue so freecomand buffer
 	}
@@ -137,7 +148,6 @@ namespace lve {
 		vkDeviceWaitIdle(LveDevice::getInstance()->getDevice());//make wait the swap chain while we are creating one more
 		if (lveSwapChain == nullptr) {
 					lveSwapChain = std::make_unique<LveSwapChain>(extent);
-
 		}
 		else {
 			std::shared_ptr<LveSwapChain> oldSwapChain = std::move(lveSwapChain);
@@ -147,7 +157,17 @@ namespace lve {
 			}
 		
 		}
+
+		if(lveSwapChain->renderPassMode== LveSwapChain::RenderPassMode::DEFERRED)
+			recreateGBuffer();
 		//createPipeline();//technically dont need this, still dependan in the swapchain renderpass, mutiplerender pass work with the pipeleine
+	}
+
+	void LveRenderer::recreateGBuffer()
+	{
+		m_gBuffer = std::make_unique<GBuffer>( lveSwapChain->getSwapChainExtent(),lveSwapChain->imageCount());
+		m_gBuffer->createFramebuffers(lveSwapChain->getRenderPass());
+
 	}
 
 

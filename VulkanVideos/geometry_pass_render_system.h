@@ -24,5 +24,7 @@ namespace lve {
 		void render(FrameInfo& frameInfo)override;// camera not meber bs we want to be able to share camera object multiple mtiple render system
 
 	private:
+		std::vector<VkDescriptorSetLayout> buildLayouts(VkDescriptorSetLayout globalSetLayout);
+		void drawBatch(FrameInfo& frameInfo, SceneManager::RenderingBatch& batchs);
 	};
 }

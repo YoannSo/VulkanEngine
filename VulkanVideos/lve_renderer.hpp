@@ -1,12 +1,14 @@
 #pragma once
 
+#include <memory>
+#include <vector>
+#include <cassert>
+
 #include "window.hpp"
 #include "lve_device.hpp"
 #include "lve_swap_chain.hpp"
 #include "lve_model.hpp"
-#include <memory>
-#include <vector>
-#include <cassert>
+#include "g_buffer.hpp"
 namespace lve {
 
 	class LveRenderer {
@@ -43,8 +45,13 @@ namespace lve {
 
 				inline uint32_t getImageCount() const { return lveSwapChain->imageCount(); }
 
+		// helpers for GPU timestamp profiling - optional
+		void writeTimestampStart(VkCommandBuffer cmd, VkQueryPool queryPool, uint32_t index);
+		void writeTimestampEnd(VkCommandBuffer cmd, VkQueryPool queryPool, uint32_t index);
+
 	private:
 		void recreateSwapChain();
+		void recreateGBuffer();
 
 		void freeCommandBuffers();
 
@@ -58,5 +65,7 @@ namespace lve {
 		uint32_t currentImgIndex;
 		int currentFrameIndex{ 0 };
 		bool isFrameStarted{ false };
+
+		std::unique_ptr<GBuffer> m_gBuffer;
 	};
 }

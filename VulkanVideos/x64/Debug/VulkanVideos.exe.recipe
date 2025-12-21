@@ -2,7 +2,7 @@
 <Project>
   <ProjectOutputs>
     <ProjectOutput>
-      <FullPath>C:\prog\git\VulkanEngine\x64\Debug\VulkanVideos.exe</FullPath>
+      <FullPath>C:\Users\anton\source\repos\VulkanEngine\VulkanEngine\x64\Debug\VulkanVideos.exe</FullPath>
     </ProjectOutput>
   </ProjectOutputs>
   <ContentFiles />

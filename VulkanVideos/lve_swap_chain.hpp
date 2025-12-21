@@ -1,7 +1,6 @@
 #pragma once
 
 #include "lve_device.hpp"
-
 // vulkan headers
 #include <vulkan/vulkan.h>
 // std lib headers
@@ -13,9 +12,10 @@ namespace lve {
 class LveSwapChain {
  public:
   static constexpr int MAX_FRAMES_IN_FLIGHT = 2;
+  enum class RenderPassMode { FORWARD, DEFERRED };
 
-  LveSwapChain( VkExtent2D windowExtent);
-  LveSwapChain( VkExtent2D windowExtent,std::shared_ptr<LveSwapChain> previous);
+  LveSwapChain( VkExtent2D windowExtent, RenderPassMode mode = RenderPassMode::FORWARD);
+  LveSwapChain( VkExtent2D windowExtent,std::shared_ptr<LveSwapChain> previous, RenderPassMode mode = RenderPassMode::FORWARD);
   ~LveSwapChain();
 
   LveSwapChain(const LveSwapChain &) = delete;
@@ -40,6 +40,9 @@ class LveSwapChain {
   bool compareSwapFormats(const LveSwapChain& swapChain)const {
       return swapChain.swapChainDepthFormat == swapChainDepthFormat && swapChain.swapChainImageFormat == swapChainImageFormat;
   }
+
+  RenderPassMode renderPassMode{ RenderPassMode::FORWARD };
+
  private:
      void init();
   void createSwapChain();
@@ -59,6 +62,7 @@ class LveSwapChain {
   VkFormat swapChainImageFormat;
   VkFormat swapChainDepthFormat;
   VkExtent2D swapChainExtent;
+
 
   std::vector<VkFramebuffer> swapChainFramebuffers;
   VkRenderPass renderPass;

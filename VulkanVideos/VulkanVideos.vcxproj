@@ -124,14 +124,14 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions);TRACY_ENABLE</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)/external/glm/glm;C:\VulkanSDK\1.3.261.1\Include;C:\Users\anton\OneDrive\Documents\Visual Studio 2019\Libraries\glfw-3.3.8\include;C:\Users\anton\OneDrive\Documents\Visual Studio 2019\Libraries\glm;D:\vulkan\Include;C:\Users\hardg\Documents\Visual Studio 2019\Libraries\glfw-3.3.8\include;C:\Users\hardg\Documents\Visual Studio 2019\Libraries\glm;C:\Users\hardg\Documents\Visual Studio 2019\Libraries\tinyobjectloader;E:\VulkanEngine\Vulkan\lib\imgui;E:\VulkanEngine\Vulkan\lib\imageLoader;$(SolutionDir)\lib\assimp;$(SolutionDir)\lib\ImageLoader;$(SolutionDir)\ImageLoader;$(SolutionDir)\assimp\assimp;C:\VulkanSDK\1.3.261.1\Include;$(SolutionDir)/../../externals/glfw/include;$(SolutionDir)/../../externals/glm/;C:\VulkanSDK\1.3.296.0\Lib;C:\VulkanSDK\1.3.296.0;C:\VulkanSDK\1.3.296.0\Include\vulkan;C:\VulkanSDK\1.3.296.0\Include;C:\Users\anton\source\repos\VulkanEngine\external\Tracy\public;C:\Users\anton\source\repos\VulkanEngine\external\Tracy\public;$(SolutionDir)/external/glfw/include/GLFW;C:\VulkanSDK\1.4.309.0\Include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)/external/imgui;$(SolutionDir)/external/imgui/backends;$(SolutionDir)/external/glm/glm;C:\VulkanSDK\1.3.261.1\Include;C:\Users\anton\OneDrive\Documents\Visual Studio 2019\Libraries\glfw-3.3.8\include;C:\Users\anton\OneDrive\Documents\Visual Studio 2019\Libraries\glm;D:\vulkan\Include;C:\Users\hardg\Documents\Visual Studio 2019\Libraries\glfw-3.3.8\include;C:\Users\hardg\Documents\Visual Studio 2019\Libraries\glm;C:\Users\hardg\Documents\Visual Studio 2019\Libraries\tinyobjectloader;E:\VulkanEngine\Vulkan\lib\imgui;E:\VulkanEngine\Vulkan\lib\imageLoader;$(SolutionDir)\lib\assimp;$(SolutionDir)\lib\ImageLoader;$(SolutionDir)\ImageLoader;$(SolutionDir)\assimp\assimp;C:\VulkanSDK\1.3.261.1\Include;$(SolutionDir)/../../externals/glfw/include;$(SolutionDir)/../../externals/glm/;C:\VulkanSDK\1.3.296.0\Lib;C:\VulkanSDK\1.3.296.0;C:\VulkanSDK\1.3.296.0\Include\vulkan;C:\VulkanSDK\1.3.296.0\Include;C:\Users\anton\source\repos\VulkanEngine\external\Tracy\public;C:\Users\anton\source\repos\VulkanEngine\external\Tracy\public;$(SolutionDir)/external/glfw/include/GLFW;C:\VulkanSDK\1.4.309.0\Include;$(SolutionDir)\lib\assimp;$(SolutionDir)\assimp\assimp</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\Users\anton\OneDrive\Documents\Visual Studio 2019\Libraries\glfw-3.3.8\lib-vc2019;C:\VulkanSDK\1.3.261.1\Lib;C:\VulkanSDK\1.3.250.1\Lib;C:\Users\anton\OneDrive\Documents\Visual Studio 2019\Libraries\glfw-3.3.8.bin.WIN64\lib-vc2019;%(AdditionalLibraryDirectories);C:\Users\hardg\Documents\Visual Studio 2019\Libraries\glfw-3.3.8\lib-vc2019;$(SolutionDir)\lib\assimp;C:\VulkanSDK\1.3.296.0\Lib;C:\Users\anton\source\externals\glfw\lib-vc2022;$(SolutionDir)/external/glfw/lib-vc2022;C:\VulkanSDK\1.4.309.0\Lib</AdditionalLibraryDirectories>
-      <AdditionalDependencies>vulkan-1.lib;glfw3.lib;assimp-vc142-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)\lib\assimp;C:\Users\anton\OneDrive\Documents\Visual Studio 2019\Libraries\glfw-3.3.8\lib-vc2019;C:\VulkanSDK\1.3.261.1\Lib;C:\VulkanSDK\1.3.250.1\Lib;C:\Users\anton\OneDrive\Documents\Visual Studio 2019\Libraries\glfw-3.3.8.bin.WIN64\lib-vc2019;%(AdditionalLibraryDirectories);C:\Users\hardg\Documents\Visual Studio 2019\Libraries\glfw-3.3.8\lib-vc2019;$(SolutionDir)\lib\assimp;C:\VulkanSDK\1.3.296.0\Lib;C:\Users\anton\source\externals\glfw\lib-vc2022;$(SolutionDir)/external/glfw/lib-vc2022;C:\VulkanSDK\1.4.309.0\Lib</AdditionalLibraryDirectories>
+      <AdditionalDependencies>vulkan-1.lib;glfw3.lib;assimp-vc142-mt.lib;%(AdditionalDependencies);assimp-vc142-mt.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -142,7 +142,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions);TRACY_ENABLE</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)/external/glm/glm;C:\VulkanSDK\1.3.250.1\Include;C:\Users\anton\OneDrive\Documents\Visual Studio 2019\Libraries\glfw-3.3.8\include;C:\Users\anton\OneDrive\Documents\Visual Studio 2019\Libraries\glm;D:\vulkan\Include;C:\Users\hardg\Documents\Visual Studio 2019\Libraries\glfw-3.3.8\include;C:\Users\hardg\Documents\Visual Studio 2019\Libraries\glm;$(SolutionDir)\lib\ImageLoader;$(SolutionDir)\ImageLoader;$(SolutionDir)\assimp\assimp;C:\VulkanSDK\1.3.261.1\Include;$(SolutionDir)/../../externals/glfw/include;$(SolutionDir)/../../externals/glm/;C:\VulkanSDK\1.3.296.0\Lib;C:\VulkanSDK\1.3.296.0;C:\VulkanSDK\1.3.296.0\Include\vulkan;C:\VulkanSDK\1.3.296.0\Include;C:\Users\anton\source\repos\VulkanEngine\external\Tracy\public;C:\Users\anton\source\repos\VulkanEngine\external\Tracy\public;$(SolutionDir)/external/glfw/include/GLFW;C:\VulkanSDK\1.4.309.0\Include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)/external/imgui;$(SolutionDir)/external/imgui/backends;$(SolutionDir)/external/glm/glm;C:\VulkanSDK\1.3.250.1\Include;C:\Users\anton\OneDrive\Documents\Visual Studio 2019\Libraries\glfw-3.3.8\include;C:\Users\anton\OneDrive\Documents\Visual Studio 2019\Libraries\glm;D:\vulkan\Include;C:\Users\hardg\Documents\Visual Studio 2019\Libraries\glfw-3.3.8\include;C:\Users\hardg\Documents\Visual Studio 2019\Libraries\glm;$(SolutionDir)\lib\ImageLoader;$(SolutionDir)\ImageLoader;$(SolutionDir)\assimp\assimp;C:\VulkanSDK\1.3.261.1\Include;$(SolutionDir)/../../externals/glfw/include;$(SolutionDir)/../../externals/glm/;C:\VulkanSDK\1.3.296.0\Lib;C:\VulkanSDK\1.3.296.0;C:\VulkanSDK\1.3.296.0\Include\vulkan;C:\VulkanSDK\1.3.296.0\Include;C:\Users\anton\source\repos\VulkanEngine\external\Tracy\public;C:\Users\anton\source\repos\VulkanEngine\external\Tracy\public;$(SolutionDir)/external/glfw/include/GLFW;C:\VulkanSDK\1.4.309.0\Include;$(SolutionDir)\lib\assimp;$(SolutionDir)\assimp\assimp</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
@@ -150,14 +150,22 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\Users\anton\OneDrive\Documents\Visual Studio 2019\Libraries\glfw-3.3.8\lib-vc2019;D:\vulkan\Lib;C:\VulkanSDK\1.3.250.1\Lib;C:\Users\anton\OneDrive\Documents\Visual Studio 2019\Libraries\glfw-3.3.8.bin.WIN64\lib-vc2019;%(AdditionalLibraryDirectories);C:\Users\hardg\Documents\Visual Studio 2019\Libraries\glfw-3.3.8\lib-vc2019;D:\vulkan\Lib;C:\VulkanSDK\1.3.296.0\Lib;C:\Users\anton\source\externals\glfw\lib-vc2022;$(SolutionDir)/external/glfw/lib-vc2022;C:\VulkanSDK\1.4.309.0\Lib</AdditionalLibraryDirectories>
-      <AdditionalDependencies>vulkan-1.lib;glfw3.lib;%(AdditionalDependencies);vulkan-1.lib;glfw3.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)\lib\assimp;C:\Users\anton\OneDrive\Documents\Visual Studio 2019\Libraries\glfw-3.3.8\lib-vc2019;D:\vulkan\Lib;C:\VulkanSDK\1.3.250.1\Lib;C:\Users\anton\OneDrive\Documents\Visual Studio 2019\Libraries\glfw-3.3.8.bin.WIN64\lib-vc2019;%(AdditionalLibraryDirectories);C:\Users\hardg\Documents\Visual Studio 2019\Libraries\glfw-3.3.8\lib-vc2019;D:\vulkan\Lib;C:\VulkanSDK\1.3.296.0\Lib;C:\Users\anton\source\externals\glfw\lib-vc2022;$(SolutionDir)/external/glfw/lib-vc2022;C:\VulkanSDK\1.4.309.0\Lib</AdditionalLibraryDirectories>
+      <AdditionalDependencies>vulkan-1.lib;glfw3.lib;%(AdditionalDependencies);vulkan-1.lib;glfw3.lib;assimp-vc142-mt.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\external\imgui\backends\imgui_impl_glfw.cpp" />
+    <ClCompile Include="..\external\imgui\backends\imgui_impl_vulkan.cpp" />
+    <ClCompile Include="..\external\imgui\imgui.cpp" />
+    <ClCompile Include="..\external\imgui\imgui_draw.cpp" />
+    <ClCompile Include="..\external\imgui\imgui_tables.cpp" />
+    <ClCompile Include="..\external\imgui\imgui_widgets.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="first_app.cpp" />
     <ClCompile Include="geometry_pass_render_system.cpp" />
+    <ClCompile Include="GuiManager.cpp" />
+    <ClCompile Include="g_buffer.cpp" />
     <ClCompile Include="keyboard_movement_controller.cpp" />
     <ClCompile Include="lve_buffer.cpp" />
     <ClCompile Include="lve_camera.cpp" />
@@ -185,6 +193,8 @@
     <ClInclude Include="define.hpp" />
     <ClInclude Include="first_app.hpp" />
     <ClInclude Include="geometry_pass_render_system.h" />
+    <ClInclude Include="GuiManager.h" />
+    <ClInclude Include="g_buffer.hpp" />
     <ClInclude Include="keyboard_movement_controller.hpp" />
     <ClInclude Include="lve_buffer.hpp" />
     <ClInclude Include="lve_camera.hpp" />
@@ -210,6 +220,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="compile.bat" />
+    <None Include="gBuffer.frag" />
+    <None Include="gBuffer.vert" />
     <None Include="point_light.frag">
       <FileType>Document</FileType>
     </None>

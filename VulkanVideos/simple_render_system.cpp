@@ -7,25 +7,18 @@ namespace lve {
     };
 
     SimpleRenderSystem::SimpleRenderSystem(VkRenderPass renderPass, VkDescriptorSetLayout globalSetLayout)
-    : RenderSystem(renderPass, buildLayouts(globalSetLayout), sizeof(SimplePushConstantData), "shaders/simple_shader.vert.spv", "shaders/simple_shader.frag.spv")
+    : RenderSystem ()
     {
+        auto layouts = buildLayouts(globalSetLayout);
+        uint32_t pushConstantSize = sizeof(SimplePushConstantData);
+        init(renderPass, layouts, pushConstantSize, "shaders/simple_shader.vert.spv", "shaders/simple_shader.frag.spv");
+
     }
 
     SimpleRenderSystem::~SimpleRenderSystem() {
     }
 
-    std::vector<VkDescriptorSetLayout> SimpleRenderSystem::buildLayouts(VkDescriptorSetLayout globalSetLayout) {
-
-        std::vector<VkDescriptorSetLayout> descriptorSetLayouts{ globalSetLayout };
-
-        if (SceneManager::getInstance()->getTextureMap().size() > 0) {
-            descriptorSetLayouts.push_back(SceneManager::getInstance()->getDescriptorSetLayout().getDescriptorSetLayout());
-        }
-
-        descriptorSetLayouts.push_back(SceneManager::getInstance()->getMaterialDescriptorSetLayout().getDescriptorSetLayout());
-
-		return descriptorSetLayouts;
-	}
+   
 
    /* void createPipelineLayout(VkDescriptorSetLayout globalSetLayout) {
         VkPushConstantRange pushConstantRange{};

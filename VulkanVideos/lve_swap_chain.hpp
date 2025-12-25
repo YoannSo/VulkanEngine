@@ -14,16 +14,15 @@ class LveSwapChain {
   static constexpr int MAX_FRAMES_IN_FLIGHT = 2;
   enum class RenderPassMode { FORWARD, DEFERRED };
 
-  LveSwapChain( VkExtent2D windowExtent, RenderPassMode mode = RenderPassMode::FORWARD);
-  LveSwapChain( VkExtent2D windowExtent,std::shared_ptr<LveSwapChain> previous, RenderPassMode mode = RenderPassMode::FORWARD);
+  LveSwapChain( VkExtent2D windowExtent, RenderPassMode mode = RenderPassMode::DEFERRED);
+  LveSwapChain( VkExtent2D windowExtent,std::shared_ptr<LveSwapChain> previous, RenderPassMode mode = RenderPassMode::DEFERRED);
   ~LveSwapChain();
 
   LveSwapChain(const LveSwapChain &) = delete;
   LveSwapChain& operator=(const LveSwapChain &) = delete;
 
-  VkFramebuffer getFrameBuffer(int index) { return swapChainFramebuffers[index]; }
-  VkRenderPass getRenderPass() { return renderPass; }
   VkImageView getImageView(int index) { return swapChainImageViews[index]; }
+  VkImageView getDepthImageView(int index) { return depthImageViews[index]; }
   size_t imageCount() { return swapChainImages.size(); }
   VkFormat getSwapChainImageFormat() { return swapChainImageFormat; }
   VkExtent2D getSwapChainExtent() { return swapChainExtent; }
@@ -33,23 +32,19 @@ class LveSwapChain {
   float extentAspectRatio() {
     return static_cast<float>(swapChainExtent.width) / static_cast<float>(swapChainExtent.height);
   }
-  VkFormat findDepthFormat();
-
   VkResult acquireNextImage(uint32_t *imageIndex);
   VkResult submitCommandBuffers(const VkCommandBuffer *buffers, uint32_t *imageIndex);
   bool compareSwapFormats(const LveSwapChain& swapChain)const {
       return swapChain.swapChainDepthFormat == swapChainDepthFormat && swapChain.swapChainImageFormat == swapChainImageFormat;
   }
 
-  RenderPassMode renderPassMode{ RenderPassMode::FORWARD };
+  RenderPassMode renderPassMode{ RenderPassMode::DEFERRED };
 
  private:
      void init();
   void createSwapChain();
   void createImageViews();
   void createDepthResources();
-  void createRenderPass();
-  void createFramebuffers();
   void createSyncObjects();
 
   // Helper functions
@@ -64,8 +59,6 @@ class LveSwapChain {
   VkExtent2D swapChainExtent;
 
 
-  std::vector<VkFramebuffer> swapChainFramebuffers;
-  VkRenderPass renderPass;
   std::shared_ptr <LveSwapChain > oldSwapChain;
   std::vector<VkImage> depthImages;
   std::vector<VkDeviceMemory> depthImageMemorys;

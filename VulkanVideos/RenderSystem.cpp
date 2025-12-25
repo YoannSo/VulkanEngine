@@ -3,13 +3,17 @@
 namespace lve {
 
 
-	RenderSystem::RenderSystem(VkRenderPass renderPass, std::vector <VkDescriptorSetLayout> p_descriptorSetLayouts, uint32_t p_pushConstantSize, std::string p_vertShader, std::string p_fragShader, bool p_clearAttributes) {
-		createPipelineLayout(p_descriptorSetLayouts, p_pushConstantSize);
-		createPipeline(renderPass,p_vertShader ,p_fragShader, p_clearAttributes);
+	RenderSystem::RenderSystem() {
+
 	}
 
 	RenderSystem::~RenderSystem() {
 		vkDestroyPipelineLayout(LveDevice::getInstance()->getDevice(), pipelineLayout, nullptr);
+	}
+
+	void RenderSystem::init(VkRenderPass renderPass, std::vector <VkDescriptorSetLayout> p_descriptorSetLayouts, uint32_t p_pushConstantSize, std::string p_vertShader, std::string p_fragShader, bool p_clearAttributes) {
+		createPipelineLayout(p_descriptorSetLayouts, p_pushConstantSize);
+		createPipeline(renderPass, p_vertShader, p_fragShader, p_clearAttributes);
 	}
 
 
@@ -38,8 +42,7 @@ namespace lve {
 
 		assert(pipelineLayout != nullptr && "Cannot create pipeline before pipeline layout");
 		PipelineConfigInfo pipelineConfig{};
-		LvePipeline::defaultPipelineConfigInfo(pipelineConfig);
-		LvePipeline::enableAlphaBlinding(pipelineConfig);
+		createPipelineInfo(pipelineConfig);
 
 		if (p_clearAttributes) {
 			pipelineConfig.attributDescriptions.clear();
@@ -51,4 +54,25 @@ namespace lve {
 		pipelineConfig.pipelineLayout = pipelineLayout;
 		lvePipeline = std::make_unique<LvePipeline>(p_vertShader, p_fragShader, pipelineConfig);
 	}
+
+
+
+	std::vector<VkDescriptorSetLayout> RenderSystem::buildLayouts(VkDescriptorSetLayout globalSetLayout) {
+
+		std::vector<VkDescriptorSetLayout> descriptorSetLayouts{ globalSetLayout };
+
+		if (SceneManager::getInstance()->getTextureMap().size() > 0) {
+			descriptorSetLayouts.push_back(SceneManager::getInstance()->getDescriptorSetLayout().getDescriptorSetLayout());
+		}
+
+		descriptorSetLayouts.push_back(SceneManager::getInstance()->getMaterialDescriptorSetLayout().getDescriptorSetLayout());
+
+		return descriptorSetLayouts;
+	}
+
+	void RenderSystem::createPipelineInfo(PipelineConfigInfo& p_pipelineInfoOut) {
+		LvePipeline::defaultFowardPipelineConfigInfo(p_pipelineInfoOut);
+		LvePipeline::enableAlphaBlinding(p_pipelineInfoOut);
+	}
+
 }

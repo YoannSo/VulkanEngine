@@ -23,5 +23,6 @@ namespace lve {
 		
 		void update(FrameInfo& frameInfo, GlobalUbo& ubo) override;
 		void render(FrameInfo& frameInfo)override;// camera not meber bs we want to be able to share camera object multiple mtiple render system
+
 	};
 }

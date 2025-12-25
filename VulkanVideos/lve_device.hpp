@@ -60,8 +60,8 @@ class LveDevice {
   uint32_t findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties);
   QueueFamilyIndices findPhysicalQueueFamilies() { return findQueueFamilies(physicalDevice); }
   VkFormat findSupportedFormat(
-      const std::vector<VkFormat> &candidates, VkImageTiling tiling, VkFormatFeatureFlags features);
-
+      const std::vector<VkFormat> &candidates, VkImageTiling tiling, VkFormatFeatureFlags features)const;
+  VkFormat findDepthFormat()const;
   // Buffer Helper Functions
   void createBuffer(
       VkDeviceSize size,

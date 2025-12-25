@@ -28,6 +28,15 @@ GBuffer::~GBuffer() {
     cleanup();
 }
 
+void GBuffer::getImageViews(uint32_t index, std::vector<VkImageView>& outputViews) const
+{
+    outputViews.clear();
+    outputViews.push_back(albedoViews[index]);
+    outputViews.push_back(normalViews[index]);
+    outputViews.push_back(positionViews[index]);
+    outputViews.push_back(depthViews[index]);
+}
+
 void GBuffer::createImages() {
     albedoImages.resize(imageCount);
     albedoMem.resize(imageCount);

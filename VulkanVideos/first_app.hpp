@@ -8,7 +8,8 @@
 #include "window.hpp"
 #include "GameObject.hpp"
 #include "lve_device.hpp"
-#include "lve_renderer.hpp"
+#include "ForwardRenderer.hpp"
+#include "DeferredRenderer.hpp"
 #include "lve_model.hpp"
 #include "model.hpp"
 #include "lve_descriptor.hpp"
@@ -36,7 +37,7 @@ namespace lve {
 
 		//order matter init top to bottom destroy bottom to top
 		LveWindow _window{ WIDTH,HEIGHT,"FirstApp" };// first app created auto creat window destroy auto destroy
-		LveRenderer lveRenderer{ _window };
+		DeferredRenderer lveRenderer{ _window ,LveDevice::getInstance() };
 		std::unique_ptr<LveDescriptorPool> _globalPool{};
 		std::unique_ptr<GuiManager> m_guiManager;
 

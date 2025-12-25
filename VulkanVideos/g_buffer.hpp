@@ -19,6 +19,8 @@ public:
     const std::vector<VkFramebuffer>& getFramebuffers() const { return framebuffers; }
     VkExtent2D getExtent() const { return extent; }
 
+    void getImageViews(uint32_t index, std::vector<VkImageView>& outputViews) const;
+
 private:
     void createImages();
     void createSampler();

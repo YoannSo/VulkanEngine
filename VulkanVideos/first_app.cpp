@@ -30,7 +30,7 @@
 
 
 namespace lve {
-	
+
 
 	LveDevice* LveDevice::s_device = nullptr;
 
@@ -39,7 +39,7 @@ namespace lve {
 
 		system("E:/Prog/VulkanEngine/VulkanVideos/compile_shader.bat");
 
-				_globalPool =
+		_globalPool =
 			LveDescriptorPool::Builder()
 			.setMaxSets(LveSwapChain::MAX_FRAMES_IN_FLIGHT)
 			.addPoolSize(VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, LveSwapChain::MAX_FRAMES_IN_FLIGHT)
@@ -48,32 +48,32 @@ namespace lve {
 		SceneManager::getInstance();
 
 		m_guiManager = std::make_unique<GuiManager>();
-		m_guiManager->init(
+		/*m_guiManager->init(
 			_window.getGLFWWindow(),
 			LveDevice::getInstance()->getVkInstance(),
 			LveDevice::getInstance()->getDevice(),
 			LveDevice::getInstance()->getPhysicalDevice(),
 			0,
 			LveDevice::getInstance()->getGraphicsQueue(),
-			lveRenderer.getSwapChainRenderPass(),
+			lveRenderer.getRenderPass(),
 			nullptr,
 			LveSwapChain::MAX_FRAMES_IN_FLIGHT
-		);
+		);*/
 
 #ifndef NDEBUG
-        // Create GPU timestamp query pool for profiling (debug only)
-        if (m_queryPool == VK_NULL_HANDLE && LveDevice::getInstance()) {
-            VkQueryPoolCreateInfo queryPoolInfo{};
-            queryPoolInfo.sType = VK_STRUCTURE_TYPE_QUERY_POOL_CREATE_INFO;
-            queryPoolInfo.queryType = VK_QUERY_TYPE_TIMESTAMP;
-            queryPoolInfo.queryCount = 2 * LveSwapChain::MAX_FRAMES_IN_FLIGHT; // begin/end per frame
-            if (vkCreateQueryPool(LveDevice::getInstance()->getDevice(), &queryPoolInfo, nullptr, &m_queryPool) != VK_SUCCESS) {
-                std::cerr << "Failed to create query pool for profiling" << std::endl;
-                m_queryPool = VK_NULL_HANDLE;
-            }
-        }
+		// Create GPU timestamp query pool for profiling (debug only)
+		if (m_queryPool == VK_NULL_HANDLE && LveDevice::getInstance()) {
+			VkQueryPoolCreateInfo queryPoolInfo{};
+			queryPoolInfo.sType = VK_STRUCTURE_TYPE_QUERY_POOL_CREATE_INFO;
+			queryPoolInfo.queryType = VK_QUERY_TYPE_TIMESTAMP;
+			queryPoolInfo.queryCount = 2 * LveSwapChain::MAX_FRAMES_IN_FLIGHT; // begin/end per frame
+			if (vkCreateQueryPool(LveDevice::getInstance()->getDevice(), &queryPoolInfo, nullptr, &m_queryPool) != VK_SUCCESS) {
+				std::cerr << "Failed to create query pool for profiling" << std::endl;
+				m_queryPool = VK_NULL_HANDLE;
+			}
+		}
 #endif
-		
+
 
 		loadGameObjects();
 
@@ -91,7 +91,7 @@ namespace lve {
 
 	void FirstApp::run() {
 
-	
+
 
 		std::vector<std::unique_ptr<LveBuffer>> uboBuffers(LveSwapChain::MAX_FRAMES_IN_FLIGHT);
 		for (auto& uboBuffer : uboBuffers)
@@ -106,6 +106,7 @@ namespace lve {
 
 		auto globalSetLayout = LveDescriptorSetLayout::Builder().addBinding(0, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, VK_SHADER_STAGE_ALL_GRAPHICS).build();
 		//this global set, will be the master globalset, for all our shader, Single Master Render System, we can derive to
+		
 
 		std::vector<VkDescriptorSet> globalDescriptorSets(LveSwapChain::MAX_FRAMES_IN_FLIGHT);
 		for (int i = 0; i < globalDescriptorSets.size(); i++) {
@@ -114,125 +115,126 @@ namespace lve {
 				.writeBuffer(0, &bufferInfo)
 				.build(globalDescriptorSets[i]);
 		}
-	
-
-        LveCamera camera{};
-        //camera.setViewDirection(glm::vec3(0.f), glm::vec3(0.5f, 0.f, 1.f));
-        camera.setViewTarget(glm::vec3(-1.f,-2.f,2.f), glm::vec3(0.f, 0.f, 2.5f));
-        //       camera.setPerspectiveProjection(glm::radians(50.f),aspect,0.1f,10.f)
 
 
-        Camera* viewerObject = SceneManager::getInstance()->createCameraObject();//store camera state
+		//changer le traitement des descriptorset 
+		lveRenderer.createRenderSystems(globalSetLayout->getDescriptorSetLayout());
+
+		LveCamera camera{};
+		//camera.setViewDirection(glm::vec3(0.f), glm::vec3(0.5f, 0.f, 1.f));
+		camera.setViewTarget(glm::vec3(-1.f, -2.f, 2.f), glm::vec3(0.f, 0.f, 2.5f));
+		//       camera.setPerspectiveProjection(glm::radians(50.f),aspect,0.1f,10.f)
+
+
+		Camera* viewerObject = SceneManager::getInstance()->createCameraObject();//store camera state
 		viewerObject->transform.translation.z = -2.5f;
 
-		SimpleRenderSystem simpleRenderSystem{ lveRenderer.getSwapChainRenderPass(),globalSetLayout->getDescriptorSetLayout() };
-		PointLighRenderSystem pointLightSystem{ lveRenderer.getSwapChainRenderPass(),globalSetLayout->getDescriptorSetLayout() };
 
 
-        KeyBoardMovementController cameraController{};
-        auto currentTime = std::chrono::high_resolution_clock::now();
+		KeyBoardMovementController cameraController{};
+		auto currentTime = std::chrono::high_resolution_clock::now();
 
 
 		while (!_window.shouldClose()) {//tant que la window doit pas close 
 			glfwPollEvents();//process any window event 
-			m_guiManager->newFrame();
+			//m_guiManager->newFrame();
 
 
-            auto newTime = std::chrono::high_resolution_clock::now();
-            float frameTime = std::chrono::duration<float, std::chrono::seconds::period>(newTime - currentTime).count();
-            currentTime = newTime;
+			auto newTime = std::chrono::high_resolution_clock::now();
+			float frameTime = std::chrono::duration<float, std::chrono::seconds::period>(newTime - currentTime).count();
+			currentTime = newTime;
 
 
-           // frameTime = glm::min(frameTime, MAX_FRAME_TIME);
-            cameraController.moveInPLaneXZ(_window.getGLFWWindow(), frameTime, viewerObject);
-            camera.setViewYXZ(viewerObject->transform.translation, viewerObject->transform.rotation);
+			// frameTime = glm::min(frameTime, MAX_FRAME_TIME);
+			cameraController.moveInPLaneXZ(_window.getGLFWWindow(), frameTime, viewerObject);
+			camera.setViewYXZ(viewerObject->transform.translation, viewerObject->transform.rotation);
 
-            float aspect = lveRenderer.getAspectRatio();
-        //camera.setOrthographicProjection(-aspect, aspect, -1, 1, -1, 1);
-             camera.setPerspectiveProjection(glm::radians(50.f), aspect, 0.1f, 100.f);
+			float aspect = lveRenderer.getAspectRatio();
+			//camera.setOrthographicProjection(-aspect, aspect, -1, 1, -1, 1);
+			camera.setPerspectiveProjection(glm::radians(50.f), aspect, 0.1f, 100.f);
 
-			 SceneManager::getInstance()->updateAllGameObject(frameTime);
-               // measure update CPU time
-               auto updateEndTime = std::chrono::high_resolution_clock::now();
-               static std::chrono::high_resolution_clock::time_point updateStartTime = updateEndTime; // placeholder
+			SceneManager::getInstance()->updateAllGameObject(frameTime);
+			// measure update CPU time
+			auto updateEndTime = std::chrono::high_resolution_clock::now();
+			static std::chrono::high_resolution_clock::time_point updateStartTime = updateEndTime; // placeholder
 
-               // record start of update was measured earlier (frameTime calc), but measure actual update cost
-               // For simplicity, record updateStartTime before update call and compute here
-               // (we approximate here by using previous points)
+			// record start of update was measured earlier (frameTime calc), but measure actual update cost
+			// For simplicity, record updateStartTime before update call and compute here
+			// (we approximate here by using previous points)
 
-               if (auto commandBuffer = lveRenderer.beginFrame()) {//begin fram return nullptr if swapchain need to be recreated
-				  
+			if (auto commandBuffer = lveRenderer.beginFrame()) {//begin fram return nullptr if swapchain need to be recreated
 
-                   int frameIndex = lveRenderer.getFrameIndex();
 
-                   // Reset queries for this frame and write GPU timestamp start
+				int frameIndex = lveRenderer.getFrameIndex();
+
+				// Reset queries for this frame and write GPU timestamp start
 #ifndef NDEBUG
-                   if (m_queryPool != VK_NULL_HANDLE) {
-                       vkCmdResetQueryPool(commandBuffer, m_queryPool, frameIndex * 2, 2);
-                       lveRenderer.writeTimestampStart(commandBuffer, m_queryPool, frameIndex * 2);
-                   }
+				if (m_queryPool != VK_NULL_HANDLE) {
+					vkCmdResetQueryPool(commandBuffer, m_queryPool, frameIndex * 2, 2);
+					lveRenderer.writeTimestampStart(commandBuffer, m_queryPool, frameIndex * 2);
+				}
 #endif
 
-				   FrameInfo frameInfo{ frameIndex, frameTime, commandBuffer, camera,globalDescriptorSets[frameIndex] };
+				FrameInfo frameInfo{ frameIndex, frameTime, commandBuffer, camera,globalDescriptorSets[frameIndex] };
 
-				   GlobalUbo ubo{};
-				   ubo.projection = camera.getProjection();
-					ubo.view=camera.getView();
-					pointLightSystem.update(frameInfo, ubo);
-					ubo.inverseView = camera.getInverseView();
+				GlobalUbo ubo{};
+				ubo.projection = camera.getProjection();
+				ubo.view = camera.getView();
+				lveRenderer.updateRenderSystems(frameInfo, ubo);
+				ubo.inverseView = camera.getInverseView();
 
-					ubo.numLights = SceneManager::getInstance()->getLightMap().size();
-					for (size_t i = 0; i < SceneManager::getInstance()->getLightMap().size() && i < MAX_LIGHTS; ++i) {
-						ubo.pointsLights[i].position = glm::vec4(SceneManager::getInstance()->getLightMap()[i]->transform.translation, 1.0f);
-						ubo.pointsLights[i].color = glm::vec4(SceneManager::getInstance()->getLightMap()[i]->getColor(), SceneManager::getInstance()->getLightMap()[i]->getIntensity());
+				ubo.numLights = SceneManager::getInstance()->getLightMap().size();
+				for (size_t i = 0; i < SceneManager::getInstance()->getLightMap().size() && i < MAX_LIGHTS; ++i) {
+					ubo.pointsLights[i].position = glm::vec4(SceneManager::getInstance()->getLightMap()[i]->transform.translation, 1.0f);
+					ubo.pointsLights[i].color = glm::vec4(SceneManager::getInstance()->getLightMap()[i]->getColor(), SceneManager::getInstance()->getLightMap()[i]->getIntensity());
+				}
+
+				uboBuffers[frameIndex]->writeToBuffer(&ubo);
+				uboBuffers[frameIndex]->flush();
+
+
+
+				//begin frame and begin swap chain,  are differe,t -> want app dont main control the fonctionnality, multiple render pass for reflection shadow etc ... 
+				auto recordStart = std::chrono::high_resolution_clock::now();
+
+
+				lveRenderer.beginSwapChainRenderPass(commandBuffer);
+
+				//render first solid object 
+				lveRenderer.renderRenderSystems(frameInfo);
+
+				//m_guiManager->render(commandBuffer);
+
+				// write GPU timestamp end for this frame
+#ifndef NDEBUG
+				if (m_queryPool != VK_NULL_HANDLE) {
+					lveRenderer.writeTimestampEnd(commandBuffer, m_queryPool, frameIndex * 2 + 1);
+				}
+#endif
+
+				auto recordEnd = std::chrono::high_resolution_clock::now();
+				double recordMs = std::chrono::duration<double, std::milli>(recordEnd - recordStart).count();
+
+
+				lveRenderer.endSwapChainRenderPass(commandBuffer);
+				lveRenderer.endFrame();
+
+				// After present, fetch GPU timestamp results for this frame (debug only)
+#ifndef NDEBUG
+				if (m_queryPool != VK_NULL_HANDLE && m_enableProfiling) {
+					uint64_t timestamps[2] = { 0, 0 };
+					VkResult r = vkGetQueryPoolResults(LveDevice::getInstance()->getDevice(), m_queryPool,
+						frameIndex * 2, 2, sizeof(timestamps), timestamps, sizeof(uint64_t),
+						VK_QUERY_RESULT_64_BIT | VK_QUERY_RESULT_WAIT_BIT);
+					if (r == VK_SUCCESS) {
+						double period = LveDevice::getInstance()->properties.limits.timestampPeriod; // nanoseconds
+						uint64_t delta = timestamps[1] - timestamps[0];
+						double gpuTimeMs = (double(delta) * period) / 1000000.0;
+						if (++m_frameLogCounter % 60 == 0) {
+							std::cout << "Frame " << m_frameLogCounter << " GPU time: " << gpuTimeMs << " ms, CPU record time: " << recordMs << " ms" << std::endl;
+						}
 					}
-
-				   uboBuffers[frameIndex]->writeToBuffer(&ubo);
-				   uboBuffers[frameIndex]->flush();
-
-
-
-			//begin frame and begin swap chain,  are differe,t -> want app dont main control the fonctionnality, multiple render pass for reflection shadow etc ... 
-                   auto recordStart = std::chrono::high_resolution_clock::now();
-                   lveRenderer.beginSwapChainRenderPass(commandBuffer);
-
-				   //render first solid object 
-				   simpleRenderSystem.render(frameInfo);
-
-				   pointLightSystem.render(frameInfo);
-
-                   m_guiManager->render(commandBuffer);
-
-                   // write GPU timestamp end for this frame
-#ifndef NDEBUG
-                   if (m_queryPool != VK_NULL_HANDLE) {
-                       lveRenderer.writeTimestampEnd(commandBuffer, m_queryPool, frameIndex * 2 + 1);
-                   }
-#endif
-
-                   auto recordEnd = std::chrono::high_resolution_clock::now();
-                   double recordMs = std::chrono::duration<double, std::milli>(recordEnd - recordStart).count();
-
- 
-               lveRenderer.endSwapChainRenderPass(commandBuffer);
-               lveRenderer.endFrame();
-
-               // After present, fetch GPU timestamp results for this frame (debug only)
-#ifndef NDEBUG
-               if (m_queryPool != VK_NULL_HANDLE && m_enableProfiling) {
-                   uint64_t timestamps[2] = {0, 0};
-                   VkResult r = vkGetQueryPoolResults(LveDevice::getInstance()->getDevice(), m_queryPool,
-                       frameIndex * 2, 2, sizeof(timestamps), timestamps, sizeof(uint64_t),
-                       VK_QUERY_RESULT_64_BIT | VK_QUERY_RESULT_WAIT_BIT);
-                   if (r == VK_SUCCESS) {
-                       double period = LveDevice::getInstance()->properties.limits.timestampPeriod; // nanoseconds
-                       uint64_t delta = timestamps[1] - timestamps[0];
-                       double gpuTimeMs = (double(delta) * period) / 1000000.0;
-                       if (++m_frameLogCounter % 60 == 0) {
-                           std::cout << "Frame " << m_frameLogCounter << " GPU time: " << gpuTimeMs << " ms, CPU record time: " << recordMs << " ms" << std::endl;
-                       }
-                   }
-               }
+				}
 #endif
 
 			}
@@ -244,85 +246,85 @@ namespace lve {
 		SceneManager::getInstance()->addTextureElement("C:/Users/anton/source/repos/VulkanEngine/VulkanEngine/VulkanVideos/models/debugTex.png", new LveTexture("C:/Users/anton/source/repos/VulkanEngine/VulkanEngine/VulkanVideos/models/debugTex.png"));
 
 
- /* std::shared_ptr<Model> lveModel = std::make_shared<Model>(lveDevice, "Seahawk", "models/Helicopter/Seahawk.obj");
+		/* std::shared_ptr<Model> lveModel = std::make_shared<Model>(lveDevice, "Seahawk", "models/Helicopter/Seahawk.obj");
 
 
-  auto flatVase = LveGameObject::createGameObject();
-  flatVase._model = lveModel;
-  flatVase.transform.translation = {-.5f, .5f, 0.f};
-  flatVase.transform.scale = {3.f, 1.5f, 3.f};
-  gameObjects.emplace(flatVase.getId(), std::move(flatVase));*/
+		 auto flatVase = LveGameObject::createGameObject();
+		 flatVase._model = lveModel;
+		 flatVase.transform.translation = {-.5f, .5f, 0.f};
+		 flatVase.transform.scale = {3.f, 1.5f, 3.f};
+		 gameObjects.emplace(flatVase.getId(), std::move(flatVase));*/
 
- /* std::shared_ptr<Model>  lveModel = std::make_shared<Model>(lveDevice, "bunny", "models/bunny/bunny_2.obj");
-  auto smoothVase = LveGameObject::createGameObject();
-  smoothVase._model = lveModel;
-  smoothVase.transform.translation = {.5f, .5f, 0.f};
-  smoothVase.transform.scale = {3.f, 1.5f, 3.f};
-  gameObjects.emplace(smoothVase.getId(), std::move(smoothVase));*/
+		 /* std::shared_ptr<Model>  lveModel = std::make_shared<Model>(lveDevice, "bunny", "models/bunny/bunny_2.obj");
+		  auto smoothVase = LveGameObject::createGameObject();
+		  smoothVase._model = lveModel;
+		  smoothVase.transform.translation = {.5f, .5f, 0.f};
+		  smoothVase.transform.scale = {3.f, 1.5f, 3.f};
+		  gameObjects.emplace(smoothVase.getId(), std::move(smoothVase));*/
 
-  //for (std::string test : smoothVase._model->m_allTexturesName)
-	//  std::cout << test << std::endl;
+		  //for (std::string test : smoothVase._model->m_allTexturesName)
+			//  std::cout << test << std::endl;
 
- // LveTexture* myText = new LveTexture(lveDevice, "E:/Prog/VulkanEngine/VulkanVideos/models/debugTex.png");
-	/*auto bunny = SceneManager::getInstance()->createMeshObject("bunny", "models/bunny/bunny_2.obj");
-	bunny->transform.translation = { 0.f, .5f, 0.f };
-	bunny->transform.scale = { 3.f, 1.f, 3.f };*/
+		 // LveTexture* myText = new LveTexture(lveDevice, "E:/Prog/VulkanEngine/VulkanVideos/models/debugTex.png");
+			/*auto bunny = SceneManager::getInstance()->createMeshObject("bunny", "models/bunny/bunny_2.obj");
+			bunny->transform.translation = { 0.f, .5f, 0.f };
+			bunny->transform.scale = { 3.f, 1.f, 3.f };*/
 
 		Model* floor = SceneManager::getInstance()->createModelObject("room", "models/models/conference.obj");
 		floor->transform.translation = { 2.f, 0.f, 0.f };
-		floor->transform.rotation = { 0.f, 0.f, glm::pi<float>()};
-		floor->transform.scale = { 0.01f,  0.01f, 0.01f }; 
-
-	
-
-	/*	Model* bunny2 = SceneManager::getInstance()->createModelObject("Helicopter", "models/Helicopter/Seahawk.obj");
-		bunny2->transform.translation = { 0.f,0.0f, 0.f };
-		bunny2->transform.scale = { 0.1f, 0.1f, 0.1f };
-		bunny2->transform.rotation = { 0.f,  glm::pi<float>(),  glm::pi<float>() };
-		*/
-		//bunny2->setUpdateFunction([](GameObject* gameObject,float deltaTime) {
-		//	gameObject->transform.rotate(glm::vec3(0.f,1.f,0.f),deltaTime);
-		//	});
+		floor->transform.rotation = { 0.f, 0.f, glm::pi<float>() };
+		floor->transform.scale = { 0.01f,  0.01f, 0.01f };
 
 
 
-
-		/*LveGameObject* bunny = SceneManager::getInstance()->createMeshObject("bunny", "models/bunny/bunny_2.obj");
-	bunny->transform.translation = { 0.f, 0.f, 0.f };
-	bunny->transform.scale = { 3.f, 1.f, 3.f };*/
-	std::vector<glm::vec3> lightColors{
-		  {1.f, .1f, .1f},
-		{.1f, .1f, 1.f},
-		{.1f, 1.f, .1f},
-		{1.f, 1.f, .1f},
-		{.1f, 1.f, 1.f},
-		 {1.f, 1.f, 1.f}  //
-	};
-
-	;
+		/*	Model* bunny2 = SceneManager::getInstance()->createModelObject("Helicopter", "models/Helicopter/Seahawk.obj");
+			bunny2->transform.translation = { 0.f,0.0f, 0.f };
+			bunny2->transform.scale = { 0.1f, 0.1f, 0.1f };
+			bunny2->transform.rotation = { 0.f,  glm::pi<float>(),  glm::pi<float>() };
+			*/
+			//bunny2->setUpdateFunction([](GameObject* gameObject,float deltaTime) {
+			//	gameObject->transform.rotate(glm::vec3(0.f,1.f,0.f),deltaTime);
+			//	});
 
 
-  for (int i = 0; i < lightColors.size(); i++) {  
-     PointLight* light = SceneManager::getInstance()->createLightObject();  
-     light->setColor(lightColors[i]);  
-     auto rotateLight = glm::rotate(  
-         glm::mat4(1.f),  
-         (i * glm::two_pi<float>()) / lightColors.size(),  
-         {0.f, 1.f, 0.f});  
 
-     // Increase the Y component (height) to make the light higher  
-     light->transform.translation = glm::vec3(rotateLight * glm::vec4(4.f, -3.f, -2.f, 1.f));  
-     light->transform.scale = { 0.2f, 0.2f, 0.2f };  
 
-     light->setUpdateFunction([](GameObject* gameObject, float deltaTime) {  
-         gameObject->transform.rotate(glm::vec3(0.f, 1.f, 0.f), deltaTime);  
-     });  
-  }
+			/*LveGameObject* bunny = SceneManager::getInstance()->createMeshObject("bunny", "models/bunny/bunny_2.obj");
+		bunny->transform.translation = { 0.f, 0.f, 0.f };
+		bunny->transform.scale = { 3.f, 1.f, 3.f };*/
+		std::vector<glm::vec3> lightColors{
+			  {1.f, .1f, .1f},
+			{.1f, .1f, 1.f},
+			{.1f, 1.f, .1f},
+			{1.f, 1.f, .1f},
+			{.1f, 1.f, 1.f},
+			 {1.f, 1.f, 1.f}  //
+		};
 
-  SceneManager::getInstance()->setMaterialDescriptorSet();
-  SceneManager::getInstance()->setupRenderingBatch();
+		;
 
-}
 
-	
+		for (int i = 0; i < lightColors.size(); i++) {
+			PointLight* light = SceneManager::getInstance()->createLightObject();
+			light->setColor(lightColors[i]);
+			auto rotateLight = glm::rotate(
+				glm::mat4(1.f),
+				(i * glm::two_pi<float>()) / lightColors.size(),
+				{ 0.f, 1.f, 0.f });
+
+			// Increase the Y component (height) to make the light higher  
+			light->transform.translation = glm::vec3(rotateLight * glm::vec4(4.f, -3.f, -2.f, 1.f));
+			light->transform.scale = { 0.2f, 0.2f, 0.2f };
+
+			light->setUpdateFunction([](GameObject* gameObject, float deltaTime) {
+				gameObject->transform.rotate(glm::vec3(0.f, 1.f, 0.f), deltaTime);
+				});
+		}
+
+		SceneManager::getInstance()->setMaterialDescriptorSet();
+		SceneManager::getInstance()->setupRenderingBatch();
+
+	}
+
+
 }

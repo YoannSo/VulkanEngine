@@ -21,15 +21,17 @@ namespace lve {
 		RenderSystem(const RenderSystem&) = delete; // delete copy constructor
 		RenderSystem& operator=(const RenderSystem&) = delete; // and copy operator, make sure to not have 2 pointer to window, then if we destroy one, the second isnt destroyed
 
-	protected:
-		RenderSystem(VkRenderPass renderPass, std::vector <VkDescriptorSetLayout> p_descriptorSetLayouts, uint32_t p_pushConstantSize, std::string p_vertShader, std::string p_fragShader, bool p_clearAttributes = false);//globalSetLayout to tell the pipeline what descriptor set layout will be
+		virtual std::vector<VkDescriptorSetLayout> buildLayouts(VkDescriptorSetLayout globalSetLayout);
 
-
-		virtual void update(FrameInfo& frameInfo, GlobalUbo& ubo) = 0;
+		virtual void update(FrameInfo& frameInfo, GlobalUbo& ubo) {};
 		virtual void render(FrameInfo& frameInfo) = 0;// camera not meber bs we want to be able to share camera object multiple mtiple render system
-
+		virtual void createPipelineInfo(PipelineConfigInfo& p_pipelineInfoOut);
+		void init(VkRenderPass renderPass, std::vector <VkDescriptorSetLayout> p_descriptorSetLayouts, uint32_t p_pushConstantSize, std::string p_vertShader, std::string p_fragShader, bool p_clearAttributes = false);
+	
+	protected:
+		RenderSystem();//globalSetLayout to tell the pipeline what descriptor set layout will be
 		void createPipelineLayout(std::vector <VkDescriptorSetLayout> p_descriptorSetLayouts, uint32_t p_pushConstantSize);
-		void createPipeline(VkRenderPass renderPass, std::string p_vertShader, std::string p_fragShader, bool p_clearAttributes);//just to create the pipeline
+		virtual void createPipeline(VkRenderPass renderPass, std::string p_vertShader, std::string p_fragShader, bool p_clearAttributes);//just to create the pipeline
 
 		//LveWindow _window{ WIDTH,HEIGHT,"SimpleRenderSystem" };// first app created auto creat window destroy auto destroy
 		//std::unique_ptr<LveSwapChain> lveSwapChain;//using pointer small performance cost

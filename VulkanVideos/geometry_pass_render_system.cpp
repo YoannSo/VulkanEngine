@@ -10,29 +10,41 @@ namespace lve {
 
 
     GeometryPassRenderSystem::GeometryPassRenderSystem(VkRenderPass renderPass, VkDescriptorSetLayout globalSetLayout)
-        : RenderSystem(renderPass, buildLayouts(globalSetLayout), sizeof(SimplePushConstantData), "shaders/gBuffer.vert.spv", "shaders/gBuffer.frag.spv")  // call base class constructor
+        : RenderSystem()  // call base class constructor
     {
+        auto layouts = buildLayouts(globalSetLayout);
+        uint32_t pushConstantSize = sizeof(SimplePushConstantData);
+        init(renderPass, layouts, pushConstantSize, "shaders/gBuffer.vert.spv", "shaders/gBuffer.frag.spv");
+
     }
     GeometryPassRenderSystem::~GeometryPassRenderSystem() {
     }
 
     void GeometryPassRenderSystem::render(FrameInfo& frameInfo)
     {
+        lvePipeline->bind(frameInfo.commandBuffer);
+
+        vkCmdBindDescriptorSets(frameInfo.commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout,
+            0, // starting set
+            1, // number of sets
+            &frameInfo.globalDescriptorSet,
+            0,
+            nullptr
+        );
+
+        vkCmdBindDescriptorSets(frameInfo.commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout,
+            1, // starting set
+            1, // number of sets
+            &(SceneManager::getInstance()->getGlobalDescriptorSet()[frameInfo.frameIndex]),
+            0,
+            nullptr
+        );
+
+        drawBatch(frameInfo, SceneManager::getInstance()->getOpaqueRenderingBatch());
     }
 
 
-    std::vector<VkDescriptorSetLayout> GeometryPassRenderSystem::buildLayouts(VkDescriptorSetLayout globalSetLayout) {
-
-        std::vector<VkDescriptorSetLayout> descriptorSetLayouts{ globalSetLayout };
-
-        if (SceneManager::getInstance()->getTextureMap().size() > 0) {
-            descriptorSetLayouts.push_back(SceneManager::getInstance()->getDescriptorSetLayout().getDescriptorSetLayout());
-        }
-
-        descriptorSetLayouts.push_back(SceneManager::getInstance()->getMaterialDescriptorSetLayout().getDescriptorSetLayout());
-
-        return descriptorSetLayouts;
-    }
+ 
 
     void GeometryPassRenderSystem::drawBatch(FrameInfo& frameInfo, SceneManager::RenderingBatch& batchs)
     {
@@ -59,6 +71,11 @@ namespace lve {
                 }
             }
         }
+    }
+
+    void GeometryPassRenderSystem::createPipelineInfo(PipelineConfigInfo& p_pipelineInfoOut)
+    {
+         LvePipeline::defaultDeferredPipelineConfigInfo(p_pipelineInfoOut);
     }
 
 }

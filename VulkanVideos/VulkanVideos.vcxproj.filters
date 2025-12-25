@@ -34,6 +34,15 @@
     <Filter Include="Header Files\systems">
       <UniqueIdentifier>{b4da41a5-622e-4e10-a46c-3f2d3df203b2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\GUI">
+      <UniqueIdentifier>{5361df3c-2576-4f43-a08d-932ae403889b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Renderer">
+      <UniqueIdentifier>{a239ce88-a112-482e-92dc-9739afd65e03}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Renderer">
+      <UniqueIdentifier>{230575e8-2eed-4e9d-a8c4-000b0ad181c6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -81,9 +90,6 @@
     <ClCompile Include="lve_model.cpp">
       <Filter>Source Files\VulkanUtils</Filter>
     </ClCompile>
-    <ClCompile Include="lve_renderer.cpp">
-      <Filter>Source Files\VulkanUtils</Filter>
-    </ClCompile>
     <ClCompile Include="lve_swap_chain.cpp">
       <Filter>Source Files\VulkanUtils</Filter>
     </ClCompile>
@@ -112,24 +118,33 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="GuiManager.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\GUI</Filter>
     </ClCompile>
     <ClCompile Include="..\external\imgui\imgui.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\GUI</Filter>
     </ClCompile>
     <ClCompile Include="..\external\imgui\imgui_draw.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\external\imgui\imgui_tables.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\external\imgui\imgui_widgets.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\GUI</Filter>
     </ClCompile>
     <ClCompile Include="..\external\imgui\backends\imgui_impl_glfw.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\GUI</Filter>
     </ClCompile>
     <ClCompile Include="..\external\imgui\backends\imgui_impl_vulkan.cpp">
+      <Filter>Source Files\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\external\imgui\imgui_tables.cpp">
+      <Filter>Source Files\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\external\imgui\imgui_widgets.cpp">
+      <Filter>Source Files\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="ForwardRenderer.cpp">
+      <Filter>Source Files\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="lve_renderer.cpp">
+      <Filter>Source Files\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="DeferredRenderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -173,9 +188,6 @@
     <ClInclude Include="lve_model.hpp">
       <Filter>Header Files\VulkanUtils</Filter>
     </ClInclude>
-    <ClInclude Include="lve_renderer.hpp">
-      <Filter>Header Files\VulkanUtils</Filter>
-    </ClInclude>
     <ClInclude Include="lve_swap_chain.hpp">
       <Filter>Header Files\VulkanUtils</Filter>
     </ClInclude>
@@ -217,6 +229,15 @@
     </ClInclude>
     <ClInclude Include="GuiManager.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="lve_renderer.hpp">
+      <Filter>Header Files\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="ForwardRenderer.hpp">
+      <Filter>Header Files\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="DeferredRenderer.hpp">
+      <Filter>Header Files\Renderer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

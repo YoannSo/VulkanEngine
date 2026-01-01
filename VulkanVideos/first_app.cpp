@@ -198,11 +198,7 @@ namespace lve {
 				auto recordStart = std::chrono::high_resolution_clock::now();
 
 
-				lveRenderer.beginSwapChainRenderPass(commandBuffer);
-
-				//render first solid object 
-				lveRenderer.renderRenderSystems(frameInfo);
-
+				lveRenderer.render(frameInfo);
 				//m_guiManager->render(commandBuffer);
 
 				// write GPU timestamp end for this frame
@@ -216,7 +212,6 @@ namespace lve {
 				double recordMs = std::chrono::duration<double, std::milli>(recordEnd - recordStart).count();
 
 
-				lveRenderer.endSwapChainRenderPass(commandBuffer);
 				lveRenderer.endFrame();
 
 				// After present, fetch GPU timestamp results for this frame (debug only)

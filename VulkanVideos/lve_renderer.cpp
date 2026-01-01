@@ -11,11 +11,13 @@ namespace lve {
 	}
 
 	void LveRenderer::init() {
+
 		recreateSwapChain();
 		onSwapChainRecreated();
 		createRenderPass();
 		createFramebuffers();
 		createCommandBuffers();
+
 	}
 	void LveRenderer::writeTimestampStart(VkCommandBuffer cmd, VkQueryPool queryPool, uint32_t index) {
 		if (queryPool == VK_NULL_HANDLE) return;
@@ -100,11 +102,8 @@ namespace lve {
 		renderPassInfo.renderArea.offset = { 0,0 }; // render area, 
 		renderPassInfo.renderArea.extent = m_swapChain->getSwapChainExtent();//swapchain extent instead of window extent
 			
-		std::array<VkClearValue, 4> clearValues{};//what we want the initiale value of frame buffer attachement
-		clearValues[0].color = { 0.0f,0.0f,0.0f,1.0f };//albedo attachement
-		clearValues[2].color = { 0.0f,0.0f,0.0f,1.0f };//normal attachement
-		clearValues[3].color = { 0.0f,0.0f,0.0f,1.0f };//position attachement
-		clearValues[1].depthStencil = { 1.f, 0 };//index 0 is color attachement and 1 is deth, because we setuped like this in the render pass
+		std::array<VkClearValue, 1> clearValues{};//what we want the initiale value of frame buffer attachement
+		clearValues[0].color = { 0.01f,0.01f,0.01f,1.0f };
 
 		renderPassInfo.clearValueCount = static_cast<uint32_t>(clearValues.size());
 		renderPassInfo.pClearValues = clearValues.data();
@@ -188,7 +187,10 @@ namespace lve {
 		for (size_t i = 0; i < m_swapChain->imageCount(); ++i) {
 			
 			std::vector<VkImageView> attachementView;
-			getAttachementView(i, attachementView);
+			//getAttachementView(i, attachementView);
+
+			attachementView.push_back(m_swapChain->getImageView(i));
+			//attachementView.push_back(m_swapChain->getDepthImageView(i));
 
 			VkExtent2D swapChainExtent = m_swapChain->getSwapChainExtent();
 			VkFramebufferCreateInfo framebufferInfo = {};
@@ -214,7 +216,51 @@ namespace lve {
 
 	void LveRenderer::createRenderPass() {
 
-		fillRenderPassInfo();// virtual fction implemented in derived class
+	//	fillRenderPassInfo();// virtual fction implemented in derived class
+
+
+		m_attachments.clear();
+		m_subpasses.clear();
+		m_dependencies.clear();
+		m_colorAttachmentRefs.clear();
+
+
+		VkAttachmentDescription colorAttachment = {};
+		colorAttachment.format = m_swapChain->getSwapChainImageFormat();
+		colorAttachment.samples = VK_SAMPLE_COUNT_1_BIT;
+		colorAttachment.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
+		colorAttachment.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
+		colorAttachment.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+		colorAttachment.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
+		colorAttachment.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+		colorAttachment.finalLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
+
+		m_attachments.push_back(colorAttachment);
+
+		VkAttachmentReference colorAttachmentRef = {};
+		colorAttachmentRef.attachment = 0;
+		colorAttachmentRef.layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+		m_colorAttachmentRefs.push_back(colorAttachmentRef);
+
+		VkSubpassDescription subpass = {};
+		subpass.pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS;
+		subpass.colorAttachmentCount = 1;
+		subpass.pColorAttachments = m_colorAttachmentRefs.data();
+		subpass.pDepthStencilAttachment = nullptr;
+
+		m_subpasses.push_back(subpass);
+
+		VkSubpassDependency dependency{};
+		dependency.srcSubpass = VK_SUBPASS_EXTERNAL;
+		dependency.srcStageMask = VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT;
+		dependency.srcAccessMask = VK_ACCESS_SHADER_READ_BIT;
+		dependency.dstSubpass = 0;
+		dependency.dstStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+		dependency.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+
+
+		m_dependencies.push_back(dependency);
+
 
 		VkRenderPassCreateInfo renderPassInfo = {};
 		renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
@@ -246,5 +292,13 @@ void lve::LveRenderer::renderRenderSystems(FrameInfo& frameInfo)
 
 	}
 }
+
+void lve::LveRenderer::render(FrameInfo& frameInfo) {
+	beginSwapChainRenderPass(frameInfo.commandBuffer);
+	renderRenderSystems(frameInfo);
+	endSwapChainRenderPass(frameInfo.commandBuffer);
+}
+
+
 
 

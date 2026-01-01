@@ -18,7 +18,7 @@ namespace lve {
 
 	private:
 		void fillRenderPassInfo() override;
-		void getAttachementView(uint32_t p_imgIndex, std::vector<VkImageView>& p_outputAttachement)override;
+		//void getAttachementView(uint32_t p_imgIndex, std::vector<VkImageView>& p_outputAttachement)override;
 
 
 	};

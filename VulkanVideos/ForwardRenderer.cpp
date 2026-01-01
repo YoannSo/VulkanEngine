@@ -78,13 +78,13 @@ void lve::ForwardRenderer::fillRenderPassInfo()
 
 }
 
-void lve::ForwardRenderer::getAttachementView(uint32_t p_imgIndex, std::vector<VkImageView>& p_outputAttachement)
+/*void lve::ForwardRenderer::getAttachementView(uint32_t p_imgIndex, std::vector<VkImageView>& p_outputAttachement)
 {
     p_outputAttachement.clear();
     p_outputAttachement.push_back(m_swapChain->getImageView(p_imgIndex));
 	p_outputAttachement.push_back(m_swapChain->getDepthImageView(p_imgIndex));
 }
-
+*/
 void lve::ForwardRenderer::createRenderSystems(VkDescriptorSetLayout p_globalDescriptorSet)
 {
 	m_renderSystems.push_back(std::make_unique<SimpleRenderSystem>(m_renderPass, p_globalDescriptorSet));

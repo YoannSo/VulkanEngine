@@ -135,114 +135,92 @@ namespace lve {
 	}
 	void LvePipeline::defaultFowardPipelineConfigInfo(PipelineConfigInfo& configInfo) {
 
-		configInfo.inputAssemblyInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO;
-		configInfo.inputAssemblyInfo.topology = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
+		configInfo.inputAssemblyInfo = {};
+		configInfo.inputAssemblyInfo.sType =
+			VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO;
+		configInfo.inputAssemblyInfo.topology =
+			VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
 		configInfo.inputAssemblyInfo.primitiveRestartEnable = VK_FALSE;
 
-		///was not dynamic 
-	   /* //viewport describe the transformation between pipeline output and target image gl=>output image
-		configInfo.viewport.x = 0.0f;
-		configInfo.viewport.y = 0.0f;
-		configInfo.viewport.width = static_cast<float>(width);
-		configInfo.viewport.height = static_cast<float>(height);
-
-		//depth,
-		configInfo.viewport.minDepth = 0.0f;
-		configInfo.viewport.maxDepth = 1.0f;
-
-		//scissor kind of like the viewport, every pixel outside this, will be discarbed
-		configInfo.scissor.offset = {0, 0};
-		configInfo.scissor.extent = {width, height};*/
-
-
-		configInfo.viewportInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO;
+		// Viewport and Scissor (dynamic)
+		configInfo.viewportInfo = {};
+		configInfo.viewportInfo.sType =
+			VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO;
 		configInfo.viewportInfo.viewportCount = 1;
 		configInfo.viewportInfo.pViewports = nullptr;
 		configInfo.viewportInfo.scissorCount = 1;
 		configInfo.viewportInfo.pScissors = nullptr;
 
-
-
-
-		//setup the rasterizer state
-		configInfo.rasterizationInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO;
-		configInfo.rasterizationInfo.depthClampEnable = VK_FALSE;//will clamp to 1 max and -1 min, but not good for true, because too far is far not close
-		configInfo.rasterizationInfo.rasterizerDiscardEnable = VK_FALSE;//discard all primitive before tasterization, when you only wnana see the first stage of the pipeline 
-		configInfo.rasterizationInfo.polygonMode = VK_POLYGON_MODE_FILL;//triangle ? just corner ? filled ? 
+		// Rasterizer
+		configInfo.rasterizationInfo = {};
+		configInfo.rasterizationInfo.sType =
+			VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO;
+		configInfo.rasterizationInfo.depthClampEnable = VK_FALSE;
+		configInfo.rasterizationInfo.rasterizerDiscardEnable = VK_FALSE;
+		configInfo.rasterizationInfo.polygonMode =
+			VK_POLYGON_MODE_FILL;
 		configInfo.rasterizationInfo.lineWidth = 1.0f;
-		configInfo.rasterizationInfo.cullMode = VK_CULL_MODE_FRONT_BIT; //discard triangle by their facing ? front to camera ? back ?
-		configInfo.rasterizationInfo.frontFace = VK_FRONT_FACE_CLOCKWISE; // which is facing ? 
-		configInfo.rasterizationInfo.depthBiasEnable = VK_FALSE; //alter deapth value, by ading value
-		configInfo.rasterizationInfo.depthBiasConstantFactor = 0.0f;  // Optional
-		configInfo.rasterizationInfo.depthBiasClamp = 0.0f;           // Optional
-		configInfo.rasterizationInfo.depthBiasSlopeFactor = 0.0f;     // Optional
+		configInfo.rasterizationInfo.cullMode =
+			VK_CULL_MODE_NONE;
+		configInfo.rasterizationInfo.frontFace =
+			VK_FRONT_FACE_COUNTER_CLOCKWISE;
+		configInfo.rasterizationInfo.depthBiasEnable = VK_FALSE;
 
-
-		//multisampling, alising, if we use the pixel cneter to color  probleme of alisiang, multesampling in the pixel for the color
-		configInfo.multisampleInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO;
+		// Multisampling
+		configInfo.multisampleInfo = {};
+		configInfo.multisampleInfo.sType =
+			VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO;
 		configInfo.multisampleInfo.sampleShadingEnable = VK_FALSE;
-		configInfo.multisampleInfo.rasterizationSamples = VK_SAMPLE_COUNT_1_BIT;
-		configInfo.multisampleInfo.minSampleShading = 1.0f;           // Optional
-		configInfo.multisampleInfo.pSampleMask = nullptr;             // Optional
-		configInfo.multisampleInfo.alphaToCoverageEnable = VK_FALSE;  // Optional
-		configInfo.multisampleInfo.alphaToOneEnable = VK_FALSE;       // Optional
+		configInfo.multisampleInfo.rasterizationSamples =
+			VK_SAMPLE_COUNT_1_BIT;
 
-
-
-		// Crée un blend state par attachment ici 1
+		// Color blend (1 output attachment)
 		configInfo.colorBlendAttachments.resize(1);
+		configInfo.colorBlendAttachments[0] = {};
+		configInfo.colorBlendAttachments[0].colorWriteMask =
+			VK_COLOR_COMPONENT_R_BIT |
+			VK_COLOR_COMPONENT_G_BIT |
+			VK_COLOR_COMPONENT_B_BIT |
+			VK_COLOR_COMPONENT_A_BIT;
+		configInfo.colorBlendAttachments[0].blendEnable = VK_FALSE;
 
-
-		for (auto& attachment : configInfo.colorBlendAttachments) {
-			attachment = {};
-			attachment.colorWriteMask =
-				VK_COLOR_COMPONENT_R_BIT | VK_COLOR_COMPONENT_G_BIT |
-				VK_COLOR_COMPONENT_B_BIT | VK_COLOR_COMPONENT_A_BIT;
-			attachment.blendEnable = VK_FALSE;  // pas de blending pour le G-Buffer
-			attachment.srcColorBlendFactor = VK_BLEND_FACTOR_SRC_ALPHA;   // facultatif si blendEnable = VK_FALSE
-			attachment.dstColorBlendFactor = VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA;  // facultatif
-			attachment.colorBlendOp = VK_BLEND_OP_ADD;              // facultatif
-			attachment.srcAlphaBlendFactor = VK_BLEND_FACTOR_ONE;   // facultatif
-			attachment.dstAlphaBlendFactor = VK_BLEND_FACTOR_ZERO;  // facultatif
-			attachment.alphaBlendOp = VK_BLEND_OP_ADD;              // facultatif
-		}
-
-		configInfo.colorBlendInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO;
+		configInfo.colorBlendInfo = {};
+		configInfo.colorBlendInfo.sType =
+			VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO;
 		configInfo.colorBlendInfo.logicOpEnable = VK_FALSE;
-		configInfo.colorBlendInfo.logicOp = VK_LOGIC_OP_COPY;  // Optional
 		configInfo.colorBlendInfo.attachmentCount = 1;
-		configInfo.colorBlendInfo.pAttachments = configInfo.colorBlendAttachments.data();
-		configInfo.colorBlendInfo.blendConstants[0] = 0.0f;  // Optional
-		configInfo.colorBlendInfo.blendConstants[1] = 0.0f;  // Optional
-		configInfo.colorBlendInfo.blendConstants[2] = 0.0f;  // Optional
-		configInfo.colorBlendInfo.blendConstants[3] = 0.0f;  // Optional
+		configInfo.colorBlendInfo.pAttachments =
+			configInfo.colorBlendAttachments.data();
 
-
-		//depth buffer aditionnal attanchement to fram buffer , store value of the depth for every pixel, 
-		//depth buffer of the fra
-		configInfo.depthStencilInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO;
-		configInfo.depthStencilInfo.depthTestEnable = VK_TRUE;
-		configInfo.depthStencilInfo.depthWriteEnable = VK_TRUE;
-		configInfo.depthStencilInfo.depthCompareOp = VK_COMPARE_OP_LESS;
-		configInfo.depthStencilInfo.depthBoundsTestEnable = VK_FALSE;
-		configInfo.depthStencilInfo.minDepthBounds = 0.0f;  // Optional
-		configInfo.depthStencilInfo.maxDepthBounds = 1.0f;  // Optional
+		// Depth stencil disabled
+		configInfo.depthStencilInfo = {};
+		configInfo.depthStencilInfo.sType =
+			VK_STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO;
+		configInfo.depthStencilInfo.depthTestEnable = VK_FALSE;
+		configInfo.depthStencilInfo.depthWriteEnable = VK_FALSE;
+		configInfo.depthStencilInfo.depthCompareOp =
+			VK_COMPARE_OP_ALWAYS;
 		configInfo.depthStencilInfo.stencilTestEnable = VK_FALSE;
-		configInfo.depthStencilInfo.front = {};  // Optional
-		configInfo.depthStencilInfo.back = {};   // Optional
 
-		//configure the pipeline to expect dynamic pipeleine and viewport
-		configInfo.dynamicStateEnables = { VK_DYNAMIC_STATE_VIEWPORT, VK_DYNAMIC_STATE_SCISSOR };
-		configInfo.dynamicStateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_DYNAMIC_STATE_CREATE_INFO;
-		configInfo.dynamicStateInfo.pDynamicStates = configInfo.dynamicStateEnables.data();
+		// Dynamic states
+		configInfo.dynamicStateEnables.clear();
+		configInfo.dynamicStateEnables.push_back(
+			VK_DYNAMIC_STATE_VIEWPORT);
+		configInfo.dynamicStateEnables.push_back(
+			VK_DYNAMIC_STATE_SCISSOR);
+
+		configInfo.dynamicStateInfo = {};
+		configInfo.dynamicStateInfo.sType =
+			VK_STRUCTURE_TYPE_PIPELINE_DYNAMIC_STATE_CREATE_INFO;
+		configInfo.dynamicStateInfo.pDynamicStates =
+			configInfo.dynamicStateEnables.data();
 		configInfo.dynamicStateInfo.dynamicStateCount =
-			static_cast<uint32_t>(configInfo.dynamicStateEnables.size());
-		configInfo.dynamicStateInfo.flags = 0;
+			static_cast<uint32_t>(
+				configInfo.dynamicStateEnables.size());
 
-
-
-		configInfo.bindingDescriptions = Vertex::getBindingDescriptions();
-		configInfo.attributDescriptions = Vertex::getAttributeDescription();
+		// No vertex input (fullscreen triangle)
+		configInfo.bindingDescriptions.clear();
+		configInfo.attributDescriptions.clear();
 
 	}
 	void LvePipeline::enableAlphaBlinding(PipelineConfigInfo& configInfo)
@@ -261,7 +239,7 @@ namespace lve {
 			colorBlendInfo.alphaBlendOp = VK_BLEND_OP_ADD;              // Optional
 		}
 
-		
+
 
 	}
 	std::vector<char> LvePipeline::readFile(const std::string& filePath) {

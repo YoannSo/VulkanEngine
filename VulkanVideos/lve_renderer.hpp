@@ -56,6 +56,8 @@ namespace lve {
 		void updateRenderSystems(FrameInfo& frameInfo, GlobalUbo& ubo);
 		void renderRenderSystems(FrameInfo& frameInfo);
 
+		virtual void render(FrameInfo& frameInfo);
+
 
 
 	private:
@@ -87,17 +89,16 @@ namespace lve {
 
 		VkRenderPass m_renderPass;
 
+		uint32_t currentImgIndex;
+		bool isFrameStarted{ false };
+		int currentFrameIndex{ 0 };
+
 
 	private:
 
 
 		LveWindow& _window;// first app created auto creat window destroy auto destroy
 		std::vector<VkCommandBuffer> commandBuffers;
-
-		uint32_t currentImgIndex;
-		int currentFrameIndex{ 0 };
-		bool isFrameStarted{ false };
-
 		std::vector<VkFramebuffer> m_frameBuffers;
 
 

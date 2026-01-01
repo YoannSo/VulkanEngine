@@ -64,6 +64,7 @@ void main(){
     outColor = vec4(materialUbo.diffuseColor.xyz,0.5);
 	return;
 	}
+	
     vec3 diffuseColor = materialUbo.diffuseColor.xyz;
     if (materialUbo.hasDiffuseMap != -1) {
         diffuseColor = texture(textures[materialUbo.hasDiffuseMap], inUV).xyz;

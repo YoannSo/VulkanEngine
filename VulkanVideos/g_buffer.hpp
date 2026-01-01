@@ -3,7 +3,9 @@
 #include <vulkan/vulkan.h>
 #include <vector>
 #include "lve_device.hpp"
-
+#include "lve_descriptor.hpp"
+#include "lve_buffer.hpp"
+#include "SceneManager.h"
 namespace lve {
 class GBuffer {
 public:
@@ -21,11 +23,23 @@ public:
 
     void getImageViews(uint32_t index, std::vector<VkImageView>& outputViews) const;
 
+    VkDescriptorSetLayout getDescritporSetLayout() const {
+        return m_descriptorSetLayout->getDescriptorSetLayout();
+	}
+	const std::vector<VkDescriptorSet>& getDescriptorSets() const { return m_descriptorSet; }
+
 private:
     void createImages();
     void createSampler();
     void createImageViews();
     void cleanup();
+	void createDescriptorSetLayout();
+	void createDescriptorSets();
+private:
+
+	std::vector<VkDescriptorSet> m_descriptorSet;
+    std::unique_ptr<LveDescriptorSetLayout> m_descriptorSetLayout;
+    std::vector<LveBuffer*> m_uboBuffer;
 
     LveDevice* device{ nullptr };
     VkExtent2D extent{};

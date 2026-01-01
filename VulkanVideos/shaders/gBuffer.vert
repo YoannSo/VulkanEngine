@@ -1,34 +1,41 @@
 #version 450
 
-// === Global UBO (camera only) ===
+// ===== Global UBO (identique au forward, mais réduit) =====
 layout(set = 0, binding = 0) uniform GlobalUbo {
     mat4 projection;
     mat4 view;
-} ubo;
+} globalUbo;
 
-// === Push constants (par objet) ===
+// ===== Push constants (identique forward) =====
 layout(push_constant) uniform Push {
     mat4 modelMatrix;
     mat4 normalMatrix;
 } push;
 
-// === Vertex inputs ===
-layout(location = 0) in vec3 inPosition;
-layout(location = 1) in vec3 inColor;   // optionnel
-layout(location = 2) in vec3 inNormal;
-layout(location = 3) in vec2 inUV;
 
-// === Outputs vers fragment shader ===
+layout(set=2, binding=0)uniform ObjectUbo{
+	int _idText;
+}objectUbo;
+
+
+// ===== Vertex inputs (MÊMES locations que forward) =====
+layout(location = 0) in vec3 position;
+layout(location = 1) in vec3 color;   // pas utilisé mais conservé
+layout(location = 2) in vec3 normal;
+layout(location = 3) in vec2 uv;
+
+// ===== Outputs vers fragment shader =====
 layout(location = 0) out vec3 fragPosWorld;
 layout(location = 1) out vec3 fragNormalWorld;
 layout(location = 2) out vec2 fragUV;
 
-void main() {
-    vec4 worldPos = push.modelMatrix * vec4(inPosition, 1.0);
+void main()
+{
+    vec4 positionWorld = push.modelMatrix * vec4(position, 1.0);
 
-    gl_Position = ubo.projection * ubo.view * worldPos;
+    gl_Position = globalUbo.projection * globalUbo.view * positionWorld;
 
-    fragPosWorld = worldPos.xyz;
-    fragNormalWorld = normalize(mat3(push.normalMatrix) * inNormal);
-    fragUV = inUV;
+    fragPosWorld    = positionWorld.xyz;
+    fragNormalWorld = normalize(mat3(push.normalMatrix) * normal);
+    fragUV          = uv;
 }

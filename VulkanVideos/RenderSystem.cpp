@@ -61,9 +61,9 @@ namespace lve {
 
 		std::vector<VkDescriptorSetLayout> descriptorSetLayouts{ globalSetLayout };
 
-		if (SceneManager::getInstance()->getTextureMap().size() > 0) {
-			descriptorSetLayouts.push_back(SceneManager::getInstance()->getDescriptorSetLayout().getDescriptorSetLayout());
-		}
+		//if (SceneManager::getInstance()->getTextureMap().size() > 0) {
+		//	descriptorSetLayouts.push_back(SceneManager::getInstance()->getDescriptorSetLayout().getDescriptorSetLayout());
+		//}
 
 		descriptorSetLayouts.push_back(SceneManager::getInstance()->getMaterialDescriptorSetLayout().getDescriptorSetLayout());
 

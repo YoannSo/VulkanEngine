@@ -14,7 +14,7 @@ namespace lve {
 		ForwardRenderer(LveWindow& window, LveDevice* p_deviceRef);
 		~ForwardRenderer();
 
-		virtual void createRenderSystems(VkDescriptorSetLayout p_globalDescriptorSet)override;
+		virtual void createRenderSystems(std::vector<VkDescriptorSetLayout>& p_globalDescriptorSet)override;
 
 	private:
 		void fillRenderPassInfo() override;

@@ -14,7 +14,7 @@ namespace lve {
 		DeferredRenderer(LveWindow& window, LveDevice* p_deviceRef);
 		~DeferredRenderer();
 
-		virtual void createRenderSystems(VkDescriptorSetLayout p_globalDescriptorSet)override;
+		virtual void createRenderSystems(std::vector<VkDescriptorSetLayout>& p_globalDescriptorSet)override;
 		void render(FrameInfo& frameInfo) override;
 
 	private:

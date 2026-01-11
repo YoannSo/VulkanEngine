@@ -52,7 +52,7 @@ namespace lve {
 		void writeTimestampStart(VkCommandBuffer cmd, VkQueryPool queryPool, uint32_t index);
 		void writeTimestampEnd(VkCommandBuffer cmd, VkQueryPool queryPool, uint32_t index);
 
-		virtual void createRenderSystems(VkDescriptorSetLayout p_globalDescriptorSet) = 0;
+		virtual void createRenderSystems(std::vector<VkDescriptorSetLayout>& p_globalDescriptorSet) = 0;
 		void updateRenderSystems(FrameInfo& frameInfo, GlobalUbo& ubo);
 		void renderRenderSystems(FrameInfo& frameInfo);
 

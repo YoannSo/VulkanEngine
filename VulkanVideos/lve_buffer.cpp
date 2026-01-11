@@ -99,6 +99,18 @@ namespace lve {
         }
     }
 
+    void LveBuffer::writeToBuffer(const void* data, VkDeviceSize size, VkDeviceSize offset) {
+        assert(mapped && "Cannot copy to unmapped buffer");
+
+        if (size == VK_WHOLE_SIZE) {
+            memcpy(mapped, data, bufferSize);
+        }
+        else {
+            char* memOffset = (char*)mapped;
+            memOffset += offset;
+            memcpy(memOffset, data, size);
+        }
+    }
     /**
      * Flush a memory range of the buffer to make it visible to the device
      *

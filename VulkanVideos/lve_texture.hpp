@@ -27,7 +27,7 @@ namespace lve {
 		VkSampler getSampler() { return _vkSampler; }
 		VkImageView getImageView() { return _vkImageView; }
 		VkImageLayout getImageLayout() { return _vkImageLayout; }
-		VkDescriptorImageInfo getDescriptorImageInfo();
+		VkDescriptorImageInfo getDescriptorImageInfo()const;
 
 	private:
 		void generateMipMaps();

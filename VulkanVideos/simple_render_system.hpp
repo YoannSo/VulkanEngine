@@ -17,7 +17,7 @@ namespace lve {
 	public:
 
 
-		SimpleRenderSystem( VkRenderPass renderPass, VkDescriptorSetLayout globalSetLayout);//globalSetLayout to tell the pipeline what descriptor set layout will be
+		SimpleRenderSystem( VkRenderPass renderPass, std::vector<VkDescriptorSetLayout>& globalSetLayout);//globalSetLayout to tell the pipeline what descriptor set layout will be
 		~SimpleRenderSystem();
 		
 		SimpleRenderSystem(const SimpleRenderSystem&) = delete; // delete copy constructor

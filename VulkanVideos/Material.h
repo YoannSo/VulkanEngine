@@ -14,30 +14,19 @@ namespace lve {
 	class Material
 	{
 	
+	public:
+		struct MaterialGPU {
+			glm::vec4 ambien { 0.f,0.f,0.f,0.f };
+			glm::vec4 diffuseColor{ 0.f,0.f,0.f,0.f };
+			glm::vec4 specular{ 0.f,0.f,0.f,0.f };
+			glm::vec4 emission{ 0.f,0.f,0.f,0.f };
+			glm::vec4 transmissionFilter{ 0.f,0.f,0.f,0.f };
 
-		struct MaterialUBO {
-			glm::vec4 ambientColor{ 0.f, 0.f, 0.f, 1.f };  // Ka (Ambient)
-			glm::vec4 diffuseColor{ 1.f, 0.f, 0.f, 1.f };  // Kd (Diffuse)
-			glm::vec4 specularColor{ 0.f, 0.f, 0.f, 1.f }; // Ks (Specular)
-			glm::vec4 emissionColor{ 0.f, 0.f, 0.f, 1.f }; // Ke (Emission)
-			glm::vec4 transmissionFilter{ 1.f, 1.f, 1.f, 1.f }; // Tf (Transmission Filter)
-
-			float shininess{ 0.f };  // Ns (Shininess)
-			float opacity{ 1.f };    // d (Opacity)
-			float indexOfRefraction{ 1.f }; // Ni (IOR)
-			float transparency{ 0.f }; // Tr (Transparency)
-
-			int idDiffuseMap{ -1 };
-			int idNormalMap{ -1 };
-			int idSpecularMap{ -1 };
-			int idShininessMap{ -1 };
-			int idAmbientMap{ -1 };
-			int idEmissionMap{ -1 };  // Ke Texture
-			int idTransmissionMap{ -1 }; // Tf Texture
-
-			int illuminationModel{ 0 }; // illum value
-
+			glm::vec4 params1{ 0.f,1.f,0.f,0.f }; // shininess, opacity, transparency, ior
+			glm::ivec4 maps1{ -1,-1,-1,-1 };  // diffuse, normal, specular, shininess
+			glm::ivec4 maps2{ -1,-1,-1,-1 };  // ambient, emission, transmission, illum
 		};
+
 
 	public:
 
@@ -60,18 +49,12 @@ namespace lve {
 		inline std::string getName() { return m_name; }
 
 		void setMaterialParameter(EMaterialParameter p_materialParameter, glm::vec4 p_color);
-		void setMaterialParameter(EMaterialParameter p_materialParameter, std::shared_ptr<LveTexture> p_texture);
+		void setMaterialParameter(EMaterialParameter p_materialParameter, uint32_t p_textureID);
 		void setMaterialParameter(EMaterialParameter p_materialParameter,float p_value);
 
+		inline bool isTransparent() const { return m_isTransparent;}
 
-		std::vector<VkDescriptorImageInfo> getVkDescriptorImages();
-		inline std::vector<VkDescriptorSet>& getDescriptorSet() { return m_materialDescriptorSet; }
-
-		inline bool isTransparent() const { return m_isTransparent; }
-
-		void setupDescriptorSet();
-
-		MaterialUBO m_ubo{};
+		inline const MaterialGPU& getMaterialBuffer() const { return m_gpuBuffer; }
 
 	private:
 		const std::string m_name;
@@ -81,11 +64,10 @@ namespace lve {
 		glm::vec3 m_diffuse{ 0.f,0.f,0.f };
 		glm::vec3 m_specular{ 0.f,0.f,0.f };
 		float m_shininess{ 0.f };
-		float shininess{ 0.f };  // Ns (Shininess)
-		float opacity{ 1.f };    // d (Opacity)
-		float indexOfRefraction{ 1.f }; // Ni (IOR)
-		float transparency{ 0.f }; // Tr (Transparency)
-		int illuminationModel{ 0 }; // illum value
+		float m_opacity{ 1.f };    // d (Opacity)
+		float m_indexOfRefraction{ 1.f }; // Ni (IOR)
+		float m_transparency{ 0.f }; // Tr (Transparency)
+		int m_illuminationModel{ 0 }; // illum value
 
 		std::shared_ptr<LveTexture> m_ambientMap{ nullptr };
 		std::shared_ptr<LveTexture> m_diffuseMap{ nullptr };
@@ -93,10 +75,12 @@ namespace lve {
 		std::shared_ptr<LveTexture> m_shininessMap{ nullptr };
 		std::shared_ptr<LveTexture> m_normalMap{ nullptr };
 
+		uint32_t m_idDiffuseMap{ 0 };
+		uint32_t m_idSpecularMap{ 0 };
+		uint32_t m_idAmbientMap{ 0 };
+		uint32_t m_idShininessMap{ 0 };
 
-
-		std::vector<LveBuffer*> m_uboBuffer;
-		std::vector<VkDescriptorSet> m_materialDescriptorSet;
+		MaterialGPU m_gpuBuffer;
 
 	};
 }

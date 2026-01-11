@@ -14,7 +14,7 @@ namespace lve {
 	public:
 
 
-		GeometryPassRenderSystem(VkRenderPass renderPass, VkDescriptorSetLayout globalSetLayout);//globalSetLayout to tell the pipeline what descriptor set layout will be
+		GeometryPassRenderSystem(VkRenderPass renderPass, std::vector<VkDescriptorSetLayout>& p_descriptorSetLayout);//globalSetLayout to tell the pipeline what descriptor set layout will be
 		~GeometryPassRenderSystem();
 
 		GeometryPassRenderSystem(const GeometryPassRenderSystem&) = delete; // delete copy constructor

@@ -9,8 +9,8 @@ lve::TriangleMesh::~TriangleMesh()
 }
 
 
-lve::TriangleMesh::TriangleMesh(const std::string& p_name, const std::vector<Vertex>& p_vertices, const std::vector<unsigned int>& p_indices, const std::string p_material, const Model* p_parent)
-	: _name{ p_name }, _vertices{ p_vertices }, m_materialName{ p_material }, _indices{ p_indices },m_modelRef{ p_parent }
+lve::TriangleMesh::TriangleMesh(const std::string& p_name, const std::vector<Vertex>& p_vertices, const std::vector<unsigned int>& p_indices, const uint32_t p_materialID, const Model* p_parent)
+	: _name{ p_name }, _vertices{ p_vertices }, _materialID{ p_materialID }, _indices{ p_indices },m_modelRef{ p_parent }
 {
 
 	_indexCount = _indices.size();
@@ -29,7 +29,7 @@ lve::TriangleMesh::TriangleMesh(const std::string& p_name, const std::vector<Ver
 }
 
 
-void lve::TriangleMesh::bind(VkCommandBuffer& commandBuffer, int& p_frameIndex, VkPipelineLayout& p_pipelineLayout)
+void lve::TriangleMesh::bind(VkCommandBuffer& commandBuffer, int& p_frameIndex, VkPipelineLayout& p_pipelineLayout)const
 {
 	
 
@@ -47,7 +47,7 @@ void lve::TriangleMesh::bind(VkCommandBuffer& commandBuffer, int& p_frameIndex, 
 	}
 }
 
-void lve::TriangleMesh::draw(VkCommandBuffer& commandBuffer)
+void lve::TriangleMesh::draw(VkCommandBuffer& commandBuffer)const
 {
 
 	if (_hasIndexBuffer) {

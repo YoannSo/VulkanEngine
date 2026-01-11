@@ -181,6 +181,8 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="lve_device.cpp" />
     <ClCompile Include="Material.cpp" />
+    <ClCompile Include="MaterialManager.cpp" />
+    <ClCompile Include="MaterialSystem.cpp" />
     <ClCompile Include="model.cpp" />
     <ClCompile Include="pipeline.cpp" />
     <ClCompile Include="PointLight.cpp" />
@@ -188,6 +190,7 @@
     <ClCompile Include="RenderSystem.cpp" />
     <ClCompile Include="SceneManager.cpp" />
     <ClCompile Include="simple_render_system.cpp" />
+    <ClCompile Include="TextureManager.cpp" />
     <ClCompile Include="TriangleMesh.cpp" />
     <ClCompile Include="window.cpp" />
   </ItemGroup>
@@ -214,6 +217,8 @@
     <ClInclude Include="lve_texture.hpp" />
     <ClInclude Include="lve_utils.hpp" />
     <ClInclude Include="Material.h" />
+    <ClInclude Include="MaterialManager.h" />
+    <ClInclude Include="MaterialSystem.h" />
     <ClInclude Include="model.hpp" />
     <ClInclude Include="pipeline.hpp" />
     <ClInclude Include="PointLight.h" />
@@ -221,6 +226,7 @@
     <ClInclude Include="RenderSystem.h" />
     <ClInclude Include="SceneManager.h" />
     <ClInclude Include="simple_render_system.hpp" />
+    <ClInclude Include="TextureManager.h" />
     <ClInclude Include="TriangleMesh.hpp" />
     <ClInclude Include="window.hpp" />
   </ItemGroup>

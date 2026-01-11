@@ -149,10 +149,6 @@ namespace lve {
 
         auto& bindingDescription = setLayout.bindings[binding];
 
-        assert(
-            bindingDescription.descriptorCount == 1 &&
-            "Binding single descriptor info, but binding expects multiple");// count is just 1, bc for knwo we dont hangle multiple descriptor in one binding 
-
         VkWriteDescriptorSet write{}; // then create a VKObject to add in the descriptor array of write
         write.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
         write.descriptorType = bindingDescription.descriptorType;

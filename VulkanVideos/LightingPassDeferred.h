@@ -16,7 +16,7 @@ namespace lve {
 	public:
 
 
-		LightingPassDeferred(VkRenderPass renderPass, VkDescriptorSetLayout globalSetLayout, VkDescriptorSetLayout p_gBufferDescriptorLayout, std::shared_ptr<GBuffer> p_gBuffer);//globalSetLayout to tell the pipeline what descriptor set layout will be
+		LightingPassDeferred(VkRenderPass renderPass, std::vector<VkDescriptorSetLayout>& p_descriptorSetLayout, std::shared_ptr<GBuffer> p_gBuffer);//globalSetLayout to tell the pipeline what descriptor set layout will be
 		~LightingPassDeferred();
 
 		LightingPassDeferred(const LightingPassDeferred&) = delete; // delete copy constructor

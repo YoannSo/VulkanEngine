@@ -1,19 +1,30 @@
 #pragma once
 
+#define GLM_FORCE_RADIANS//force use radian 
+#define GLM_FORCE_DEPTH_ZERO_TO_ONE //depth value to 0 to 1
 
 #include <memory>
 #include <vector>
+#include <iostream>
+#include <glm.hpp>
+#include <chrono>
 
+#include <gtc/constants.hpp>
 #include "SceneManager.h"
 #include "window.hpp"
-#include "GameObject.hpp"
-#include "lve_device.hpp"
+#include "GuiManager.h"
+#include "lve_camera.hpp"
+
 #include "ForwardRenderer.hpp"
 #include "DeferredRenderer.hpp"
-#include "lve_model.hpp"
-#include "model.hpp"
-#include "lve_descriptor.hpp"
-#include "GuiManager.h"
+
+
+#include "keyboard_movement_controller.hpp"
+#include "lve_frame_info.hpp"
+
+#include "PointLight.h"
+#include "GameObject.hpp"
+
 namespace lve {
 
 	class FirstApp {
@@ -31,9 +42,6 @@ namespace lve {
 		void run();
 	private:
 		void loadGameObjects();
-	//	void createPipelineLayout();
-	//	void createPipeline();
-	//	void renderGameObjects(VkCommandBuffer vkCOmmandBufferParameters);
 
 		//order matter init top to bottom destroy bottom to top
 		LveWindow _window{ WIDTH,HEIGHT,"FirstApp" };// first app created auto creat window destroy auto destroy

@@ -9,11 +9,13 @@ lve::DeferredRenderer::~DeferredRenderer()
 {
 }
 
-void lve::DeferredRenderer::createRenderSystems(VkDescriptorSetLayout p_globalDescriptorSet)
+void lve::DeferredRenderer::createRenderSystems(std::vector<VkDescriptorSetLayout>& p_globalDescriptorSet)
 {
 
 	m_renderSystems.push_back(std::make_unique<GeometryPassRenderSystem>(m_geometryRenderPass, p_globalDescriptorSet));
-	m_renderSystems.push_back(std::make_unique<LightingPassDeferred>(m_renderPass, p_globalDescriptorSet,m_gBuffer->getDescritporSetLayout(),m_gBuffer));
+    std::vector<VkDescriptorSetLayout> lightingPassLayouts{ p_globalDescriptorSet[0] };
+    lightingPassLayouts.emplace_back(m_gBuffer->getDescritporSetLayout());
+	m_renderSystems.push_back(std::make_unique<LightingPassDeferred>(m_renderPass, lightingPassLayouts,m_gBuffer));
 }
 
 void lve::DeferredRenderer::fillRenderPassInfo()

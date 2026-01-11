@@ -15,7 +15,7 @@ namespace lve {
 	class PointLighRenderSystem:public RenderSystem {
 
 	public:
-		PointLighRenderSystem( VkRenderPass renderPass, VkDescriptorSetLayout globalSetLayout);//globalSetLayout to tell the pipeline what descriptor set layout will be
+		PointLighRenderSystem( VkRenderPass renderPass, std::vector<VkDescriptorSetLayout>& globalSetLayout);//globalSetLayout to tell the pipeline what descriptor set layout will be
 		~PointLighRenderSystem();
 
 		PointLighRenderSystem(const PointLighRenderSystem&) = delete; // delete copy constructor

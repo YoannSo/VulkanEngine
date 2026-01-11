@@ -1,33 +1,4 @@
 #include "first_app.hpp"
-#include <stdexcept>
-#include "lve_camera.hpp"
-#include "model.hpp"
-#include "PointLight.h"
-#include <array>
-#include "simple_render_system.hpp"
-#include "point_light_system.hpp"
-#include <gtc/constants.hpp>
-#include "keyboard_movement_controller.hpp"
-#include <chrono>
-#define GLM_FORCE_RADIANS//force use radian 
-#define GLM_FORCE_DEPTH_ZERO_TO_ONE //depth value to 0 to 1
-#include <glm.hpp>
-#include "lve_buffer.hpp"
-
-#include <fstream>
-#include <stdexcept>
-#include "lve_frame_info.hpp"
-#include "simple_render_system.hpp"
-#include <iostream>
-#include <cstdlib>
-
-//#include "lve_texture.hpp"
-
-
-// General settings.
-
-
-
 
 namespace lve {
 
@@ -37,7 +8,7 @@ namespace lve {
 
 	FirstApp::FirstApp() {
 
-		system("E:/Prog/VulkanEngine/VulkanVideos/compile_shader.bat");
+		system("C:/prog/git/VulkanEngine/VulkanVideos/compile_shader.bat");
 
 		_globalPool =
 			LveDescriptorPool::Builder()
@@ -59,35 +30,11 @@ namespace lve {
 			nullptr,
 			LveSwapChain::MAX_FRAMES_IN_FLIGHT
 		);*/
-
-#ifndef NDEBUG
-		// Create GPU timestamp query pool for profiling (debug only)
-		if (m_queryPool == VK_NULL_HANDLE && LveDevice::getInstance()) {
-			VkQueryPoolCreateInfo queryPoolInfo{};
-			queryPoolInfo.sType = VK_STRUCTURE_TYPE_QUERY_POOL_CREATE_INFO;
-			queryPoolInfo.queryType = VK_QUERY_TYPE_TIMESTAMP;
-			queryPoolInfo.queryCount = 2 * LveSwapChain::MAX_FRAMES_IN_FLIGHT; // begin/end per frame
-			if (vkCreateQueryPool(LveDevice::getInstance()->getDevice(), &queryPoolInfo, nullptr, &m_queryPool) != VK_SUCCESS) {
-				std::cerr << "Failed to create query pool for profiling" << std::endl;
-				m_queryPool = VK_NULL_HANDLE;
-			}
-		}
-#endif
-
-
 		loadGameObjects();
 
 	}
 	FirstApp::~FirstApp() {
 	}
-#ifdef IMGUI_VULKAN_DEBUG_REPORT
-	static VKAPI_ATTR VkBool32 VKAPI_CALL debug_report(VkDebugReportFlagsEXT flags, VkDebugReportObjectTypeEXT objectType, uint64_t object, size_t location, int32_t messageCode, const char* pLayerPrefix, const char* pMessage, void* pUserData)
-	{
-		(void)flags; (void)object; (void)location; (void)messageCode; (void)pUserData; (void)pLayerPrefix; // Unused arguments
-		fprintf(stderr, "[vulkan] Debug report from ObjectType: %i\nMessage: %s\n\n", objectType, pMessage);
-		return VK_FALSE;
-	}
-#endif // IMGUI_VULKAN_DEBUG_REPORT
 
 	void FirstApp::run() {
 
@@ -117,8 +64,17 @@ namespace lve {
 		}
 
 
+		std::vector<VkDescriptorSetLayout> descriptorSetLayouts = { globalSetLayout->getDescriptorSetLayout()};
+		const auto& materialLayouts =
+			SceneManager::getInstance()->getMaterialSystemDescriptorSetLayouts();
+
+		descriptorSetLayouts.insert(
+			descriptorSetLayouts.end(),
+			materialLayouts.begin(),
+			materialLayouts.end()
+		);
 		//changer le traitement des descriptorset 
-		lveRenderer.createRenderSystems(globalSetLayout->getDescriptorSetLayout());
+		lveRenderer.createRenderSystems(descriptorSetLayouts);
 
 		LveCamera camera{};
 		//camera.setViewDirection(glm::vec3(0.f), glm::vec3(0.5f, 0.f, 1.f));
@@ -168,12 +124,6 @@ namespace lve {
 				int frameIndex = lveRenderer.getFrameIndex();
 
 				// Reset queries for this frame and write GPU timestamp start
-#ifndef NDEBUG
-				if (m_queryPool != VK_NULL_HANDLE) {
-					vkCmdResetQueryPool(commandBuffer, m_queryPool, frameIndex * 2, 2);
-					lveRenderer.writeTimestampStart(commandBuffer, m_queryPool, frameIndex * 2);
-				}
-#endif
 
 				FrameInfo frameInfo{ frameIndex, frameTime, commandBuffer, camera,globalDescriptorSets[frameIndex] };
 
@@ -192,53 +142,21 @@ namespace lve {
 				uboBuffers[frameIndex]->writeToBuffer(&ubo);
 				uboBuffers[frameIndex]->flush();
 
-
-
-				//begin frame and begin swap chain,  are differe,t -> want app dont main control the fonctionnality, multiple render pass for reflection shadow etc ... 
-				auto recordStart = std::chrono::high_resolution_clock::now();
-
-
 				lveRenderer.render(frameInfo);
 				//m_guiManager->render(commandBuffer);
 
 				// write GPU timestamp end for this frame
-#ifndef NDEBUG
-				if (m_queryPool != VK_NULL_HANDLE) {
-					lveRenderer.writeTimestampEnd(commandBuffer, m_queryPool, frameIndex * 2 + 1);
-				}
-#endif
 
-				auto recordEnd = std::chrono::high_resolution_clock::now();
-				double recordMs = std::chrono::duration<double, std::milli>(recordEnd - recordStart).count();
 
 
 				lveRenderer.endFrame();
-
-				// After present, fetch GPU timestamp results for this frame (debug only)
-#ifndef NDEBUG
-				if (m_queryPool != VK_NULL_HANDLE && m_enableProfiling) {
-					uint64_t timestamps[2] = { 0, 0 };
-					VkResult r = vkGetQueryPoolResults(LveDevice::getInstance()->getDevice(), m_queryPool,
-						frameIndex * 2, 2, sizeof(timestamps), timestamps, sizeof(uint64_t),
-						VK_QUERY_RESULT_64_BIT | VK_QUERY_RESULT_WAIT_BIT);
-					if (r == VK_SUCCESS) {
-						double period = LveDevice::getInstance()->properties.limits.timestampPeriod; // nanoseconds
-						uint64_t delta = timestamps[1] - timestamps[0];
-						double gpuTimeMs = (double(delta) * period) / 1000000.0;
-						if (++m_frameLogCounter % 60 == 0) {
-							std::cout << "Frame " << m_frameLogCounter << " GPU time: " << gpuTimeMs << " ms, CPU record time: " << recordMs << " ms" << std::endl;
-						}
-					}
-				}
-#endif
 
 			}
 		}
 		vkDeviceWaitIdle(LveDevice::getInstance()->getDevice());//block the stop, cpu will block until gpu is completed
 	}
-
 	void FirstApp::loadGameObjects() {
-		SceneManager::getInstance()->addTextureElement("C:/Users/anton/source/repos/VulkanEngine/VulkanEngine/VulkanVideos/models/debugTex.png", new LveTexture("C:/Users/anton/source/repos/VulkanEngine/VulkanEngine/VulkanVideos/models/debugTex.png"));
+	//	SceneManager::getInstance()->addTextureElement("C:/prog/git/VulkanEngine/VulkanVideos/models/debugTex.png", new LveTexture("C:/prog/git/VulkanEngine/VulkanVideos/models/debugTex.png"));
 
 
 		/* std::shared_ptr<Model> lveModel = std::make_shared<Model>(lveDevice, "Seahawk", "models/Helicopter/Seahawk.obj");
@@ -265,7 +183,7 @@ namespace lve {
 			bunny->transform.translation = { 0.f, .5f, 0.f };
 			bunny->transform.scale = { 3.f, 1.f, 3.f };*/
 
-		Model* floor = SceneManager::getInstance()->createModelObject("room", "models/models/conference.obj");
+		Model* floor = SceneManager::getInstance()->createModelObject("sponza", "models/sponza/sponza.obj");
 		floor->transform.translation = { 2.f, 0.f, 0.f };
 		floor->transform.rotation = { 0.f, 0.f, glm::pi<float>() };
 		floor->transform.scale = { 0.01f,  0.01f, 0.01f };
@@ -299,7 +217,7 @@ namespace lve {
 		;
 
 
-		for (int i = 0; i < lightColors.size(); i++) {
+		/*for (int i = 0; i < lightColors.size(); i++) {
 			PointLight* light = SceneManager::getInstance()->createLightObject();
 			light->setColor(lightColors[i]);
 			auto rotateLight = glm::rotate(
@@ -314,10 +232,9 @@ namespace lve {
 			light->setUpdateFunction([](GameObject* gameObject, float deltaTime) {
 				gameObject->transform.rotate(glm::vec3(0.f, 1.f, 0.f), deltaTime);
 				});
-		}
+		}*/
 
-		SceneManager::getInstance()->setMaterialDescriptorSet();
-		SceneManager::getInstance()->setupRenderingBatch();
+		SceneManager::getInstance()->initializeMaterialSystem();
 
 	}
 

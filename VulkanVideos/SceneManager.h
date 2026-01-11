@@ -5,17 +5,21 @@
 #include <string>
 #include <memory>
 #include <vector>
+
+
 #include "lve_texture.hpp"
 #include "model.hpp"
 #include "Camera.h"
 #include "PointLight.h"
 #include "define.hpp"
 
+#include "TextureManager.h"
+#include "MaterialManager.h"
+#include "MaterialSystem.h"
 namespace lve {
 
     class SceneManager {
     public:
-        using TextureMap = std::unordered_map<std::string, LveTexture*>; // efficiently look up object
         using Map = std::unordered_map<uint32_t, GameObject*>; // efficiently look up object
         using RenderingBatch = std::vector<std::pair<std::string, std::vector<TriangleMesh*>>>;
         using TransparentRenderingBatch = std::vector<std::pair<std::string, TriangleMesh*>>;
@@ -35,7 +39,6 @@ namespace lve {
         void loadGameObject(std::string p_name, std::string p_path);
 
         inline Map getSceneObjects() { return m_objectMap; }
-        inline const TextureMap getTextureMap() { return m_textureMap; }
         inline const std::vector<std::string> getShaderTextureId() { return m_shaderTextureId; }
 
         inline std::vector<VkDescriptorSet> getGlobalDescriptorSet() { return m_globalDescriptorSet; }
@@ -49,7 +52,6 @@ namespace lve {
         inline MaterialMap& getMaterialMap() { return m_materialMap; }
         inline LightMap& getLightMap() { return m_lightMap; }
 
-        int addTextureElement(std::string p_path, LveTexture* p_texture);
         void addMaterial(std::unique_ptr<Material> p_material);
 
         static SceneManager* s_sceneSingleton;
@@ -58,10 +60,30 @@ namespace lve {
                 s_sceneSingleton = new SceneManager();
             return s_sceneSingleton;
         }
-
-        void setMaterialDescriptorSet();
-        void setupRenderingBatch();
         void updateAllGameObject(float p_dt);
+
+		const Map& getObjectMap() const { return m_objectMap; }
+
+        void initializeMaterialSystem();
+
+        std::vector<VkDescriptorSetLayout> getMaterialSystemDescriptorSetLayouts() const
+        {
+            std::vector<VkDescriptorSetLayout> layouts;
+            m_materialSystem->fillDescriptorSetLayouts(layouts);
+            return layouts;
+		}
+
+        const std::vector < VkDescriptorSet>& getMaterialSystemBindlessTextureSet() const
+        {
+
+            return m_materialSystem->getBindlessTextureSet();
+		}
+
+        const std::vector < VkDescriptorSet>& getMaterialSystemMaterialSet() const
+        {
+
+            return m_materialSystem->getMaterialDescriptorSet();
+        }
 
     private:
         void setupDescriptorSet();
@@ -83,13 +105,19 @@ namespace lve {
         std::unique_ptr<LveDescriptorSetLayout> m_objectLocalSetLayout;
         std::vector<VkDescriptorSet> m_globalDescriptorSet;
 
-        TextureMap m_textureMap;
         Map m_objectMap;
         MaterialMap m_materialMap;
         RenderingBatch m_opaqueRenderingBatch;
         TransparentRenderingBatch m_transparentRenderingBatch;
         LightMap m_lightMap;
 
+
+
         std::vector<std::string> m_shaderTextureId;
+
+		TextureManager m_textureManager;
+        MaterialManager m_materialManager{ m_textureManager };
+		std::unique_ptr<MaterialSystem> m_materialSystem;
+
     };
 }

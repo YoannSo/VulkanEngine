@@ -21,7 +21,7 @@ namespace lve {
 		int m_BytesPerPixel;
 		
 		if (VERBOSE)
-			std::cout << "-****- Load Texture:" << filepath << std::endl;
+			std::cout << "-****- Create Texture:" << filepath << std::endl;
 
 		auto data = stbi_load(filepath.c_str(), &_width, &_height, &m_BytesPerPixel, 4);
 
@@ -243,7 +243,7 @@ namespace lve {
 
 	}
 
-	VkDescriptorImageInfo LveTexture::getDescriptorImageInfo()
+	VkDescriptorImageInfo LveTexture::getDescriptorImageInfo()const
 	{
 		VkDescriptorImageInfo imageDescriptor= VkDescriptorImageInfo();
 		imageDescriptor.imageLayout = _vkImageLayout;

@@ -9,15 +9,13 @@ namespace lve {
     };
 
 
-    LightingPassDeferred::LightingPassDeferred(VkRenderPass renderPass, VkDescriptorSetLayout globalSetLayout,VkDescriptorSetLayout p_gBufferDescriptorLayout, std::shared_ptr<GBuffer> p_gBuffer)
+    LightingPassDeferred::LightingPassDeferred(VkRenderPass renderPass, std::vector<VkDescriptorSetLayout>& p_descriptorSetLayout,std::shared_ptr<GBuffer> p_gBuffer)
         : RenderSystem(),
 		m_gBuffer{ p_gBuffer }
     {
 
-        auto layouts = buildLayouts(globalSetLayout);
-		layouts.push_back(p_gBufferDescriptorLayout);
         uint32_t pushConstantSize = sizeof(SimplePushConstantData);
-        init(renderPass, layouts, pushConstantSize, "shaders/LightningPassDeffered.vert.spv", "shaders/LightningPassDeffered.frag.spv");
+        init(renderPass, p_descriptorSetLayout, pushConstantSize, "shaders/LightningPassDeffered.vert.spv", "shaders/LightningPassDeffered.frag.spv");
 
     }
     std::vector<VkDescriptorSetLayout> LightingPassDeferred::buildLayouts(VkDescriptorSetLayout globalSetLayout) {

@@ -6,12 +6,11 @@ namespace lve {
         glm::mat4 normalMatrix{ 1.f };
     };
 
-    SimpleRenderSystem::SimpleRenderSystem(VkRenderPass renderPass, VkDescriptorSetLayout globalSetLayout)
+    SimpleRenderSystem::SimpleRenderSystem(VkRenderPass renderPass, std::vector<VkDescriptorSetLayout>& globalSetLayout)
     : RenderSystem ()
     {
-        auto layouts = buildLayouts(globalSetLayout);
         uint32_t pushConstantSize = sizeof(SimplePushConstantData);
-        init(renderPass, layouts, pushConstantSize, "shaders/simple_shader.vert.spv", "shaders/simple_shader.frag.spv");
+        init(renderPass, globalSetLayout, pushConstantSize, "shaders/simple_shader.vert.spv", "shaders/simple_shader.frag.spv");
 
     }
 
@@ -54,13 +53,13 @@ namespace lve {
             auto material = SceneManager::getInstance()->getMaterialMap().find(batch.first);
 
             if (batch.second.size() > 0) {
-                vkCmdBindDescriptorSets(frameInfo.commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout,
+               /* vkCmdBindDescriptorSets(frameInfo.commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout,
                     2, // starting set
                     1, // number of sets
                     &(material->second->getDescriptorSet()[frameInfo.frameIndex]),
                     0,
                     nullptr
-                );
+                );*/
 
                 for (auto& object : batch.second) {
                     SimplePushConstantData push{};
@@ -91,13 +90,13 @@ namespace lve {
             for (auto& object : transparentsObject) {
                 auto material = SceneManager::getInstance()->getMaterialMap().find(object.first);
 
-                vkCmdBindDescriptorSets(frameInfo.commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout,
+                /*vkCmdBindDescriptorSets(frameInfo.commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout,
                     2, // starting set
                     1, // number of sets
                     &(material->second->getDescriptorSet()[frameInfo.frameIndex]),
                     0,
                     nullptr
-                );
+                );*/
 
                 SimplePushConstantData push{};
                 push.modelMatrix = object.second->getModel()->transform.mat4();

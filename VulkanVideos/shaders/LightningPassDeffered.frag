@@ -27,10 +27,5 @@ const float shininess = 32.0;
 
 void main()
 {
-    if(ubo.numLights==0)
-
-        outColor = vec4(1.0,1.0,1.0, 1.0);
-        else
-    outColor = vec4(0.0,0.0,1.0, 1.0);
-
+    outColor=texture(gAlbedo,fragUV);
 }

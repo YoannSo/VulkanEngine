@@ -7,12 +7,11 @@ namespace lve {
 		float radius;
 	};
 
-	PointLighRenderSystem::PointLighRenderSystem( VkRenderPass renderPass, VkDescriptorSetLayout globalSetLayout)
+	PointLighRenderSystem::PointLighRenderSystem( VkRenderPass renderPass, std::vector<VkDescriptorSetLayout>& globalSetLayout)
 		: RenderSystem()  // call base class constructor
 	{
-		auto layouts = buildLayouts(globalSetLayout);
 		uint32_t pushConstantSize = sizeof(PointLightPushConstants);
-		init(renderPass, layouts, pushConstantSize, "shaders/point_light.vert.spv", "shaders/point_light.frag.spv", true);
+		init(renderPass, globalSetLayout, pushConstantSize, "shaders/point_light.vert.spv", "shaders/point_light.frag.spv", true);
 
 	}
     PointLighRenderSystem::~PointLighRenderSystem() {  

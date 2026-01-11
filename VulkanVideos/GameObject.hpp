@@ -33,6 +33,8 @@ namespace lve {
 
 
         TransformComponent transform;
+        virtual void bind(VkCommandBuffer& commandBuffer, int& p_frameIndex, VkPipelineLayout& p_pipelineLayout) {};
+        virtual void draw(VkCommandBuffer& commandBuffer, int& p_frameIndex, VkPipelineLayout& p_pipelineLayout) {};
     protected:
 
         uint32_t m_id;

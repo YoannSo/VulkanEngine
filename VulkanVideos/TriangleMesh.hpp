@@ -57,12 +57,12 @@ namespace lve {
 		TriangleMesh(const std::string& p_name,
 			const std::vector<Vertex>& p_vertices,
 			const std::vector<unsigned int>& p_indices,
-			const std::string p_material,
+			const uint32_t p_materialID,
 			const Model* p_parent);
 
 
-		void bind(VkCommandBuffer& commandBuffer, int& p_frameIndex, VkPipelineLayout& p_pipelineLayout);
-		void draw(VkCommandBuffer& commandBuffer);
+		void bind(VkCommandBuffer& commandBuffer, int& p_frameIndex, VkPipelineLayout& p_pipelineLayout)const;
+		void draw(VkCommandBuffer& commandBuffer)const;
 
 		void createVertexBuffers();
 		void createIndexBuffer();
@@ -75,6 +75,7 @@ namespace lve {
 
 
 
+		const uint32_t _materialID;
 
 	private:
 
@@ -89,7 +90,6 @@ namespace lve {
 		std::vector<glm::vec3> _positions;
 
 		std::vector<uint32_t> _indices;
-		std::string m_materialName;
 
 
 		uint32_t _indexCount{ 0 };

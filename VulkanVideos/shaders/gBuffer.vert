@@ -10,12 +10,8 @@ layout(set = 0, binding = 0) uniform GlobalUbo {
 layout(push_constant) uniform Push {
     mat4 modelMatrix;
     mat4 normalMatrix;
+    ivec4 params;//x:idMaterial
 } push;
-
-
-layout(set=2, binding=0)uniform ObjectUbo{
-	int _idText;
-}objectUbo;
 
 
 // ===== Vertex inputs (MÊMES locations que forward) =====
@@ -28,6 +24,7 @@ layout(location = 3) in vec2 uv;
 layout(location = 0) out vec3 fragPosWorld;
 layout(location = 1) out vec3 fragNormalWorld;
 layout(location = 2) out vec2 fragUV;
+layout(location = 3) flat out uint matIndex;
 
 void main()
 {
@@ -38,4 +35,5 @@ void main()
     fragPosWorld    = positionWorld.xyz;
     fragNormalWorld = normalize(mat3(push.normalMatrix) * normal);
     fragUV          = uv;
+    matIndex=push.params.x;
 }

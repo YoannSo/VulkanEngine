@@ -1,5 +1,4 @@
 #include "GuiManager.h"
-#include <iostream>
 #if LVF_USE_IMGUI
 // Loader helper for ImGui Vulkan to resolve function pointers through vkGetInstanceProcAddr
 static PFN_vkVoidFunction ImGuiVulkanLoader(const char* function_name, void* user_data) {

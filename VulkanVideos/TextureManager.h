@@ -1,9 +1,7 @@
 #pragma once
-#include <cstdint>
 #include <unordered_map>
 #include <string>
 #include <memory>
-#include <iostream>
 
 #include "lve_texture.hpp"
 

@@ -11,8 +11,6 @@
 #define LVF_USE_IMGUI 1
 
 
-
-
 struct GLFWwindow;
 class GuiManager {
  public:

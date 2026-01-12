@@ -30,25 +30,14 @@ namespace lve {
         SceneManager();
         ~SceneManager();
 
-        GameObject* appendGameObject();
         Model* createModelObject(std::string p_meshName, std::string p_path);
         PointLight* createLightObject();
         Camera* createCameraObject();
-
         void addGameObject(GameObject* p_newGameObject);
-        void loadGameObject(std::string p_name, std::string p_path);
 
         inline Map getSceneObjects() { return m_objectMap; }
-        inline const std::vector<std::string> getShaderTextureId() { return m_shaderTextureId; }
-
-        inline std::vector<VkDescriptorSet> getGlobalDescriptorSet() { return m_globalDescriptorSet; }
-        inline LveDescriptorSetLayout& getDescriptorSetLayout() { return *m_globalSetLayout; }
-        inline LveDescriptorSetLayout& getLocalDescriptorSetLayout() { return *m_objectLocalSetLayout; }
-        inline LveDescriptorSetLayout& getMaterialDescriptorSetLayout() { return *m_materialSetLayout; }
         inline LveDescriptorPool& getPool() { return *m_descriptorPool; }
 
-        inline RenderingBatch& getOpaqueRenderingBatch() { return m_opaqueRenderingBatch; }
-        inline TransparentRenderingBatch& getTransparentRenderingBatch() { return m_transparentRenderingBatch; }
         inline MaterialMap& getMaterialMap() { return m_materialMap; }
         inline LightMap& getLightMap() { return m_lightMap; }
 
@@ -73,6 +62,9 @@ namespace lve {
             return layouts;
 		}
 
+        inline LveDescriptorSetLayout& getLocalDescriptorSetLayout() { return *m_objectLocalSetLayout; }
+
+
         const std::vector < VkDescriptorSet>& getMaterialSystemBindlessTextureSet() const
         {
 
@@ -93,17 +85,11 @@ namespace lve {
         const uint16_t MAX_OBJECT_IN_SCENE{ 100 };
         const uint16_t MAX_MATERIAL_IN_SCENE{ 100 };
 
-        uint32_t _currentIdTexture{ 0 };
-
     private:
         std::string m_name{ "UNDEFINED" };
-        uint32_t m_nbModel{ 0 };
 
         std::unique_ptr<LveDescriptorPool> m_descriptorPool{};
-        std::unique_ptr<LveDescriptorSetLayout> m_globalSetLayout;
-        std::unique_ptr<LveDescriptorSetLayout> m_materialSetLayout;
         std::unique_ptr<LveDescriptorSetLayout> m_objectLocalSetLayout;
-        std::vector<VkDescriptorSet> m_globalDescriptorSet;
 
         Map m_objectMap;
         MaterialMap m_materialMap;
@@ -111,13 +97,10 @@ namespace lve {
         TransparentRenderingBatch m_transparentRenderingBatch;
         LightMap m_lightMap;
 
-
-
-        std::vector<std::string> m_shaderTextureId;
-
 		TextureManager m_textureManager;
         MaterialManager m_materialManager{ m_textureManager };
 		std::unique_ptr<MaterialSystem> m_materialSystem;
+
 
     };
 }

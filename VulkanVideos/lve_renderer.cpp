@@ -289,7 +289,6 @@ void lve::LveRenderer::renderRenderSystems(FrameInfo& frameInfo)
 {
 	for (auto& renderSystem : m_renderSystems) {
 		renderSystem->render(frameInfo);
-
 	}
 }
 

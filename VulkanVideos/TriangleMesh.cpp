@@ -1,7 +1,4 @@
 #include "TriangleMesh.hpp"
-#include "lve_swap_chain.hpp"
-
-#include "SceneManager.h"
 
 lve::TriangleMesh::~TriangleMesh()
 {
@@ -12,7 +9,6 @@ lve::TriangleMesh::~TriangleMesh()
 lve::TriangleMesh::TriangleMesh(const std::string& p_name, const std::vector<Vertex>& p_vertices, const std::vector<unsigned int>& p_indices, const uint32_t p_materialID, const Model* p_parent)
 	: _name{ p_name }, _vertices{ p_vertices }, _materialID{ p_materialID }, _indices{ p_indices },m_modelRef{ p_parent }
 {
-
 	_indexCount = _indices.size();
 	_vertexCount = _vertices.size();
 	_positions.reserve(_vertexCount);
@@ -22,10 +18,6 @@ lve::TriangleMesh::TriangleMesh(const std::string& p_name, const std::vector<Ver
 	_positions.shrink_to_fit();
 	createVertexBuffers();
 	createIndexBuffer();
-
-	setupObjectDescriptor();
-
-	//_descriptorSet = LveDescriptorSetLayout::Builder(_lveDevice).addBinding(0, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, VK_SHADER_STAGE_FRAGMENT_BIT).addBinding(1, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, VK_SHADER_STAGE_FRAGMENT_BIT).addBinding(2, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, VK_SHADER_STAGE_FRAGMENT_BIT).addBinding(3, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, VK_SHADER_STAGE_FRAGMENT_BIT).build().get();
 }
 
 
@@ -117,46 +109,6 @@ void lve::TriangleMesh::createIndexBuffer()
 
 	LveDevice::getInstance()->copyBuffer(stagingBuffer.getBuffer(), _indexBuffer->getBuffer(), bufferSize);
 
-}
-lve::ObjectUbo lve::TriangleMesh::createObjectUbo() {
-	lve::ObjectUbo ubo{};
-
-//	if (_material._hasDiffuseMap)
-	//	ubo.diffuseTextureID = _material.m_idDiffuse;
-	//else
-	//	ubo.diffuseTextureID = -1;
-
-	return ubo;
-}
-void lve::TriangleMesh::setupObjectDescriptor()
-{
-
-
-	m_objectUbo = std::vector<LveBuffer*>(LveSwapChain::MAX_FRAMES_IN_FLIGHT);
-
-	ObjectUbo ubo=createObjectUbo();
-
-	for (auto& buffer : m_objectUbo) {
-		buffer = new LveBuffer(sizeof(ObjectUbo), 1, VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT);
-		buffer->map();
-		buffer->writeToBuffer(&ubo);
-		buffer->flush();
-	}
-
-	
-	m_objectDescriptorSet = std::vector<VkDescriptorSet>(LveSwapChain::MAX_FRAMES_IN_FLIGHT);
-
-	for (int i = 0; i < m_objectDescriptorSet.size(); ++i) {
-
-		
-		auto bufferUboInfo = m_objectUbo[i]->descriptorInfo();
-		LveDescriptorWriter(SceneManager::getInstance()->getLocalDescriptorSetLayout(), SceneManager::getInstance()->getPool())
-			.writeBuffer(0, &bufferUboInfo)
-			.build(m_objectDescriptorSet[i]);
-
-
-	}
-	
 }
 
 std::vector<VkVertexInputBindingDescription> lve::Vertex::getBindingDescriptions()

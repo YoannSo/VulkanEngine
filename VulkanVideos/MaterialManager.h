@@ -1,12 +1,9 @@
 #pragma once
-#include <cstdint>
 #include <unordered_map>
 #include <string>
-#include <memory>
 #include <assimp/scene.h>
 #include <iostream>
 
-#include "lve_texture.hpp"
 #include "Material.h"
 #include "define.hpp"
 #include "TextureManager.h"

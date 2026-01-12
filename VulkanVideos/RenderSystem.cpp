@@ -55,23 +55,6 @@ namespace lve {
 		lvePipeline = std::make_unique<LvePipeline>(p_vertShader, p_fragShader, pipelineConfig);
 	}
 
-
-
-	std::vector<VkDescriptorSetLayout> RenderSystem::buildLayouts(VkDescriptorSetLayout globalSetLayout) {
-
-		std::vector<VkDescriptorSetLayout> descriptorSetLayouts{ globalSetLayout };
-
-		//if (SceneManager::getInstance()->getTextureMap().size() > 0) {
-		//	descriptorSetLayouts.push_back(SceneManager::getInstance()->getDescriptorSetLayout().getDescriptorSetLayout());
-		//}
-
-		descriptorSetLayouts.push_back(SceneManager::getInstance()->getMaterialDescriptorSetLayout().getDescriptorSetLayout());
-
-
-
-		return descriptorSetLayouts;
-	}
-
 	void RenderSystem::createPipelineInfo(PipelineConfigInfo& p_pipelineInfoOut) {
 		LvePipeline::defaultFowardPipelineConfigInfo(p_pipelineInfoOut);
 		LvePipeline::enableAlphaBlinding(p_pipelineInfoOut);

@@ -10,7 +10,7 @@ namespace lve {
         m_opaqueRenderingBatch = RenderingBatch();
         m_transparentRenderingBatch = TransparentRenderingBatch();
         m_lightMap = LightMap();
-        m_shaderTextureId = std::vector<std::string>();
+        m_objectLocalSetLayout = LveDescriptorSetLayout::Builder().addBinding(0, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, VK_SHADER_STAGE_ALL_GRAPHICS).build();
 
         m_descriptorPool =
             LveDescriptorPool::Builder()

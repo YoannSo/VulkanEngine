@@ -1,7 +1,4 @@
 #include "model.hpp"
-
-#include "SceneManager.h"
-
 namespace lve {
 
 
@@ -19,11 +16,6 @@ namespace lve {
 	}
 	Model::~Model()
 	{
-	}
-
-	std::vector<std::string> Model::LoadMaterials(const aiScene& p_scene)
-	{
-		return std::vector<std::string>();
 	}
 
 	void Model::_loadMesh(const aiMesh* const p_mesh, const aiScene&  p_scene, const MaterialManager& p_materialManagerRef)

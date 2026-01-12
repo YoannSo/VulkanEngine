@@ -18,11 +18,6 @@ namespace lve {
         init(renderPass, p_descriptorSetLayout, pushConstantSize, "shaders/LightningPassDeffered.vert.spv", "shaders/LightningPassDeffered.frag.spv");
 
     }
-    std::vector<VkDescriptorSetLayout> LightingPassDeferred::buildLayouts(VkDescriptorSetLayout globalSetLayout) {
-        std::vector<VkDescriptorSetLayout> descriptorSetLayouts{ globalSetLayout };
-        return descriptorSetLayouts;
-    }
-
     LightingPassDeferred::~LightingPassDeferred() {
     }
 

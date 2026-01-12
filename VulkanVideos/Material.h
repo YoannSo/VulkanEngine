@@ -2,10 +2,9 @@
 #ifndef MATERIAL_HPP
 #define MATERIAL_HPP
 
-#include <glm.hpp>
 #include <string>
+#include <glm.hpp>
 
-#include "memory"
 #include "lve_texture.hpp"
 #include "lve_buffer.hpp"
 namespace lve {
@@ -68,12 +67,6 @@ namespace lve {
 		float m_indexOfRefraction{ 1.f }; // Ni (IOR)
 		float m_transparency{ 0.f }; // Tr (Transparency)
 		int m_illuminationModel{ 0 }; // illum value
-
-		std::shared_ptr<LveTexture> m_ambientMap{ nullptr };
-		std::shared_ptr<LveTexture> m_diffuseMap{ nullptr };
-		std::shared_ptr<LveTexture> m_specularMap{ nullptr };
-		std::shared_ptr<LveTexture> m_shininessMap{ nullptr };
-		std::shared_ptr<LveTexture> m_normalMap{ nullptr };
 
 		uint32_t m_idDiffuseMap{ 0 };
 		uint32_t m_idSpecularMap{ 0 };

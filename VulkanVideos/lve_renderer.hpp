@@ -3,13 +3,9 @@
 #include <memory>
 #include <vector>
 #include <cassert>
-#include <iostream>
 
 #include "window.hpp"
 #include "lve_device.hpp"
-#include "lve_swap_chain.hpp"
-#include "lve_model.hpp"
-#include "g_buffer.hpp"
 #include "RenderSystem.h"
 namespace lve {
 

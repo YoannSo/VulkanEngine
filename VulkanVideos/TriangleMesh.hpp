@@ -28,9 +28,6 @@ namespace lve {
 	};
 
 
-	struct ObjectUbo {
-		int diffuseTextureID=-1;
-	};
 
 
 	class TriangleMesh {
@@ -66,21 +63,12 @@ namespace lve {
 
 		void createVertexBuffers();
 		void createIndexBuffer();
-		void setupObjectDescriptor();
 
-		inline std::vector<VkDescriptorSet> getDescriptorSet() { return m_objectDescriptorSet; }
 		inline const glm::vec3 getPosition() const {return _vertices[0]._position;}
-
 		inline const Model* getModel() const { return m_modelRef; };
 
 
-
-		const uint32_t _materialID;
-
-	private:
-
-		ObjectUbo createObjectUbo();
-		
+		const uint32_t _materialID;		
 
 	private:
 
@@ -94,18 +82,6 @@ namespace lve {
 
 		uint32_t _indexCount{ 0 };
 		uint32_t _vertexCount{ 0 };
-
-		std::unique_ptr<VkDescriptorImageInfo> _specularMapDescriptorInfo{nullptr};
-		std::unique_ptr<VkDescriptorImageInfo> _ambientMapDescriptorInfo{ nullptr };
-		std::unique_ptr<VkDescriptorImageInfo> _diffuseMapDescriptorInfo{ nullptr };
-		std::unique_ptr<VkDescriptorImageInfo> _shininessMapDescriptorInfo{ nullptr };
-
-
-	
-		std::vector<LveBuffer*> m_objectUbo;
-		std::vector<VkDescriptorSet> m_objectDescriptorSet{};
-
-
 
 		std::shared_ptr<LveBuffer> _vertexBuffer{ nullptr };
 

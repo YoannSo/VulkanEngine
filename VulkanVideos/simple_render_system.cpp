@@ -76,37 +76,7 @@ namespace lve {
 
     void SimpleRenderSystem::drawTransparentBatch(FrameInfo& frameInfo, SceneManager::TransparentRenderingBatch& batch)
     {
-		SceneManager::TransparentRenderingBatch& transparentsObject = SceneManager::getInstance()->getTransparentRenderingBatch();
-
-        std::sort(transparentsObject.begin(), transparentsObject.end(),
-            [&frameInfo](const std::pair<std::string, TriangleMesh*>& a,
-                const std::pair<std::string, TriangleMesh*>& b) {
-                    float distanceA = glm::length(frameInfo.camera.getPosition() - a.second->getPosition());
-                    float distanceB = glm::length(frameInfo.camera.getPosition() - b.second->getPosition());
-                    return distanceA > distanceB; // Tri décroissant (back-to-front)
-            }); 
-
-
-            for (auto& object : transparentsObject) {
-                auto material = SceneManager::getInstance()->getMaterialMap().find(object.first);
-
-                /*vkCmdBindDescriptorSets(frameInfo.commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout,
-                    2, // starting set
-                    1, // number of sets
-                    &(material->second->getDescriptorSet()[frameInfo.frameIndex]),
-                    0,
-                    nullptr
-                );*/
-
-                SimplePushConstantData push{};
-                push.modelMatrix = object.second->getModel()->transform.mat4();
-                push.normalMatrix = object.second->getModel()->transform.normalMatrix();
-
-                vkCmdPushConstants(frameInfo.commandBuffer, pipelineLayout, VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT, 0, sizeof(SimplePushConstantData), &push);
-                object.second->bind(frameInfo.commandBuffer, frameInfo.frameIndex, pipelineLayout);
-                object.second->draw(frameInfo.commandBuffer);
-
-            }
+		
     }
 
     void SimpleRenderSystem::render(FrameInfo& frameInfo) {
@@ -120,16 +90,16 @@ namespace lve {
             nullptr
         );
 
-        vkCmdBindDescriptorSets(frameInfo.commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout,
+       /* vkCmdBindDescriptorSets(frameInfo.commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout,
             1, // starting set
             1, // number of sets
             &(SceneManager::getInstance()->getGlobalDescriptorSet()[frameInfo.frameIndex]),
             0,
             nullptr
         );
-
-		drawBatch(frameInfo, SceneManager::getInstance()->getOpaqueRenderingBatch());
-        drawTransparentBatch(frameInfo, SceneManager::getInstance()->getTransparentRenderingBatch());
+       */
+		////drawBatch(frameInfo, SceneManager::getInstance()->getOpaqueRenderingBatch());
+      //  drawTransparentBatch(frameInfo, SceneManager::getInstance()->getTransparentRenderingBatch());
 
     }
 }

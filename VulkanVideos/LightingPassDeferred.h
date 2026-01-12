@@ -1,11 +1,11 @@
 #pragma once
 #define GLM_FORCE_RADIANS//force use radian 
 #define GLM_FORCE_DEPTH_ZERO_TO_ONE //depth value to 0 to 1
-#include <map>
+
 #include <gtc/constants.hpp>
 #include <glm.hpp>
 #include <memory>
-#include "lve_model.hpp"
+
 #include "RenderSystem.h"
 #include "g_buffer.hpp"
 
@@ -26,7 +26,6 @@ namespace lve {
 		void render(FrameInfo& frameInfo)override;// camera not meber bs we want to be able to share camera object multiple mtiple render system
 
 	private:
-		std::vector<VkDescriptorSetLayout> buildLayouts(VkDescriptorSetLayout globalSetLayout);
 		void drawBatch(FrameInfo& frameInfo, SceneManager::RenderingBatch& batchs);
 		void createPipelineInfo(PipelineConfigInfo& p_pipelineInfoOut) override;
 

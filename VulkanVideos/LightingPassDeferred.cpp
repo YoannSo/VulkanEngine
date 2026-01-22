@@ -3,20 +3,17 @@
 #include <algorithm>
 
 namespace lve {
-    struct SimplePushConstantData {
-        glm::mat4 modelMatrix{ 1.f }; // offset homegous 
-        glm::mat4 normalMatrix{ 1.f };
-    };
-
+ 
 
     LightingPassDeferred::LightingPassDeferred(VkRenderPass renderPass, std::vector<VkDescriptorSetLayout>& p_descriptorSetLayout,std::shared_ptr<GBuffer> p_gBuffer)
         : RenderSystem(),
 		m_gBuffer{ p_gBuffer }
     {
 
+		p_descriptorSetLayout.push_back(SceneManager::getInstance()->getLightDescriptorSetLayout());
         uint32_t pushConstantSize = sizeof(SimplePushConstantData);
         init(renderPass, p_descriptorSetLayout, pushConstantSize, "shaders/LightningPassDeffered.vert.spv", "shaders/LightningPassDeffered.frag.spv");
-
+        m_pushConstants._lightNumber = SceneManager::getInstance()->getLightManager().getLightCount();
     }
     LightingPassDeferred::~LightingPassDeferred() {
     }
@@ -46,6 +43,20 @@ namespace lve {
             0, nullptr
         );
 
+        auto lightSet=SceneManager::getInstance()->getLightDescriptorSet()[frameInfo.frameIndex];
+         vkCmdBindDescriptorSets(
+            frameInfo.commandBuffer,
+            VK_PIPELINE_BIND_POINT_GRAPHICS,
+            pipelineLayout,
+            2, 1,
+            &lightSet,
+            0, nullptr
+		 );
+     
+         vkCmdPushConstants(frameInfo.commandBuffer, pipelineLayout,  VK_SHADER_STAGE_VERTEX_BIT| VK_SHADER_STAGE_FRAGMENT_BIT, 0, sizeof(SimplePushConstantData), &m_pushConstants);
+
+
+
         // FULLSCREEN TRIANGLE
         vkCmdDraw(frameInfo.commandBuffer, 3, 1, 0, 0);
     }
@@ -55,22 +66,7 @@ namespace lve {
 
     void LightingPassDeferred::drawBatch(FrameInfo& frameInfo, SceneManager::RenderingBatch& batchs)
     {
-        for (auto& batch : batchs) {
-            auto material = SceneManager::getInstance()->getMaterialMap().find(batch.first);
-
-            if (batch.second.size() > 0) {
-
-                for (auto& object : batch.second) {
-                    SimplePushConstantData push{};
-                    push.modelMatrix = object->getModel()->transform.mat4();
-                    push.normalMatrix = object->getModel()->transform.normalMatrix();
-
-                    vkCmdPushConstants(frameInfo.commandBuffer, pipelineLayout, VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT, 0, sizeof(SimplePushConstantData), &push);
-                    object->bind(frameInfo.commandBuffer, frameInfo.frameIndex, pipelineLayout);
-                    object->draw(frameInfo.commandBuffer);
-                }
-            }
-        }
+    
     }
 
     void LightingPassDeferred::createPipelineInfo(PipelineConfigInfo& p_pipelineInfoOut)

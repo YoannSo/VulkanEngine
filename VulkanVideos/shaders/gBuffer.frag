@@ -6,7 +6,8 @@ layout(location = 0) in vec3 fragPosWorld;
 layout(location = 1) in vec3 fragNormalWorld;
 layout(location = 2) in vec2 fragUV;
 layout(location = 3) flat in uint matIndex;
-
+layout(location = 4) in vec3 fragTangentWorld;
+layout(location = 5) in vec3 fragBitangentWorld;
 // ===== Outputs G-buffer =====
 layout(location = 0) out vec4 outAlbedo;
 layout(location = 1) out vec4 outNormal;
@@ -45,8 +46,26 @@ void main()
         outAlbedo = texture(textures[material.maps1.x], fragUV);
     }
 
-    // Normale monde
+    if(outAlbedo.a<0.5)
+        discard;
+
     outNormal = vec4(normalize(fragNormalWorld), 1.0);
+
+//    if(material.maps1.y!=-1)
+  //      outNormal=vec4(fragTangentWorld,1.0);//texture(textures[material.maps1.y],fragUV);
+    
+
+if (material.maps1.y!=-1) {
+    vec3 normalTS =texture(textures[material.maps1.y],fragUV).xyz * 2.0 - 1.0;
+
+    mat3 TBN = mat3(
+        normalize(fragTangentWorld),
+        normalize(fragBitangentWorld),
+        normalize(fragNormalWorld)
+    );
+
+   outNormal = vec4(normalize(TBN * normalTS),1.0);
+}
 
     // Position monde
     outPosition = vec4(fragPosWorld, 1.0);

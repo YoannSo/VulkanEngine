@@ -169,7 +169,10 @@
     <ClCompile Include="GuiManager.cpp" />
     <ClCompile Include="g_buffer.cpp" />
     <ClCompile Include="keyboard_movement_controller.cpp" />
+    <ClCompile Include="Light.cpp" />
     <ClCompile Include="LightingPassDeferred.cpp" />
+    <ClCompile Include="LightManager.cpp" />
+    <ClCompile Include="LightSystem.cpp" />
     <ClCompile Include="lve_buffer.cpp" />
     <ClCompile Include="lve_camera.cpp" />
     <ClCompile Include="lve_descriptor.cpp" />
@@ -204,7 +207,10 @@
     <ClInclude Include="GuiManager.h" />
     <ClInclude Include="g_buffer.hpp" />
     <ClInclude Include="keyboard_movement_controller.hpp" />
+    <ClInclude Include="Light.h" />
     <ClInclude Include="LightingPassDeferred.h" />
+    <ClInclude Include="LightManager.h" />
+    <ClInclude Include="LightSystem.h" />
     <ClInclude Include="lve_buffer.hpp" />
     <ClInclude Include="lve_camera.hpp" />
     <ClInclude Include="lve_descriptor.hpp" />
@@ -238,6 +244,8 @@
       <FileType>Document</FileType>
     </None>
     <None Include="point_light.vert" />
+    <None Include="shaders\LightningPassDeffered.frag" />
+    <None Include="shaders\LightningPassDeffered.vert" />
     <None Include="shaders\simple_shader.frag" />
     <None Include="shaders\simple_shader.vert" />
     <None Include="simple_shader.frag" />

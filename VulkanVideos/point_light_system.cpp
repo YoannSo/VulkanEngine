@@ -19,7 +19,7 @@ namespace lve {
 
 	void PointLighRenderSystem::update(FrameInfo& frameInfo, GlobalUbo& ubo)
 	{
-		auto rotateLight = glm::rotate( //
+		/*auto rotateLight = glm::rotate( //
 			glm::mat4(1.f),//indeity matrix
 			frameInfo.frameTime,// circle equal size of slice, rotate each point incremently to create a ring of light
 			{ 0.f, -1.f, 0.f });//up vector
@@ -37,7 +37,7 @@ namespace lve {
 			//ubo.pointsLights[lightIndex].color = glm::vec4(obj->color, obj->pointLight->lightIntensity);
 			lightIndex++;
 		}
-		ubo.numLights = lightIndex;
+		ubo.numLights = lightIndex;*/
 	}
 
 	void PointLighRenderSystem::render(FrameInfo& frameInfo)
@@ -45,11 +45,11 @@ namespace lve {
 
 		std::map<float, PointLight*> sorted;
 
-		for (PointLight* pointLight : SceneManager::getInstance()->getLightMap()) {
+		/*for (PointLight* pointLight : SceneManager::getInstance()->getLightMap()) {
 			auto offset = frameInfo.camera.getPosition() - pointLight->transform.translation;
 			float distSquared = glm::dot(offset, offset);
 			sorted[distSquared] = pointLight;
-		}
+		}*/
 
 		lvePipeline->bind(frameInfo.commandBuffer);
 

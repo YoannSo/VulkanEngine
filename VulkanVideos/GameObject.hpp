@@ -18,10 +18,7 @@ namespace lve {
         glm::mat4 mat4() const;
         glm::mat3 normalMatrix() const;
     };
-    struct PointLightComponent {
-        float lightIntensity=1.0f;
-        
-    };
+
     class GameObject {
     public:
         virtual ~GameObject() = default;

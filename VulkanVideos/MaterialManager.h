@@ -24,9 +24,10 @@ namespace lve {
 		void fillMaterialsBufferData(std::vector<Material::MaterialGPU>& p_materialsBufferData)const;
         uint32_t getIDOfMaterial(const std::string& p_materialName) const;
 
+
     private:
-        void setupDescriptorSet();
 		void createMaterial(const aiMaterial* p_mtl);
+        void createBasicMaterial();
 
     public:
         const uint16_t MAX_TEXTURE_IN_SCENE{ 100 };

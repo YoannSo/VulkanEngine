@@ -9,13 +9,22 @@ lve::DeferredRenderer::~DeferredRenderer()
 {
 }
 
-void lve::DeferredRenderer::createRenderSystems(std::vector<VkDescriptorSetLayout>& p_globalDescriptorSet)
+void lve::DeferredRenderer::createRenderSystems(VkDescriptorSetLayout p_globalDescriptorLayout)
 {
+    std::vector<VkDescriptorSetLayout> descriptorLayoutGeometryPass = { p_globalDescriptorLayout };
+    std::vector<VkDescriptorSetLayout> descriptorLayoutLightningPass = { p_globalDescriptorLayout };
+   
+    std::vector<VkDescriptorSetLayout> materialLayouts =
+		SceneManager::getInstance()->getMaterialSystemDescriptorSetLayouts();
 
-	m_renderSystems.push_back(std::make_unique<GeometryPassRenderSystem>(m_geometryRenderPass, p_globalDescriptorSet));
-    std::vector<VkDescriptorSetLayout> lightingPassLayouts{ p_globalDescriptorSet[0] };
-    lightingPassLayouts.emplace_back(m_gBuffer->getDescritporSetLayout());
-	m_renderSystems.push_back(std::make_unique<LightingPassDeferred>(m_renderPass, lightingPassLayouts,m_gBuffer));
+    descriptorLayoutGeometryPass.insert(descriptorLayoutGeometryPass.end(),
+        materialLayouts.begin(),
+        materialLayouts.end());
+
+    descriptorLayoutLightningPass.emplace_back(m_gBuffer->getDescritporSetLayout());
+
+	m_renderSystems.push_back(std::make_unique<GeometryPassRenderSystem>(m_geometryRenderPass, descriptorLayoutGeometryPass));
+	m_renderSystems.push_back(std::make_unique<LightingPassDeferred>(m_renderPass, descriptorLayoutLightningPass,m_gBuffer));
 }
 
 void lve::DeferredRenderer::fillRenderPassInfo()

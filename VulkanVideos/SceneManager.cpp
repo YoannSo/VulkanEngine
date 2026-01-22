@@ -9,7 +9,6 @@ namespace lve {
         m_materialMap = MaterialMap();
         m_opaqueRenderingBatch = RenderingBatch();
         m_transparentRenderingBatch = TransparentRenderingBatch();
-        m_lightMap = LightMap();
         m_objectLocalSetLayout = LveDescriptorSetLayout::Builder().addBinding(0, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, VK_SHADER_STAGE_ALL_GRAPHICS).build();
 
         m_descriptorPool =
@@ -22,6 +21,7 @@ namespace lve {
             .build();
 
 		m_materialSystem = std::make_unique<MaterialSystem>(m_textureManager, m_materialManager, *m_descriptorPool);
+		m_lightSystem = std::make_unique<LightSystem>(m_lightManager, *m_descriptorPool);
 
         setupDescriptorSet();
     }
@@ -37,13 +37,13 @@ namespace lve {
         return obj;
     }
 
-    Model* SceneManager::createModelObject(std::string p_meshName, std::string p_path) {
+    Model* SceneManager::createModelObject(std::string p_meshName, std::string p_path,bool p_useBasicMaterial) {
         if (VERBOSE)
             std::cout << "-*-" << " Create Mesh Game Object:" << p_meshName << std::endl;
 
         Assimp::Importer importer;
 
-        const unsigned int flags = aiProcessPreset_TargetRealtime_Fast | aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_JoinIdenticalVertices;
+        const unsigned int flags = aiProcessPreset_TargetRealtime_Fast | aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_JoinIdenticalVertices| aiProcess_CalcTangentSpace;
 
         const aiScene* const scene = importer.ReadFile(p_path, flags);
 
@@ -53,22 +53,13 @@ namespace lve {
             throw std::runtime_error("Fail to load file \" " + p_path + "\": " + importer.GetErrorString());
         }
 
-		m_materialManager.createMaterialsFromMesh(*scene, p_meshName);
+        if(!p_useBasicMaterial)
+		    m_materialManager.createMaterialsFromMesh(*scene, p_meshName);
 
 
-        Model* obj = new Model(p_meshName, *scene,m_materialManager);
+        Model* obj = new Model(p_meshName, *scene,m_materialManager, p_useBasicMaterial);
 
         m_objectMap.emplace(obj->getId(), obj);
-        return obj;
-    }
-
-    PointLight* SceneManager::createLightObject() {
-        if (VERBOSE)
-            std::cout << "-*-" << " Create Light Game Object" << std::endl;
-
-        PointLight* obj = new PointLight();
-        m_objectMap.emplace(obj->getId(), obj);
-        m_lightMap.emplace_back(obj);
         return obj;
     }
 
@@ -94,6 +85,11 @@ namespace lve {
     {
         m_materialSystem->setupDescriptorSetLayout();
 		m_materialSystem->setupDescriptorSet();
+    }
+
+    void SceneManager::initializeLightSystem()
+    {
+		m_lightSystem->createDescriptors();
     }
 
     void SceneManager::setupDescriptorSet() {

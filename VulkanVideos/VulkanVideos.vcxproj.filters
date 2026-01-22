@@ -165,6 +165,15 @@
     <ClCompile Include="TriangleMesh.cpp">
       <Filter>Source Files\Objects</Filter>
     </ClCompile>
+    <ClCompile Include="Light.cpp">
+      <Filter>Source Files\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="LightManager.cpp">
+      <Filter>Source Files\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="LightSystem.cpp">
+      <Filter>Header Files\systems</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="window.hpp">
@@ -269,6 +278,15 @@
     <ClInclude Include="PointLight.h">
       <Filter>Header Files\Objects</Filter>
     </ClInclude>
+    <ClInclude Include="Light.h">
+      <Filter>Header Files\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="LightManager.h">
+      <Filter>Header Files\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="LightSystem.h">
+      <Filter>Header Files\systems</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="simple_shader.vert">
@@ -296,6 +314,12 @@
       <Filter>shader</Filter>
     </None>
     <None Include="gBuffer.frag">
+      <Filter>shader</Filter>
+    </None>
+    <None Include="shaders\LightningPassDeffered.vert">
+      <Filter>shader</Filter>
+    </None>
+    <None Include="shaders\LightningPassDeffered.frag">
       <Filter>shader</Filter>
     </None>
   </ItemGroup>

@@ -6,7 +6,7 @@ namespace lve {
     struct SimplePushConstantData {
         glm::mat4 modelMatrix{ 1.f }; // offset homegous 
         glm::mat4 normalMatrix{ 1.f };
-		glm::ivec4 params{ 0,0,0,0 };//x:idMaterial
+        uint32_t idMaterial=0;//x:idMaterial
     };
 
 
@@ -14,6 +14,8 @@ namespace lve {
         : RenderSystem()  // call base class constructor
     {
         uint32_t pushConstantSize = sizeof(SimplePushConstantData);
+        std::cout << "size" << pushConstantSize;
+
         init(renderPass, p_descriptorSetLayout, pushConstantSize, "shaders/gBuffer.vert.spv", "shaders/gBuffer.frag.spv");
 
     }
@@ -59,7 +61,7 @@ namespace lve {
                 push.modelMatrix = object.second->transform.mat4();
                 push.normalMatrix = object.second->transform.normalMatrix();
 
-				push.params.x = mesh._materialID;
+				push.idMaterial = mesh._materialID;
 
                 vkCmdPushConstants(frameInfo.commandBuffer, pipelineLayout, VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT, 0, sizeof(SimplePushConstantData), &push);
                 mesh.bind(frameInfo.commandBuffer, frameInfo.frameIndex, pipelineLayout);

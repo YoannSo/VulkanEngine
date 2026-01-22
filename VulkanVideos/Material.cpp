@@ -21,6 +21,10 @@ namespace lve {
 				m_idAmbientMap = p_textureID;
 				m_gpuBuffer.maps2.x = p_textureID;
 				break;
+			case EMaterialParameter::NORMALMAP:
+				m_idNormalMap = p_textureID;
+				m_gpuBuffer.maps1.y = p_textureID;
+				break;
 		}
 	}
 	void Material::setMaterialParameter(EMaterialParameter p_materialParameter, glm::vec4 p_color) {

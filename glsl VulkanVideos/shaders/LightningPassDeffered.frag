@@ -31,8 +31,8 @@ void main()
     vec3 normal = normalize(texture(gNormal, fragUV).xyz);
 
     // Hard-coded ambient (debug)
-    const vec3 ambientColor = vec3(0.01); // increase to brighten overall scene
-    vec3 color = vec3(0.0);//albedo*ambientColor;
+    const vec3 ambientColor = vec3(0.9); // increase to brighten overall scene
+    vec3 color = albedo * ambientColor;
 
     for (uint i = 0; i < pushConstant.lightCount; i++) {
         LightGPU light = lightBuffer.lights[i];
@@ -41,7 +41,6 @@ void main()
             vec3 L = normalize(-light.direction.xyz);
             float NdotL = max(dot(normal, L), 0.0);
             color += albedo * light.color.rgb * light.color.w * NdotL;
-
         }
         else if (type == 0) {
             // World-space fragment position
@@ -67,6 +66,6 @@ void main()
                    * attenuation;
         }
     }
-    color+=ambientColor;
+
     outColor = vec4(color, 1.0);
 }

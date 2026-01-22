@@ -4,6 +4,7 @@ lve::MaterialManager::MaterialManager(TextureManager& p_textureManager):
 	m_materialBuffer{},
 	m_textureManager{ p_textureManager }
 {
+	createBasicMaterial();
 }
 
 lve::MaterialManager::~MaterialManager()
@@ -42,6 +43,17 @@ uint32_t lve::MaterialManager::getIDOfMaterial(const std::string& p_materialName
 			std::cout << "Material " << p_materialName << " not found!" << std::endl;
 		return 0;
 	}
+}
+
+void lve::MaterialManager::createBasicMaterial() {
+	auto [it, inserted] = m_materialNameToID.try_emplace("basic", 0);
+
+	m_materialBuffer.emplace_back(Material("basic"));
+	Material& currentMat = m_materialBuffer.back();
+
+	currentMat.setMaterialParameter(Material::EMaterialParameter::DIFFUSECOLOR, glm::vec4(1.f, 0.f, 0.f, 1.f));
+	++m_currentIdMaterial;
+
 }
 
 void lve::MaterialManager::createMaterial(const aiMaterial* p_mtl)
@@ -88,14 +100,15 @@ void lve::MaterialManager::createMaterial(const aiMaterial* p_mtl)
 	if (p_mtl->GetTextureCount(aiTextureType_NORMALS) > 0) // Texture ?
 	{
 
-		//p_mtl->GetTexture(aiTextureType_NORMALS, 0, &texturePath);
-		//std::string completePath = _dirPath + texturePath.C_Str();
+		p_mtl->GetTexture(aiTextureType_NORMALS, 0, &texturePath);
+		std::string completePath = _dirPath + texturePath.C_Str();
+
+		uint32_t id = m_textureManager.loadTexture(completePath);
 
 		if (VERBOSE)
-			std::cout << "-*- Load Normal Map:" << std::endl;
+			std::cout << "-*- Load Normal Map" << completePath << " at ID : " << id << std::endl;
 
-		//material.m_idNormal = addTexture(completePath);
-		//material._hasNormalMap = true;
+		currentMat.setMaterialParameter(Material::EMaterialParameter::NORMALMAP, id);
 
 	}
 	else if (p_mtl->Get(AI_MATKEY_COLOR_AMBIENT, color) == AI_SUCCESS) // else Material ?

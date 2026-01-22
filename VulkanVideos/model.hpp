@@ -19,7 +19,7 @@ namespace lve {
 
 
 	public:
-		Model(const std::string p_name, const aiScene& p_scene,const MaterialManager& p_materialManagerRef);
+		Model(const std::string p_name, const aiScene& p_scene,const MaterialManager& p_materialManagerRef, bool p_useBasicMaterial=false);
 		~Model();
 
 		void bind(VkCommandBuffer& commandBuffer, int& p_frameIndex,VkPipelineLayout& p_pipelineLayout)override;
@@ -28,7 +28,7 @@ namespace lve {
 		const std::vector<TriangleMesh>& getMeshes() const { return m_meshes; }
 
 	private:
-		void _loadMesh(const aiMesh* const p_mesh, const aiScene& p_scene,const MaterialManager& p_materialManagerRef);
+		void _loadMesh(const aiMesh* const p_mesh, const aiScene& p_scene,const MaterialManager& p_materialManagerRef, bool p_useBasicMaterial=false);
 
 	private:
 

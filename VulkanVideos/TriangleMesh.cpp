@@ -127,6 +127,8 @@ std::vector<VkVertexInputAttributeDescription> lve::Vertex::getAttributeDescript
 	attributeDescriptions.push_back({ 1, 0, VK_FORMAT_R32G32B32_SFLOAT, offsetof(Vertex, _color) });
 	attributeDescriptions.push_back({ 2, 0, VK_FORMAT_R32G32B32_SFLOAT, offsetof(Vertex, _normal) });
 	attributeDescriptions.push_back({ 3, 0, VK_FORMAT_R32G32_SFLOAT, offsetof(Vertex, _texCoords) });
+	attributeDescriptions.push_back({ 4, 0, VK_FORMAT_R32G32B32_SFLOAT, offsetof(Vertex, _tangent) });
+	attributeDescriptions.push_back({ 5, 0, VK_FORMAT_R32G32B32_SFLOAT, offsetof(Vertex, _bitangent) });
 
 	/*	attributeDescriptions[0].binding = 0;//index 0
 		attributeDescriptions[0].location = 0;//location 0

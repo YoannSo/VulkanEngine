@@ -64,17 +64,9 @@ namespace lve {
 		}
 
 
-		std::vector<VkDescriptorSetLayout> descriptorSetLayouts = { globalSetLayout->getDescriptorSetLayout()};
-		const auto& materialLayouts =
-			SceneManager::getInstance()->getMaterialSystemDescriptorSetLayouts();
 
-		descriptorSetLayouts.insert(
-			descriptorSetLayouts.end(),
-			materialLayouts.begin(),
-			materialLayouts.end()
-		);
 		//changer le traitement des descriptorset 
-		lveRenderer.createRenderSystems(descriptorSetLayouts);
+		lveRenderer.createRenderSystems(globalSetLayout->getDescriptorSetLayout());
 
 		LveCamera camera{};
 		//camera.setViewDirection(glm::vec3(0.f), glm::vec3(0.5f, 0.f, 1.f));
@@ -101,9 +93,15 @@ namespace lve {
 			currentTime = newTime;
 
 
+
+
 			// frameTime = glm::min(frameTime, MAX_FRAME_TIME);
 			cameraController.moveInPLaneXZ(_window.getGLFWWindow(), frameTime, viewerObject);
 			camera.setViewYXZ(viewerObject->transform.translation, viewerObject->transform.rotation);
+
+			std::cout << "Camera position: " << viewerObject->transform.translation.x << ", "
+				<< viewerObject->transform.translation.y << ", "
+				<< viewerObject->transform.translation.z << std::endl;
 
 			float aspect = lveRenderer.getAspectRatio();
 			//camera.setOrthographicProjection(-aspect, aspect, -1, 1, -1, 1);
@@ -132,12 +130,6 @@ namespace lve {
 				ubo.view = camera.getView();
 				lveRenderer.updateRenderSystems(frameInfo, ubo);
 				ubo.inverseView = camera.getInverseView();
-
-				ubo.numLights = SceneManager::getInstance()->getLightMap().size();
-				for (size_t i = 0; i < SceneManager::getInstance()->getLightMap().size() && i < MAX_LIGHTS; ++i) {
-					ubo.pointsLights[i].position = glm::vec4(SceneManager::getInstance()->getLightMap()[i]->transform.translation, 1.0f);
-					ubo.pointsLights[i].color = glm::vec4(SceneManager::getInstance()->getLightMap()[i]->getColor(), SceneManager::getInstance()->getLightMap()[i]->getIntensity());
-				}
 
 				uboBuffers[frameIndex]->writeToBuffer(&ubo);
 				uboBuffers[frameIndex]->flush();
@@ -189,6 +181,20 @@ namespace lve {
 		floor->transform.scale = { 0.01f,  0.01f, 0.01f };
 
 
+		Model* icosphere = SceneManager::getInstance()->createModelObject("icosphere", "models/sponza/icosphere.obj",true);
+		icosphere->transform.translation = { 0.f, -2.f, 0.f };
+		icosphere->transform.scale = { 1.f, 1.f,1.f };
+
+		Model* sphere = SceneManager::getInstance()->createModelObject("sphere", "models/sponza/sphere.obj", true);
+		sphere->transform.translation = { 3.f, -2.f, 0.f };
+		sphere->transform.scale = { 1.f, 1.f,1.f };
+		
+
+		Model* cube = SceneManager::getInstance()->createModelObject("cube", "models/sponza/cube.obj", true);
+		cube->transform.translation = { 6.f, -2.f, 0.f };
+		cube->transform.scale = { 1.f, 1.f,1.f };
+
+
 
 		/*	Model* bunny2 = SceneManager::getInstance()->createModelObject("Helicopter", "models/Helicopter/Seahawk.obj");
 			bunny2->transform.translation = { 0.f,0.0f, 0.f };
@@ -234,7 +240,10 @@ namespace lve {
 				});
 		}*/
 
+		SceneManager::getInstance()->getLightManager().addDirectionalLight({ 0.0,-1.f,-1.f }, { 1.f,1.f,1.f }, 1.f);
+		SceneManager::getInstance()->getLightManager().addPointLight({ 3.5f, -4.6f, -1.3f }, { 1.f,1.f,1.f }, 20.f);
 		SceneManager::getInstance()->initializeMaterialSystem();
+		SceneManager::getInstance()->initializeLightSystem();
 
 	}
 

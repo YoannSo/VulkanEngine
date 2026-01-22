@@ -2,14 +2,14 @@
 namespace lve {
 
 
-	Model::Model(const std::string p_name, const aiScene& p_scene,const MaterialManager& p_materialManagerRef) :GameObject(), _name{ p_name }
+	Model::Model(const std::string p_name, const aiScene& p_scene,const MaterialManager& p_materialManagerRef, bool p_useBasicMaterial) :GameObject(), _name{ p_name }
 	{
 
 		_nbMeshes = p_scene.mNumMeshes;
 		std::cout << "--** Your model got " << _nbMeshes << " meshes **--" << std::endl;
 
 		for (uint32_t i = 0; i < _nbMeshes; ++i) {
-			_loadMesh(p_scene.mMeshes[i], p_scene, p_materialManagerRef);
+			_loadMesh(p_scene.mMeshes[i], p_scene, p_materialManagerRef, p_useBasicMaterial);
 		}
 
 
@@ -18,7 +18,7 @@ namespace lve {
 	{
 	}
 
-	void Model::_loadMesh(const aiMesh* const p_mesh, const aiScene&  p_scene, const MaterialManager& p_materialManagerRef)
+	void Model::_loadMesh(const aiMesh* const p_mesh, const aiScene&  p_scene, const MaterialManager& p_materialManagerRef, bool p_useBasicMaterial)
 	{
 		const std::string meshName = _name + "_" + std::string(p_mesh->mName.C_Str());
 
@@ -43,16 +43,18 @@ namespace lve {
 			// Texture coordinates.
 			if (p_mesh->HasTextureCoords(0))
 			{
+
 				vertex._texCoords.x = p_mesh->mTextureCoords[0][v].x;
 				vertex._texCoords.y = p_mesh->mTextureCoords[0][v].y;
 				// Tangent.
-			//	vertex._tangent.x = p_mesh->mTangents[v].x;
-			//	vertex._tangent.y = p_mesh->mTangents[v].y;
-				//vertex._tangent.z = p_mesh->mTangents[v].z;
+				vertex._tangent.x = p_mesh->mTangents[v].x;
+				vertex._tangent.y = p_mesh->mTangents[v].y;
+				vertex._tangent.z = p_mesh->mTangents[v].z;
 				// Bitangent.
-				//vertex._bitangent.x = p_mesh->mBitangents[v].x;
-				//vertex._bitangent.y = p_mesh->mBitangents[v].y;
-			//	vertex._bitangent.z = p_mesh->mBitangents[v].z;
+				vertex._bitangent.x = p_mesh->mBitangents[v].x;
+				vertex._bitangent.y = p_mesh->mBitangents[v].y;
+				vertex._bitangent.z = p_mesh->mBitangents[v].z;
+
 			}
 			else
 			{
@@ -89,10 +91,14 @@ namespace lve {
 
 
 		//_meshes.emplace_back(std::move());
-		std::string materialName = p_scene.mMaterials[p_mesh->mMaterialIndex]->GetName().C_Str();
+		size_t textureID = 0;
+		if (!p_useBasicMaterial) {
+			std::string materialName = p_scene.mMaterials[p_mesh->mMaterialIndex]->GetName().C_Str();
+			textureID = p_materialManagerRef.getIDOfMaterial(materialName);
+		}
 
 
-		m_meshes.emplace_back(TriangleMesh(meshName, vertices, indices, p_materialManagerRef.getIDOfMaterial(materialName), this));//la pas mettre 0
+		m_meshes.emplace_back(TriangleMesh(meshName, vertices, indices, textureID, this));//la pas mettre 0
 
 		if (VERBOSE)
 		{

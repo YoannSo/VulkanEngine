@@ -16,8 +16,8 @@ namespace lve {
 		glm::vec3 _position;
 		glm::vec3 _normal;
 		glm::vec3 _color{ 1.f,1.f,1.f };
-		//glm::vec3 _tangent;
-		//glm::vec3 _bitangent;
+		glm::vec3 _tangent;
+		glm::vec3 _bitangent;
 		glm::vec2 _texCoords;
 
 		bool operator==(const Vertex& other)const {

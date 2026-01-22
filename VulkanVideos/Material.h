@@ -33,6 +33,7 @@ namespace lve {
 			DIFFUSEMAP,
 			AMBIENTMAP,
 			SPECULARMAP,
+			NORMALMAP,
 			DIFFUSECOLOR,
 			SPECULARCOLOR,
 			SHININESS,
@@ -72,6 +73,7 @@ namespace lve {
 		uint32_t m_idSpecularMap{ 0 };
 		uint32_t m_idAmbientMap{ 0 };
 		uint32_t m_idShininessMap{ 0 };
+		uint32_t m_idNormalMap{ 0 };
 
 		MaterialGPU m_gpuBuffer;
 

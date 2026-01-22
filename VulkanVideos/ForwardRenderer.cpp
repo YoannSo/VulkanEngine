@@ -85,10 +85,11 @@ void lve::ForwardRenderer::fillRenderPassInfo()
 	p_outputAttachement.push_back(m_swapChain->getDepthImageView(p_imgIndex));
 }
 */
-void lve::ForwardRenderer::createRenderSystems(std::vector<VkDescriptorSetLayout>& p_globalDescriptorSet)
+void lve::ForwardRenderer::createRenderSystems(VkDescriptorSetLayout p_globalDescriptorLayout)
 {
-	m_renderSystems.push_back(std::make_unique<SimpleRenderSystem>(m_renderPass, p_globalDescriptorSet));
-	m_renderSystems.push_back(std::make_unique<PointLighRenderSystem>(m_renderPass, p_globalDescriptorSet));
+	std::vector<VkDescriptorSetLayout> descriptorLayout = { p_globalDescriptorLayout };
+	m_renderSystems.push_back(std::make_unique<SimpleRenderSystem>(m_renderPass, descriptorLayout));
+	m_renderSystems.push_back(std::make_unique<PointLighRenderSystem>(m_renderPass, descriptorLayout));
 }
 
 

@@ -16,6 +16,8 @@
 #include "TextureManager.h"
 #include "MaterialManager.h"
 #include "MaterialSystem.h"
+#include "LightManager.h"
+#include "LightSystem.h"
 namespace lve {
 
     class SceneManager {
@@ -24,14 +26,12 @@ namespace lve {
         using RenderingBatch = std::vector<std::pair<std::string, std::vector<TriangleMesh*>>>;
         using TransparentRenderingBatch = std::vector<std::pair<std::string, TriangleMesh*>>;
         using MaterialMap = std::unordered_map<std::string, std::shared_ptr<Material>>; // efficiently look up object
-        using LightMap = std::vector<PointLight*>;
 
     public:
         SceneManager();
         ~SceneManager();
 
-        Model* createModelObject(std::string p_meshName, std::string p_path);
-        PointLight* createLightObject();
+        Model* createModelObject(std::string p_meshName, std::string p_path,bool p_useBasicMaterial=false);
         Camera* createCameraObject();
         void addGameObject(GameObject* p_newGameObject);
 
@@ -39,7 +39,8 @@ namespace lve {
         inline LveDescriptorPool& getPool() { return *m_descriptorPool; }
 
         inline MaterialMap& getMaterialMap() { return m_materialMap; }
-        inline LightMap& getLightMap() { return m_lightMap; }
+		LightManager& getLightManager()  { return m_lightManager; }
+
 
         void addMaterial(std::unique_ptr<Material> p_material);
 
@@ -54,6 +55,7 @@ namespace lve {
 		const Map& getObjectMap() const { return m_objectMap; }
 
         void initializeMaterialSystem();
+		void initializeLightSystem();
 
         std::vector<VkDescriptorSetLayout> getMaterialSystemDescriptorSetLayouts() const
         {
@@ -77,6 +79,17 @@ namespace lve {
             return m_materialSystem->getMaterialDescriptorSet();
         }
 
+        const std::vector < VkDescriptorSet>& getLightDescriptorSet() const
+        {
+
+            return m_lightSystem->getDescriptorSet();
+        }
+        const VkDescriptorSetLayout& getLightDescriptorSetLayout() const
+        {
+
+            return m_lightSystem->getDescriptorSetLayout();
+        }
+
     private:
         void setupDescriptorSet();
 
@@ -95,11 +108,14 @@ namespace lve {
         MaterialMap m_materialMap;
         RenderingBatch m_opaqueRenderingBatch;
         TransparentRenderingBatch m_transparentRenderingBatch;
-        LightMap m_lightMap;
 
 		TextureManager m_textureManager;
         MaterialManager m_materialManager{ m_textureManager };
 		std::unique_ptr<MaterialSystem> m_materialSystem;
+
+
+        LightManager m_lightManager;
+		std::unique_ptr<LightSystem> m_lightSystem;
 
 
     };

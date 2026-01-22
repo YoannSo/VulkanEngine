@@ -14,6 +14,9 @@ namespace lve {
 	class LightingPassDeferred : public RenderSystem {
 
 	public:
+		struct SimplePushConstantData {
+			uint32_t _lightNumber;
+		};
 
 
 		LightingPassDeferred(VkRenderPass renderPass, std::vector<VkDescriptorSetLayout>& p_descriptorSetLayout, std::shared_ptr<GBuffer> p_gBuffer);//globalSetLayout to tell the pipeline what descriptor set layout will be
@@ -31,5 +34,6 @@ namespace lve {
 
 		
 		std::shared_ptr<GBuffer> m_gBuffer;
+		SimplePushConstantData m_pushConstants;
 	};
 }

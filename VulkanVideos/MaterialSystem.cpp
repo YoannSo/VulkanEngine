@@ -17,6 +17,9 @@ void lve::MaterialSystem::setupDescriptorSetLayout()
 	createTextureDescriptorLayout();
 	createMaterialDescriptorLayout();
 }
+
+
+
 void lve::MaterialSystem::setupDescriptorSet()
 {
 	createMaterialDescriptors();

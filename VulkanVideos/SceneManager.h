@@ -98,6 +98,9 @@ namespace lve {
         const uint16_t MAX_OBJECT_IN_SCENE{ 100 };
         const uint16_t MAX_MATERIAL_IN_SCENE{ 100 };
 
+		bool _showNormal = false;
+		bool _showLighning = true;
+
     private:
         std::string m_name{ "UNDEFINED" };
 

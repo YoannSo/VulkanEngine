@@ -23,6 +23,8 @@ layout(set = 2, binding = 0) readonly buffer Lights {
 
 layout(push_constant) uniform LightPC {
     uint lightCount;
+    uint showNormal; //1:yes 0:no
+    uint showLighning; //1:yes 0:no
 } pushConstant;
 
 void main()
@@ -30,43 +32,51 @@ void main()
     vec3 albedo = texture(gAlbedo, fragUV).rgb;
     vec3 normal = normalize(texture(gNormal, fragUV).xyz);
 
-    // Hard-coded ambient (debug)
-    const vec3 ambientColor = vec3(0.01); // increase to brighten overall scene
-    vec3 color = vec3(0.0);//albedo*ambientColor;
+    vec3 color = vec3(0.0);
+
+    if(pushConstant.showLighning==1){
+        color=albedo*vec3(0.12); //ambient
 
     for (uint i = 0; i < pushConstant.lightCount; i++) {
-        LightGPU light = lightBuffer.lights[i];
-        uint type = uint(light.position.w);
-        if (type == 1) {
-            vec3 L = normalize(-light.direction.xyz);
-            float NdotL = max(dot(normal, L), 0.0);
-            color += albedo * light.color.rgb * light.color.w * NdotL;
+            LightGPU light = lightBuffer.lights[i];
+            uint type = uint(light.position.w);
+            if (type == 1) {
+                vec3 L = normalize(-light.direction.xyz);
+                float NdotL = max(dot(normal, L), 0.0);
+                color += albedo * light.color.rgb * light.color.w * NdotL;
 
-        }
-        else if (type == 0) {
-            // World-space fragment position
-            vec3 fragPos = texture(gPosition, fragUV).xyz;
+            }
+            else if (type == 0) {
+                // World-space fragment position
+                vec3 fragPos = texture(gPosition, fragUV).xyz;
 
-            // Vector to light
-            vec3 L = light.position.xyz - fragPos;
+                // Vector to light
+                vec3 L = light.position.xyz - fragPos;
 
-            float distance = length(L);
-            L = normalize(L);
+                float distance = length(L);
+                L = normalize(L);
 
-            // Diffuse Lambert
-            float NdotL = max(dot(normal, L), 0.0);
+                // Diffuse Lambert
+                float NdotL = max(dot(normal, L), 0.0);
 
-            // Simple attenuation
-            float attenuation = 1.0 / (distance * distance + 1.0);
+                // Simple attenuation
+                float attenuation = 1.0 / (distance * distance + 1.0);
 
-            // Contribution
-            color += albedo
-                   * light.color.rgb
-                   * light.color.w
-                   * NdotL
-                   * attenuation;
+                // Contribution
+                color += albedo
+                    * light.color.rgb
+                    * light.color.w
+                    * NdotL
+                    * attenuation;
+            }
         }
     }
-    color+=ambientColor;
-    outColor = vec4(color, 1.0);
+    else{
+        color=albedo;
+    }
+ 
+    if(pushConstant.showNormal==1)
+        outColor = vec4(normal, 1.0);
+    else
+        outColor = vec4(color, 1.0);
 }

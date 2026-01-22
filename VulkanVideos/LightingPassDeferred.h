@@ -16,6 +16,8 @@ namespace lve {
 	public:
 		struct SimplePushConstantData {
 			uint32_t _lightNumber;
+			uint32_t _showNormalMap = 0; // 0: no normal map, 1: normal map
+			uint32_t _showLighning = 0; // 0: normal lighting, 1: no lighting (show albedo only)
 		};
 
 
@@ -35,5 +37,6 @@ namespace lve {
 		
 		std::shared_ptr<GBuffer> m_gBuffer;
 		SimplePushConstantData m_pushConstants;
+		SceneManager* m_sceneManager = SceneManager::getInstance();
 	};
 }

@@ -52,7 +52,10 @@ namespace lve {
             &lightSet,
             0, nullptr
 		 );
-     
+
+		 m_pushConstants._showNormalMap = m_sceneManager->_showNormal ? 1 : 0;
+		 m_pushConstants._showLighning = m_sceneManager->_showLighning ? 1 : 0;
+
          vkCmdPushConstants(frameInfo.commandBuffer, pipelineLayout,  VK_SHADER_STAGE_VERTEX_BIT| VK_SHADER_STAGE_FRAGMENT_BIT, 0, sizeof(SimplePushConstantData), &m_pushConstants);
 
 

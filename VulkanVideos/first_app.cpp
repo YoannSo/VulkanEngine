@@ -99,9 +99,9 @@ namespace lve {
 			cameraController.moveInPLaneXZ(_window.getGLFWWindow(), frameTime, viewerObject);
 			camera.setViewYXZ(viewerObject->transform.translation, viewerObject->transform.rotation);
 
-			std::cout << "Camera position: " << viewerObject->transform.translation.x << ", "
-				<< viewerObject->transform.translation.y << ", "
-				<< viewerObject->transform.translation.z << std::endl;
+		//	std::cout << "Camera position: " << viewerObject->transform.translation.x << ", "
+			//	<< viewerObject->transform.translation.y << ", "
+			//	<< viewerObject->transform.translation.z << std::endl;
 
 			float aspect = lveRenderer.getAspectRatio();
 			//camera.setOrthographicProjection(-aspect, aspect, -1, 1, -1, 1);
@@ -124,6 +124,7 @@ namespace lve {
 				// Reset queries for this frame and write GPU timestamp start
 
 				FrameInfo frameInfo{ frameIndex, frameTime, commandBuffer, camera,globalDescriptorSets[frameIndex] };
+				cameraController.handleAction(_window.getGLFWWindow());
 
 				GlobalUbo ubo{};
 				ubo.projection = camera.getProjection();

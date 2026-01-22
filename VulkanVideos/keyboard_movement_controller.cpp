@@ -34,4 +34,32 @@ namespace lve {
 			gameObject->transform.translation += moveSpeed * dt * glm::normalize(moveDir);
 		}
 	}
+
+	void KeyBoardMovementController::handleAction(GLFWwindow* window) {
+
+		// ===== NORMAL DEBUG =====
+		if (glfwGetKey(window, keys.normalSwitch) == GLFW_PRESS && !m_normalPressed) {
+			std::cout << "avant Normal toggled: " << m_sceneManager->_showNormal << std::endl;
+			m_sceneManager->_showNormal = !m_sceneManager->_showNormal;
+			m_normalPressed = true;
+
+			std::cout << "Normal toggled: " << m_sceneManager->_showNormal << std::endl;
+		}
+
+		if (glfwGetKey(window, keys.normalSwitch) == GLFW_RELEASE) {
+			m_normalPressed = false;
+		}
+
+
+		// ===== LIGHTING DEBUG =====
+		if (glfwGetKey(window, keys.lightningSwitch) == GLFW_PRESS && !m_lightPressed) {
+			m_sceneManager->_showLighning = !m_sceneManager->_showLighning;
+			m_lightPressed = true;
+		}
+
+		if (glfwGetKey(window, keys.lightningSwitch) == GLFW_RELEASE) {
+			m_lightPressed = false;
+		}
+	}
+
 }

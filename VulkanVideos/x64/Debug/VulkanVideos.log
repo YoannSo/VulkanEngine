@@ -1,16 +1,16 @@
-﻿  DeferredRenderer.cpp
-C:\prog\git\VulkanEngine\VulkanVideos\lve_renderer.hpp(45,73): warning C4267: 'return': conversion from 'size_t' to 'uint32_t', possible loss of data
+﻿  BillboardRS.cpp
+  DeferredRenderer.cpp
+C:\prog\git\VulkanEngine\VulkanVideos\Renderer.hpp(46,73): warning C4267: 'return': conversion from 'size_t' to 'uint32_t', possible loss of data
   (compiling source file 'DeferredRenderer.cpp')
   
-C:\prog\git\VulkanEngine\VulkanVideos\DeferredRenderer.cpp(163,34): warning C4267: 'argument': conversion from 'size_t' to 'uint32_t', possible loss of data
 C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include\xutility(476,82): warning C4267: 'argument': conversion from 'size_t' to 'uint32_t', possible loss of data
   (compiling source file 'DeferredRenderer.cpp')
       C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include\xutility(476,82):
       the template instantiation context (the oldest one first) is
-          C:\prog\git\VulkanEngine\VulkanVideos\DeferredRenderer.cpp(46,22):
-          see reference to function template instantiation 'std::shared_ptr<lve::GBuffer> std::make_shared<lve::GBuffer,VkExtent2D,size_t>(VkExtent2D &&,size_t &&)' being compiled
+          C:\prog\git\VulkanEngine\VulkanVideos\DeferredRenderer.cpp(15,22):
+          see reference to function template instantiation 'std::shared_ptr<engine::GBuffer> std::make_shared<engine::GBuffer,VkExtent2D,size_t>(VkExtent2D &&,size_t &&)' being compiled
           C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include\memory(2913,46):
-          see reference to function template instantiation 'std::_Ref_count_obj2<lve::GBuffer>::_Ref_count_obj2<_Ty,unsigned __int64>(_Ty &&,unsigned __int64 &&)' being compiled
+          see reference to function template instantiation 'std::_Ref_count_obj2<engine::GBuffer>::_Ref_count_obj2<_Ty,unsigned __int64>(_Ty &&,unsigned __int64 &&)' being compiled
           with
           [
               _Ty=VkExtent2D
@@ -19,38 +19,31 @@ C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.3520
           see reference to function template instantiation 'void std::_Construct_in_place<_Ty,VkExtent2D,unsigned __int64>(_Ty &,VkExtent2D &&,unsigned __int64 &&) noexcept(false)' being compiled
           with
           [
-              _Ty=lve::GBuffer
+              _Ty=engine::GBuffer
           ]
   
-  ForwardRenderer.cpp
-C:\prog\git\VulkanEngine\VulkanVideos\lve_renderer.hpp(45,73): warning C4267: 'return': conversion from 'size_t' to 'uint32_t', possible loss of data
-  (compiling source file 'ForwardRenderer.cpp')
+  App.cpp
+C:\prog\git\VulkanEngine\VulkanVideos\Renderer.hpp(46,73): warning C4267: 'return': conversion from 'size_t' to 'uint32_t', possible loss of data
+  (compiling source file 'App.cpp')
   
-  LightingPassDeferred.cpp
-  Material.cpp
-C:\prog\git\VulkanEngine\VulkanVideos\Material.cpp(63,26): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-  RenderSystem.cpp
-  SceneManager.cpp
-  first_app.cpp
-C:\prog\git\VulkanEngine\VulkanVideos\lve_renderer.hpp(45,73): warning C4267: 'return': conversion from 'size_t' to 'uint32_t', possible loss of data
-  (compiling source file 'first_app.cpp')
-  
-  g_buffer.cpp
-  geometry_pass_render_system.cpp
-  keyboard_movement_controller.cpp
-  lve_renderer.cpp
-C:\prog\git\VulkanEngine\VulkanVideos\lve_renderer.hpp(45,73): warning C4267: 'return': conversion from 'size_t' to 'uint32_t', possible loss of data
-  (compiling source file 'lve_renderer.cpp')
-  
-C:\prog\git\VulkanEngine\VulkanVideos\lve_renderer.cpp(141,145): warning C4244: 'argument': conversion from 'float' to 'uint32_t', possible loss of data
-C:\prog\git\VulkanEngine\VulkanVideos\lve_renderer.cpp(192,56): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+  GeometryStage.cpp
+C:\prog\git\VulkanEngine\VulkanVideos\GeometryStage.cpp(129,34): warning C4267: 'argument': conversion from 'size_t' to 'uint32_t', possible loss of data
+  GeometryRS.cpp
+  LighningRS.cpp
+  LightingStage.cpp
+C:\prog\git\VulkanEngine\VulkanVideos\LightingStage.cpp(82,55): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
   main.cpp
-C:\prog\git\VulkanEngine\VulkanVideos\lve_renderer.hpp(45,73): warning C4267: 'return': conversion from 'size_t' to 'uint32_t', possible loss of data
+C:\prog\git\VulkanEngine\VulkanVideos\Renderer.hpp(46,73): warning C4267: 'return': conversion from 'size_t' to 'uint32_t', possible loss of data
   (compiling source file 'main.cpp')
   
-  point_light_system.cpp
-  simple_render_system.cpp
+  Pipeline.cpp
+  PointLight.cpp
+  RenderStage.cpp
+  RenderSystem.cpp
+  SceneManager.cpp
   Generating Code...
+C:\prog\git\VulkanEngine\VulkanVideos\SceneManager.h(112,1): warning C4172: returning address of local variable or temporary 
 C:\prog\git\VulkanEngine\VulkanVideos\LightSystem.h(38,1): warning C4172: returning address of local variable or temporary 
+C:\prog\git\VulkanEngine\VulkanVideos\SceneManager.h(112,1): warning C4172: returning address of local variable or temporary 
 LINK : warning LNK4098: defaultlib 'MSVCRT' conflicts with use of other libs; use /NODEFAULTLIB:library
   VulkanVideos.vcxproj -> C:\prog\git\VulkanEngine\x64\Debug\VulkanVideos.exe

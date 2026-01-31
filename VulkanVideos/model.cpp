@@ -1,5 +1,5 @@
 #include "model.hpp"
-namespace lve {
+namespace engine {
 
 
 	Model::Model(const std::string p_name, const aiScene& p_scene,const MaterialManager& p_materialManagerRef, bool p_useBasicMaterial) :GameObject(), _name{ p_name }

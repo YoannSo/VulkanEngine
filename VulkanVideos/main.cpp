@@ -1,11 +1,11 @@
-#include "first_app.hpp"
+#include "App.hpp"
 #define STB_IMAGE_IMPLEMENTATION
 #include <cstdlib>
 #include <iostream>
 #include <stdexcept>
 int main() {
 
-	lve::FirstApp app{};
+	engine::FirstApp app{};
 
 	try {
 

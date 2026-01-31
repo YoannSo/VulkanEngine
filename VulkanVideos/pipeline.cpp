@@ -1,27 +1,22 @@
-#include "pipeline.hpp"
-#include "lve_model.hpp"
-#include "TriangleMesh.hpp"
-#include <fstream>
-#include <stdexcept>
-#include <iostream>
-#include <cassert>
-namespace lve {
-	LvePipeline::LvePipeline(const std::string& vertFilePath, const std::string fragFilePath, const PipelineConfigInfo& configInfo)
+#include "Pipeline.hpp"
+
+namespace engine {
+	Pipeline::Pipeline(const std::string& vertFilePath, const std::string fragFilePath, const PipelineConfigInfo& configInfo)
 	{
 		createGraphicsPipeline(vertFilePath, fragFilePath, configInfo);
 	}
 
-	LvePipeline::~LvePipeline() {
-		vkDestroyShaderModule(LveDevice::getInstance()->getDevice(), vertShaderModule, nullptr);//clean up frag and vertex module
-		vkDestroyShaderModule(LveDevice::getInstance()->getDevice(), fragShaderModule, nullptr);
+	Pipeline::~Pipeline() {
+		vkDestroyShaderModule(Device::getInstance()->getDevice(), vertShaderModule, nullptr);//clean up frag and vertex module
+		vkDestroyShaderModule(Device::getInstance()->getDevice(), fragShaderModule, nullptr);
 
-		vkDestroyPipeline(LveDevice::getInstance()->getDevice(), graphicsPipeline, nullptr);//destroy our pipelien
+		vkDestroyPipeline(Device::getInstance()->getDevice(), graphicsPipeline, nullptr);//destroy our pipelien
 	}
-	void LvePipeline::bind(VkCommandBuffer commandBuffer)//bind the pipeline with the command buffer
+	void Pipeline::bind(VkCommandBuffer commandBuffer)//bind the pipeline with the command buffer
 	{
 		vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, graphicsPipeline);//flag=>signal graphics pipeline 
 	}
-	void LvePipeline::defaultDeferredPipelineConfigInfo(PipelineConfigInfo& configInfo)
+	void Pipeline::defaultDeferredPipelineConfigInfo(PipelineConfigInfo& configInfo)
 	{
 
 		configInfo.inputAssemblyInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO;
@@ -133,7 +128,7 @@ namespace lve {
 		configInfo.bindingDescriptions = Vertex::getBindingDescriptions();
 		configInfo.attributDescriptions = Vertex::getAttributeDescription();
 	}
-	void LvePipeline::defaultFowardPipelineConfigInfo(PipelineConfigInfo& configInfo) {
+	void Pipeline::defaultFowardPipelineConfigInfo(PipelineConfigInfo& configInfo) {
 
 		configInfo.inputAssemblyInfo = {};
 		configInfo.inputAssemblyInfo.sType =
@@ -223,7 +218,7 @@ namespace lve {
 		configInfo.attributDescriptions.clear();
 
 	}
-	void LvePipeline::enableAlphaBlinding(PipelineConfigInfo& configInfo)
+	void Pipeline::enableAlphaBlinding(PipelineConfigInfo& configInfo)
 	{
 
 		for (auto& colorBlendInfo : configInfo.colorBlendAttachments) {
@@ -242,7 +237,7 @@ namespace lve {
 
 
 	}
-	std::vector<char> LvePipeline::readFile(const std::string& filePath) {
+	std::vector<char> Pipeline::readFile(const std::string& filePath) {
 
 		std::ifstream file(filePath, std::ios::ate | std::ios::binary);
 		if (!file.is_open()) {
@@ -255,7 +250,7 @@ namespace lve {
 		file.close();
 		return buffer;
 	}
-	void LvePipeline::createGraphicsPipeline(const std::string& vertFilePath, const std::string& fragFilePath, const PipelineConfigInfo& configInfo)
+	void Pipeline::createGraphicsPipeline(const std::string& vertFilePath, const std::string& fragFilePath, const PipelineConfigInfo& configInfo)
 	{
 
 		assert(configInfo.pipelineLayout != VK_NULL_HANDLE && "cannot create graphics pipeline: no pipelineLayout provided in configInfo");
@@ -328,20 +323,20 @@ namespace lve {
 		pipelineInfo.basePipelineHandle = VK_NULL_HANDLE;
 
 
-		if (vkCreateGraphicsPipelines(LveDevice::getInstance()->getDevice(), VK_NULL_HANDLE, 1, &pipelineInfo, nullptr, &graphicsPipeline) != VK_SUCCESS)//null handle to pipeline cache => performance, pipeline count =>1, no allocation callback 
+		if (vkCreateGraphicsPipelines(Device::getInstance()->getDevice(), VK_NULL_HANDLE, 1, &pipelineInfo, nullptr, &graphicsPipeline) != VK_SUCCESS)//null handle to pipeline cache => performance, pipeline count =>1, no allocation callback 
 			throw	std::runtime_error("Failed to create graphics pipeline");
 
 		std::cout << "Vertex shader code size " << vertCode.size() << std::endl;
 		std::cout << "Vertex shader code size " << vertCode.size() << std::endl;
 	}
-	void LvePipeline::createShaderModule(const std::vector<char>& code, VkShaderModule* shaderModule)
+	void Pipeline::createShaderModule(const std::vector<char>& code, VkShaderModule* shaderModule)
 	{
 		VkShaderModuleCreateInfo createInfo{};// common pattern, configure a struct instrad of a function
 		createInfo.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;//
 		createInfo.codeSize = code.size();
 		createInfo.pCode = reinterpret_cast<const uint32_t*> (code.data());//vulkan expect uint32 instrad of char, sotre in vector, default allocator already insure
 
-		if (vkCreateShaderModule(LveDevice::getInstance()->getDevice(), &createInfo, nullptr, shaderModule) != VK_SUCCESS)
+		if (vkCreateShaderModule(Device::getInstance()->getDevice(), &createInfo, nullptr, shaderModule) != VK_SUCCESS)
 			throw std::runtime_error("failed to create shader module");
 	}
 }

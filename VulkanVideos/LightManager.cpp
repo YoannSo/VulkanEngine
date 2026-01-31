@@ -1,6 +1,6 @@
 #include "LightManager.h"
 
-void lve::LightManager::addPointLight(const glm::vec3& p_position, const glm::vec3& p_color, float p_intensity)
+void engine::LightManager::addPointLight(const glm::vec3& p_position, const glm::vec3& p_color, float p_intensity)
 {
 	m_lights.emplace_back();
 	Light& light = m_lights.back();
@@ -10,7 +10,7 @@ void lve::LightManager::addPointLight(const glm::vec3& p_position, const glm::ve
 	light._intensity = p_intensity;
 }
 
-void lve::LightManager::addDirectionalLight(const glm::vec3& p_direction, const glm::vec3& p_color, float p_intensity)
+void engine::LightManager::addDirectionalLight(const glm::vec3& p_direction, const glm::vec3& p_color, float p_intensity)
 {
 	m_lights.emplace_back();
 	Light& light = m_lights.back();
@@ -20,12 +20,12 @@ void lve::LightManager::addDirectionalLight(const glm::vec3& p_direction, const 
 	light._intensity = p_intensity;
 }
 
-void lve::LightManager::addSpotLight(const glm::vec3& p_position, const glm::vec3& p_direction, const glm::vec3& p_color, float p_intensity, float p_cutOff, float p_outerCutOff)
+void engine::LightManager::addSpotLight(const glm::vec3& p_position, const glm::vec3& p_direction, const glm::vec3& p_color, float p_intensity, float p_cutOff, float p_outerCutOff)
 {
 	
 }
 
-const std::vector<lve::LightGPU> lve::LightManager::getLightsBufferData()const
+const std::vector<engine::LightGPU> engine::LightManager::getLightsBufferData()const
 {
 	std::vector<LightGPU> lightBufferData;
 	for (const auto& light : m_lights) {

@@ -8,7 +8,7 @@
 #include "define.hpp"
 #include "TextureManager.h"
 
-namespace lve {
+namespace engine {
 
     class MaterialManager {
         using MaterialIDMap = std::unordered_map<std::string, uint32_t>; // efficiently look up object

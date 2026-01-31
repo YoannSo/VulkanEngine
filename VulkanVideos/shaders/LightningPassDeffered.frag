@@ -31,6 +31,7 @@ void main()
 {
     vec3 albedo = texture(gAlbedo, fragUV).rgb;
     vec3 normal = normalize(texture(gNormal, fragUV).xyz);
+    normal = normal * 2.0 - 1.0; // Remap from [0,1] to [-1,1]
 
     vec3 color = vec3(0.0);
 

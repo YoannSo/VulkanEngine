@@ -40,72 +40,57 @@
     <Filter Include="Source Files\Renderer">
       <UniqueIdentifier>{a239ce88-a112-482e-92dc-9739afd65e03}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Renderer">
-      <UniqueIdentifier>{230575e8-2eed-4e9d-a8c4-000b0ad181c6}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\Manager">
       <UniqueIdentifier>{0d68d0df-5605-4999-af05-78fd4009fd84}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files\Manager">
       <UniqueIdentifier>{a95e02f0-a951-452c-92fd-e2ca2288d593}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\render_systems">
+      <UniqueIdentifier>{a9de6823-d098-4f79-85cf-93d47f074da1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\render_systems">
+      <UniqueIdentifier>{437140d8-daaa-41f7-aa9f-e6748231501b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Renderer">
+      <UniqueIdentifier>{230575e8-2eed-4e9d-a8c4-000b0ad181c6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="window.cpp">
+    <ClCompile Include="Window.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="first_app.cpp">
+    <ClCompile Include="App.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="keyboard_movement_controller.cpp">
+    <ClCompile Include="KeyboardController.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="simple_render_system.cpp">
-      <Filter>Source Files\systems</Filter>
-    </ClCompile>
-    <ClCompile Include="point_light_system.cpp">
-      <Filter>Source Files\systems</Filter>
-    </ClCompile>
-    <ClCompile Include="lve_buffer.cpp">
+    <ClCompile Include="Buffer.cpp">
       <Filter>Source Files\VulkanUtils</Filter>
     </ClCompile>
-    <ClCompile Include="lve_camera.cpp">
+    <ClCompile Include="Camera.cpp">
       <Filter>Source Files\VulkanUtils</Filter>
     </ClCompile>
-    <ClCompile Include="lve_descriptor.cpp">
+    <ClCompile Include="Descriptor.cpp">
       <Filter>Source Files\VulkanUtils</Filter>
     </ClCompile>
-    <ClCompile Include="lve_device.cpp">
+    <ClCompile Include="Device.cpp">
       <Filter>Source Files\VulkanUtils</Filter>
     </ClCompile>
     <ClCompile Include="GameObject.cpp">
       <Filter>Source Files\VulkanUtils</Filter>
     </ClCompile>
-    <ClCompile Include="lve_model.cpp">
+    <ClCompile Include="SwapChain.cpp">
       <Filter>Source Files\VulkanUtils</Filter>
     </ClCompile>
-    <ClCompile Include="lve_swap_chain.cpp">
+    <ClCompile Include="Pipeline.cpp">
       <Filter>Source Files\VulkanUtils</Filter>
     </ClCompile>
-    <ClCompile Include="lve_texture.cpp">
-      <Filter>Source Files\VulkanUtils</Filter>
-    </ClCompile>
-    <ClCompile Include="pipeline.cpp">
-      <Filter>Source Files\VulkanUtils</Filter>
-    </ClCompile>
-    <ClCompile Include="Camera.cpp">
-      <Filter>Source Files\Objects</Filter>
-    </ClCompile>
-    <ClCompile Include="RenderSystem.cpp">
-      <Filter>Source Files\systems</Filter>
-    </ClCompile>
-    <ClCompile Include="geometry_pass_render_system.cpp">
-      <Filter>Source Files\systems</Filter>
-    </ClCompile>
-    <ClCompile Include="g_buffer.cpp">
+    <ClCompile Include="GBuffer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="GuiManager.cpp">
@@ -129,14 +114,8 @@
     <ClCompile Include="..\external\imgui\imgui_widgets.cpp">
       <Filter>Source Files\GUI</Filter>
     </ClCompile>
-    <ClCompile Include="ForwardRenderer.cpp">
+    <ClCompile Include="Renderer.cpp">
       <Filter>Source Files\Renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="lve_renderer.cpp">
-      <Filter>Source Files\Renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="LightingPassDeferred.cpp">
-      <Filter>Source Files\systems</Filter>
     </ClCompile>
     <ClCompile Include="SceneManager.cpp">
       <Filter>Source Files\Manager</Filter>
@@ -171,88 +150,94 @@
     <ClCompile Include="LightManager.cpp">
       <Filter>Source Files\Manager</Filter>
     </ClCompile>
+    <ClCompile Include="BillboardSystem.cpp">
+      <Filter>Source Files\systems</Filter>
+    </ClCompile>
+    <ClCompile Include="BillboardRS.cpp">
+      <Filter>Source Files\render_systems</Filter>
+    </ClCompile>
+    <ClCompile Include="GeometryRS.cpp">
+      <Filter>Source Files\render_systems</Filter>
+    </ClCompile>
+    <ClCompile Include="LighningRS.cpp">
+      <Filter>Source Files\render_systems</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderSystem.cpp">
+      <Filter>Source Files\render_systems</Filter>
+    </ClCompile>
+    <ClCompile Include="BillboardManager.cpp">
+      <Filter>Source Files\Manager</Filter>
+    </ClCompile>
     <ClCompile Include="LightSystem.cpp">
-      <Filter>Header Files\systems</Filter>
+      <Filter>Source Files\systems</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderStage.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GeometryStage.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="LightingStage.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Texture.cpp">
+      <Filter>Source Files\VulkanUtils</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="window.hpp">
+    <ClInclude Include="Window.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="first_app.hpp">
+    <ClInclude Include="App.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="keyboard_movement_controller.hpp">
+    <ClInclude Include="KeyboardController.hpp">
       <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="simple_render_system.hpp">
-      <Filter>Header Files\systems</Filter>
-    </ClInclude>
-    <ClInclude Include="point_light_system.hpp">
-      <Filter>Header Files\systems</Filter>
     </ClInclude>
     <ClInclude Include="define.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="lve_buffer.hpp">
+    <ClInclude Include="Buffer.hpp">
       <Filter>Header Files\VulkanUtils</Filter>
     </ClInclude>
-    <ClInclude Include="lve_descriptor.hpp">
+    <ClInclude Include="Descriptor.hpp">
       <Filter>Header Files\VulkanUtils</Filter>
     </ClInclude>
-    <ClInclude Include="lve_device.hpp">
+    <ClInclude Include="Device.hpp">
       <Filter>Header Files\VulkanUtils</Filter>
     </ClInclude>
-    <ClInclude Include="lve_model.hpp">
+    <ClInclude Include="SwapChain.hpp">
       <Filter>Header Files\VulkanUtils</Filter>
     </ClInclude>
-    <ClInclude Include="lve_swap_chain.hpp">
+    <ClInclude Include="Utils.hpp">
       <Filter>Header Files\VulkanUtils</Filter>
     </ClInclude>
-    <ClInclude Include="lve_utils.hpp">
+    <ClInclude Include="Pipeline.hpp">
       <Filter>Header Files\VulkanUtils</Filter>
     </ClInclude>
-    <ClInclude Include="pipeline.hpp">
+    <ClInclude Include="Camera.hpp">
       <Filter>Header Files\VulkanUtils</Filter>
     </ClInclude>
-    <ClInclude Include="lve_camera.hpp">
-      <Filter>Header Files\VulkanUtils</Filter>
-    </ClInclude>
-    <ClInclude Include="lve_frame_info.hpp">
+    <ClInclude Include="FrameInfo.hpp">
       <Filter>Header Files\VulkanUtils</Filter>
     </ClInclude>
     <ClInclude Include="GameObject.hpp">
       <Filter>Header Files\VulkanUtils</Filter>
     </ClInclude>
-    <ClInclude Include="lve_texture.hpp">
+    <ClInclude Include="Texture.hpp">
       <Filter>Header Files\VulkanUtils</Filter>
     </ClInclude>
     <ClInclude Include="Material.h">
       <Filter>Header Files\Objects</Filter>
     </ClInclude>
-    <ClInclude Include="Camera.h">
-      <Filter>Header Files\Objects</Filter>
-    </ClInclude>
-    <ClInclude Include="RenderSystem.h">
-      <Filter>Header Files\systems</Filter>
-    </ClInclude>
-    <ClInclude Include="geometry_pass_render_system.h">
-      <Filter>Header Files\systems</Filter>
-    </ClInclude>
-    <ClInclude Include="g_buffer.hpp">
+    <ClInclude Include="GBuffer.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="lve_renderer.hpp">
-      <Filter>Header Files\Renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="ForwardRenderer.hpp">
+    <ClInclude Include="Renderer.hpp">
       <Filter>Header Files\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="DeferredRenderer.hpp">
       <Filter>Header Files\Renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="LightingPassDeferred.h">
-      <Filter>Header Files\systems</Filter>
     </ClInclude>
     <ClInclude Include="SceneManager.h">
       <Filter>Header Files\Manager</Filter>
@@ -269,7 +254,7 @@
     <ClInclude Include="MaterialSystem.h">
       <Filter>Header Files\systems</Filter>
     </ClInclude>
-    <ClInclude Include="model.hpp">
+    <ClInclude Include="Model.hpp">
       <Filter>Header Files\Objects</Filter>
     </ClInclude>
     <ClInclude Include="TriangleMesh.hpp">
@@ -286,6 +271,33 @@
     </ClInclude>
     <ClInclude Include="LightSystem.h">
       <Filter>Header Files\systems</Filter>
+    </ClInclude>
+    <ClInclude Include="BillboardManager.h">
+      <Filter>Header Files\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="BillboardSystem.h">
+      <Filter>Header Files\systems</Filter>
+    </ClInclude>
+    <ClInclude Include="BillboardRS.h">
+      <Filter>Header Files\render_systems</Filter>
+    </ClInclude>
+    <ClInclude Include="GeometryRS.h">
+      <Filter>Header Files\render_systems</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderSystem.h">
+      <Filter>Header Files\render_systems</Filter>
+    </ClInclude>
+    <ClInclude Include="LighningRS.h">
+      <Filter>Header Files\render_systems</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderStage.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GeometryStage.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="LightingStage.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

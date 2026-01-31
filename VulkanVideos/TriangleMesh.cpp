@@ -1,12 +1,12 @@
 #include "TriangleMesh.hpp"
 
-lve::TriangleMesh::~TriangleMesh()
+engine::TriangleMesh::~TriangleMesh()
 {
 	
 }
 
 
-lve::TriangleMesh::TriangleMesh(const std::string& p_name, const std::vector<Vertex>& p_vertices, const std::vector<unsigned int>& p_indices, const uint32_t p_materialID, const Model* p_parent)
+engine::TriangleMesh::TriangleMesh(const std::string& p_name, const std::vector<Vertex>& p_vertices, const std::vector<unsigned int>& p_indices, const uint32_t p_materialID, const Model* p_parent)
 	: _name{ p_name }, _vertices{ p_vertices }, _materialID{ p_materialID }, _indices{ p_indices },m_modelRef{ p_parent }
 {
 	_indexCount = _indices.size();
@@ -21,7 +21,7 @@ lve::TriangleMesh::TriangleMesh(const std::string& p_name, const std::vector<Ver
 }
 
 
-void lve::TriangleMesh::bind(VkCommandBuffer& commandBuffer, int& p_frameIndex, VkPipelineLayout& p_pipelineLayout)const
+void engine::TriangleMesh::bind(const VkCommandBuffer& commandBuffer, const int& p_frameIndex, VkPipelineLayout& p_pipelineLayout)const
 {
 	
 
@@ -39,7 +39,7 @@ void lve::TriangleMesh::bind(VkCommandBuffer& commandBuffer, int& p_frameIndex, 
 	}
 }
 
-void lve::TriangleMesh::draw(VkCommandBuffer& commandBuffer)const
+void engine::TriangleMesh::draw(const VkCommandBuffer& commandBuffer)const
 {
 
 	if (_hasIndexBuffer) {
@@ -53,14 +53,14 @@ void lve::TriangleMesh::draw(VkCommandBuffer& commandBuffer)const
 	}
 }
 
-void lve::TriangleMesh::createVertexBuffers()
+void engine::TriangleMesh::createVertexBuffers()
 {
 	_vertexCount = static_cast<uint32_t>(_vertices.size());
 	assert(_vertexCount >= 3 && "Vertex count must be a least 3");
 	VkDeviceSize bufferSize = sizeof(_vertices[0]) * _vertexCount; // total number of vertex buffer of all vertices
 	uint32_t vertexSize = sizeof(_vertices[0]);
 
-	LveBuffer stagingBuffer{vertexSize,_vertexCount,VK_BUFFER_USAGE_TRANSFER_SRC_BIT,//tell device that we want to create a buffer for vextes data
+	GwatBuffer stagingBuffer{vertexSize,_vertexCount,VK_BUFFER_USAGE_TRANSFER_SRC_BIT,//tell device that we want to create a buffer for vextes data
 		VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT |//allocate mem to be accessible from the host, host to write on device meem
 		VK_MEMORY_PROPERTY_HOST_COHERENT_BIT };//keep host and device memory consistent together, }
 
@@ -70,16 +70,16 @@ void lve::TriangleMesh::createVertexBuffers()
 	stagingBuffer.writeToBuffer((void*)_vertices.data());
 
 
-	_vertexBuffer = std::make_unique<LveBuffer>( vertexSize, _vertexCount, VK_BUFFER_USAGE_VERTEX_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT,//tell device that we want to create a buffer for vextes data
+	_vertexBuffer = std::make_unique<GwatBuffer>( vertexSize, _vertexCount, VK_BUFFER_USAGE_VERTEX_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT,//tell device that we want to create a buffer for vextes data
 		VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
 
-	LveDevice::getInstance()->copyBuffer(stagingBuffer.getBuffer(), _vertexBuffer->getBuffer(), bufferSize);
+	Device::getInstance()->copyBuffer(stagingBuffer.getBuffer(), _vertexBuffer->getBuffer(), bufferSize);
 
 
 
 }
 
-void lve::TriangleMesh::createIndexBuffer()
+void engine::TriangleMesh::createIndexBuffer()
 {
 	_indexCount= static_cast<uint32_t>(_indices.size());
 	_hasIndexBuffer = _indexCount > 0;
@@ -91,7 +91,7 @@ void lve::TriangleMesh::createIndexBuffer()
 	VkDeviceSize bufferSize = sizeof(_indices[0]) * _indexCount;
 	uint32_t indexSize = sizeof(_indices[0]);
 
-	LveBuffer stagingBuffer{
+	GwatBuffer stagingBuffer{
 		indexSize,
 		_indexCount,
 		VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
@@ -101,17 +101,17 @@ void lve::TriangleMesh::createIndexBuffer()
 	stagingBuffer.map();
 	stagingBuffer.writeToBuffer((void*)_indices.data());
 
-	_indexBuffer = std::make_unique<LveBuffer>(
+	_indexBuffer = std::make_unique<GwatBuffer>(
 		indexSize,
 		_indexCount,
 		VK_BUFFER_USAGE_INDEX_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT,
 		VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
 
-	LveDevice::getInstance()->copyBuffer(stagingBuffer.getBuffer(), _indexBuffer->getBuffer(), bufferSize);
+	Device::getInstance()->copyBuffer(stagingBuffer.getBuffer(), _indexBuffer->getBuffer(), bufferSize);
 
 }
 
-std::vector<VkVertexInputBindingDescription> lve::Vertex::getBindingDescriptions()
+std::vector<VkVertexInputBindingDescription> engine::Vertex::getBindingDescriptions()
 {
 	std::vector<VkVertexInputBindingDescription> bindingDescriptions(1);//single vertex buffer
 	bindingDescriptions[0].binding = 0;//index 0 
@@ -119,7 +119,7 @@ std::vector<VkVertexInputBindingDescription> lve::Vertex::getBindingDescriptions
 	bindingDescriptions[0].inputRate = VK_VERTEX_INPUT_RATE_VERTEX;
 	return bindingDescriptions;
 }
-std::vector<VkVertexInputAttributeDescription> lve::Vertex::getAttributeDescription()
+std::vector<VkVertexInputAttributeDescription> engine::Vertex::getAttributeDescription()
 {
 	std::vector<VkVertexInputAttributeDescription> attributeDescriptions{};
 

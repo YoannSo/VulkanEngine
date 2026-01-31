@@ -1,5 +1,5 @@
 #include "PointLight.h"
-namespace lve
+namespace engine
 {
 	PointLight::PointLight()
 	{

@@ -1,7 +1,7 @@
 #include "Material.h"
 #include "SceneManager.h"
 
-namespace lve {
+namespace engine {
 
 	Material::Material(std::string p_name): m_name(p_name)
 	{

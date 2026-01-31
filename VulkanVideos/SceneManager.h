@@ -1,26 +1,44 @@
 #pragma once
 #include <stdio.h>
-#include "lve_descriptor.hpp"
-#include "lve_device.hpp"
+#include "Descriptor.hpp"
+#include "Device.hpp"
 #include <string>
 #include <memory>
 #include <vector>
 
 
-#include "lve_texture.hpp"
+#include "Texture.hpp"
 #include "model.hpp"
-#include "Camera.h"
+#include "Camera.hpp"
 #include "PointLight.h"
 #include "define.hpp"
 
 #include "TextureManager.h"
+
 #include "MaterialManager.h"
 #include "MaterialSystem.h"
+
 #include "LightManager.h"
 #include "LightSystem.h"
-namespace lve {
+
+#include "BillboardManager.h"
+#include "BillboardSystem.h"
+
+namespace engine {
+
+	using namespace managers;
+    using namespace systems;
 
     class SceneManager {
+
+    public:
+        struct GlobalUbo {
+            glm::mat4 projection{ 1.f };
+            glm::mat4 view{ 1.f };
+            glm::mat4 inverseView{ 1.f };//cam pos last colum
+        };
+
+
     public:
         using Map = std::unordered_map<uint32_t, GameObject*>; // efficiently look up object
         using RenderingBatch = std::vector<std::pair<std::string, std::vector<TriangleMesh*>>>;
@@ -36,10 +54,11 @@ namespace lve {
         void addGameObject(GameObject* p_newGameObject);
 
         inline Map getSceneObjects() { return m_objectMap; }
-        inline LveDescriptorPool& getPool() { return *m_descriptorPool; }
+        inline DescriptorPool& getPool() { return *m_descriptorPool; }
 
         inline MaterialMap& getMaterialMap() { return m_materialMap; }
 		LightManager& getLightManager()  { return m_lightManager; }
+		BillboardManager& getBillboardManager() { return m_billboardManager; }
 
 
         void addMaterial(std::unique_ptr<Material> p_material);
@@ -54,8 +73,7 @@ namespace lve {
 
 		const Map& getObjectMap() const { return m_objectMap; }
 
-        void initializeMaterialSystem();
-		void initializeLightSystem();
+        void initializeDescriptor();
 
         std::vector<VkDescriptorSetLayout> getMaterialSystemDescriptorSetLayouts() const
         {
@@ -63,8 +81,6 @@ namespace lve {
             m_materialSystem->fillDescriptorSetLayouts(layouts);
             return layouts;
 		}
-
-        inline LveDescriptorSetLayout& getLocalDescriptorSetLayout() { return *m_objectLocalSetLayout; }
 
 
         const std::vector < VkDescriptorSet>& getMaterialSystemBindlessTextureSet() const
@@ -90,8 +106,18 @@ namespace lve {
             return m_lightSystem->getDescriptorSetLayout();
         }
 
-    private:
-        void setupDescriptorSet();
+
+        const VkDescriptorSetLayout& getGlobalDescriptorSetLayout() const
+        {
+            return m_globalDescriptorLayout->getDescriptorSetLayout();
+		}
+
+        const std::vector<VkDescriptorSet>& getGlobalDescriptorSets() const
+        {
+            return m_globalDescriptorSets;
+        }
+
+        void writeInGlobalUbo(GlobalUbo& p_buffer, size_t p_frameIndex);
 
     public:
         const uint16_t MAX_TEXTURE_IN_SCENE{ 100 };
@@ -104,8 +130,11 @@ namespace lve {
     private:
         std::string m_name{ "UNDEFINED" };
 
-        std::unique_ptr<LveDescriptorPool> m_descriptorPool{};
-        std::unique_ptr<LveDescriptorSetLayout> m_objectLocalSetLayout;
+        std::unique_ptr<DescriptorPool> m_descriptorPool{};
+        std::unique_ptr<DescriptorSetLayout> m_globalDescriptorLayout;
+        std::vector<std::unique_ptr<GwatBuffer>> m_globalUboBuffers;
+		std::vector<VkDescriptorSet> m_globalDescriptorSets;
+
 
         Map m_objectMap;
         MaterialMap m_materialMap;
@@ -119,6 +148,12 @@ namespace lve {
 
         LightManager m_lightManager;
 		std::unique_ptr<LightSystem> m_lightSystem;
+
+        BillboardManager m_billboardManager;
+		std::unique_ptr<BillboardSystem> m_billboardSystem;
+
+
+
 
 
     };

@@ -1,7 +1,7 @@
 #include "GameObject.hpp"
 
 
-namespace lve {
+namespace engine {
 
     uint32_t GameObject::s_maxId = 0;
 

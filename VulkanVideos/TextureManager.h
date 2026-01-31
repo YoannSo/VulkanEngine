@@ -3,9 +3,9 @@
 #include <string>
 #include <memory>
 
-#include "lve_texture.hpp"
+#include "Texture.hpp"
 
-namespace lve {
+namespace engine {
 
     class TextureManager {
     public:
@@ -32,6 +32,6 @@ namespace lve {
 
     private:
         TextureStringToIDMap m_textureMap;
-		std::vector<std::unique_ptr<LveTexture>> m_textureArray;
+		std::vector<std::unique_ptr<Texture>> m_textureArray;
     };
 }

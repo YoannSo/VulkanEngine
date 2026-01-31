@@ -2,16 +2,16 @@
 #define GLFW_INCLUDE_VULKAN //said that we want to include vulkan
 #include <glfw3.h>
 #include <string>
-namespace lve{
+namespace engine{
 
-	class LveWindow {
+	class Window {
 
 	public:
-		LveWindow(int w, int h, std::string name);
-		~LveWindow();
+		Window(int w, int h, std::string name);
+		~Window();
 
-		LveWindow(const LveWindow&) = delete; // delete copy constructor
-		LveWindow& operator=(const LveWindow&) = delete; // and copy operator, make sure to not have 2 pointer to window, then if we destroy one, the second isnt destroyed
+		Window(const Window&) = delete; // delete copy constructor
+		Window& operator=(const Window&) = delete; // and copy operator, make sure to not have 2 pointer to window, then if we destroy one, the second isnt destroyed
 
 		bool shouldClose(){ return glfwWindowShouldClose(_window); };
 		bool wasWindowResized() { return _frameBufferResized; };

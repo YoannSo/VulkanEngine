@@ -6,3 +6,5 @@ C:\VulkanSDK\1.4.309.0\Bin\glslc.exe shaders/gBuffer.vert -o shaders/gBuffer.ver
 C:\VulkanSDK\1.4.309.0\Bin\glslc.exe shaders/gBuffer.frag -o shaders/gBuffer.frag.spv
 C:\VulkanSDK\1.4.309.0\Bin\glslc.exe shaders/LightningPassDeffered.vert -o shaders/LightningPassDeffered.vert.spv
 C:\VulkanSDK\1.4.309.0\Bin\glslc.exe shaders/LightningPassDeffered.frag -o shaders/LightningPassDeffered.frag.spv
+C:\VulkanSDK\1.4.309.0\Bin\glslc.exe shaders/billboard.vert -o shaders/billboard.vert.spv
+C:\VulkanSDK\1.4.309.0\Bin\glslc.exe shaders/billboard.frag -o shaders/billboard.frag.spv

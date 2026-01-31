@@ -2,11 +2,11 @@
 #ifndef GAMEOBJECT_HPP
 #define GAMEOBJECT_HPP
 
-#include "lve_model.hpp"
 #include <gtc/matrix_transform.hpp>
 #include <memory>
 #include <functional>
-namespace lve {
+#include <vulkan/vulkan.h>
+namespace engine {
 
     struct TransformComponent {
         glm::vec3 translation{};  // (position offset)
@@ -40,5 +40,5 @@ namespace lve {
 
 
     };
-}  // namespace lve
+}  // namespace engine
 #endif

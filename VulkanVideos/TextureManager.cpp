@@ -1,14 +1,14 @@
 #include "TextureManager.h"
 
-lve::TextureManager::TextureManager()
+engine::TextureManager::TextureManager()
 {
 }
 
-lve::TextureManager::~TextureManager()
+engine::TextureManager::~TextureManager()
 {
 }
 
-uint32_t lve::TextureManager::loadTexture(const std::string& p_texturePath)
+uint32_t engine::TextureManager::loadTexture(const std::string& p_texturePath)
 {
 	if(m_textureMap.find(p_texturePath) != m_textureMap.end()) {
 		// Texture already loaded
@@ -17,13 +17,13 @@ uint32_t lve::TextureManager::loadTexture(const std::string& p_texturePath)
 
 	m_textureMap.emplace(p_texturePath, m_currentIdTexture);
 
-	auto tex = std::make_unique<LveTexture>(p_texturePath.c_str());
+	auto tex = std::make_unique<Texture>(p_texturePath.c_str());
 	m_textureArray.emplace_back(std::move(tex));
 
 	return m_currentIdTexture++;//return the id then increment
 }
 
-void lve::TextureManager::fillDescriptorImageInfoArray(std::vector<VkDescriptorImageInfo>& p_imageInfos)const
+void engine::TextureManager::fillDescriptorImageInfoArray(std::vector<VkDescriptorImageInfo>& p_imageInfos)const
 {
 	for (auto& tex : m_textureArray) {
 

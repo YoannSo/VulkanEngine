@@ -4,12 +4,12 @@
 #include <vector>
 #include <glm.hpp>
 #include <iostream>
-#include "lve_buffer.hpp"
+#include "Buffer.hpp"
 #include <string>
-#include "lve_texture.hpp"
-#include "lve_descriptor.hpp"
+#include "Texture.hpp"
+#include "Descriptor.hpp"
 
-namespace lve {
+namespace engine {
 	class Model;
 
 	struct Vertex {
@@ -58,8 +58,8 @@ namespace lve {
 			const Model* p_parent);
 
 
-		void bind(VkCommandBuffer& commandBuffer, int& p_frameIndex, VkPipelineLayout& p_pipelineLayout)const;
-		void draw(VkCommandBuffer& commandBuffer)const;
+		void bind(const VkCommandBuffer& commandBuffer, const int& p_frameIndex, VkPipelineLayout& p_pipelineLayout)const;
+		void draw(const VkCommandBuffer& commandBuffer)const;
 
 		void createVertexBuffers();
 		void createIndexBuffer();
@@ -83,10 +83,10 @@ namespace lve {
 		uint32_t _indexCount{ 0 };
 		uint32_t _vertexCount{ 0 };
 
-		std::shared_ptr<LveBuffer> _vertexBuffer{ nullptr };
+		std::shared_ptr<GwatBuffer> _vertexBuffer{ nullptr };
 
 		bool _hasIndexBuffer{ false };
-		std::shared_ptr<LveBuffer> _indexBuffer{ nullptr };
+		std::shared_ptr<GwatBuffer> _indexBuffer{ nullptr };
 		
 		const Model* m_modelRef;
 

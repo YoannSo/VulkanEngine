@@ -1,6 +1,6 @@
 #include "SceneManager.h"
 
-namespace lve {
+namespace engine {
 
     SceneManager* SceneManager::s_sceneSingleton = nullptr;
 
@@ -9,21 +9,48 @@ namespace lve {
         m_materialMap = MaterialMap();
         m_opaqueRenderingBatch = RenderingBatch();
         m_transparentRenderingBatch = TransparentRenderingBatch();
-        m_objectLocalSetLayout = LveDescriptorSetLayout::Builder().addBinding(0, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, VK_SHADER_STAGE_ALL_GRAPHICS).build();
+
+
+
+
 
         m_descriptorPool =
-            LveDescriptorPool::Builder()
-            .setMaxSets(LveSwapChain::MAX_FRAMES_IN_FLIGHT * 500)
-            .addPoolSize(VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, LveSwapChain::MAX_FRAMES_IN_FLIGHT * MAX_TEXTURE_IN_SCENE)
-            .addPoolSize(VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, MAX_OBJECT_IN_SCENE * LveSwapChain::MAX_FRAMES_IN_FLIGHT)
-            .addPoolSize(VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, MAX_MATERIAL_IN_SCENE * LveSwapChain::MAX_FRAMES_IN_FLIGHT)
-			.addPoolSize(VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, LveSwapChain::MAX_FRAMES_IN_FLIGHT * 100)
+            DescriptorPool::Builder()
+            .setMaxSets(SwapChain::MAX_FRAMES_IN_FLIGHT * 500)
+            .addPoolSize(VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, SwapChain::MAX_FRAMES_IN_FLIGHT * MAX_TEXTURE_IN_SCENE)
+            .addPoolSize(VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, MAX_OBJECT_IN_SCENE * SwapChain::MAX_FRAMES_IN_FLIGHT)
+            .addPoolSize(VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, MAX_MATERIAL_IN_SCENE * SwapChain::MAX_FRAMES_IN_FLIGHT)
+			.addPoolSize(VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, SwapChain::MAX_FRAMES_IN_FLIGHT * 100)
             .build();
+
+        m_globalDescriptorLayout = DescriptorSetLayout::Builder().addBinding(0, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, VK_SHADER_STAGE_ALL_GRAPHICS).build();
+
+
+
+        m_globalUboBuffers.resize(SwapChain::MAX_FRAMES_IN_FLIGHT);
+        for (auto& uboBuffer : m_globalUboBuffers)
+        {
+            uboBuffer = std::make_unique<GwatBuffer>(
+                sizeof(GlobalUbo),
+                1,
+                VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT,
+                VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT);
+            uboBuffer->map();
+        }
+
+		m_globalDescriptorSets.resize(SwapChain::MAX_FRAMES_IN_FLIGHT);
+        for (int i = 0; i < m_globalDescriptorSets.size(); i++) {
+            auto bufferInfo = m_globalUboBuffers[i]->descriptorInfo();
+            DescriptorWriter(*m_globalDescriptorLayout, *m_descriptorPool)
+                .writeBuffer(0, &bufferInfo)
+                .build(m_globalDescriptorSets[i]);
+        }
+
+
 
 		m_materialSystem = std::make_unique<MaterialSystem>(m_textureManager, m_materialManager, *m_descriptorPool);
 		m_lightSystem = std::make_unique<LightSystem>(m_lightManager, *m_descriptorPool);
 
-        setupDescriptorSet();
     }
 
     SceneManager::~SceneManager() {
@@ -81,18 +108,20 @@ namespace lve {
         }
     }
 
-    void SceneManager::initializeMaterialSystem()
+    void SceneManager::initializeDescriptor()
     {
-        m_materialSystem->setupDescriptorSetLayout();
 		m_materialSystem->setupDescriptorSet();
+        m_lightSystem->setupDescriptorSet();
     }
 
-    void SceneManager::initializeLightSystem()
+
+
+    void SceneManager::writeInGlobalUbo(GlobalUbo& p_buffer, size_t p_frameIndex)
     {
-		m_lightSystem->createDescriptors();
+        m_globalUboBuffers[p_frameIndex]->writeToBuffer(&p_buffer);
+        m_globalUboBuffers[p_frameIndex]->flush();
     }
 
-    void SceneManager::setupDescriptorSet() {
-        m_objectLocalSetLayout = LveDescriptorSetLayout::Builder().addBinding(0, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, VK_SHADER_STAGE_ALL_GRAPHICS).build();
-    }
+
+
 }

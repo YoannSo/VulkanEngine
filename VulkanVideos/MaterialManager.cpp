@@ -1,17 +1,17 @@
 #include "MaterialManager.h"
 
-lve::MaterialManager::MaterialManager(TextureManager& p_textureManager):
+engine::MaterialManager::MaterialManager(TextureManager& p_textureManager):
 	m_materialBuffer{},
 	m_textureManager{ p_textureManager }
 {
 	createBasicMaterial();
 }
 
-lve::MaterialManager::~MaterialManager()
+engine::MaterialManager::~MaterialManager()
 {
 }
 
-uint32_t lve::MaterialManager::createMaterialsFromMesh(const aiScene& p_scene,std::string p_name)
+uint32_t engine::MaterialManager::createMaterialsFromMesh(const aiScene& p_scene,std::string p_name)
 {
 	_dirPath = "models/" + p_name + "/";
 	uint32_t materialCount = p_scene.mNumMaterials;
@@ -24,7 +24,7 @@ uint32_t lve::MaterialManager::createMaterialsFromMesh(const aiScene& p_scene,st
 
 }
 
-void lve::MaterialManager::fillMaterialsBufferData(std::vector<Material::MaterialGPU>& p_materialsBufferData) const
+void engine::MaterialManager::fillMaterialsBufferData(std::vector<Material::MaterialGPU>& p_materialsBufferData) const
 {
 	p_materialsBufferData.reserve(m_materialBuffer.size());
 	for (const auto& materialPair : m_materialBuffer) {
@@ -32,7 +32,7 @@ void lve::MaterialManager::fillMaterialsBufferData(std::vector<Material::Materia
 	}
 }
 
-uint32_t lve::MaterialManager::getIDOfMaterial(const std::string& p_materialName) const
+uint32_t engine::MaterialManager::getIDOfMaterial(const std::string& p_materialName) const
 {
 	auto it = m_materialNameToID.find(p_materialName);
 	if (it != m_materialNameToID.end()) {
@@ -45,7 +45,7 @@ uint32_t lve::MaterialManager::getIDOfMaterial(const std::string& p_materialName
 	}
 }
 
-void lve::MaterialManager::createBasicMaterial() {
+void engine::MaterialManager::createBasicMaterial() {
 	auto [it, inserted] = m_materialNameToID.try_emplace("basic", 0);
 
 	m_materialBuffer.emplace_back(Material("basic"));
@@ -56,7 +56,7 @@ void lve::MaterialManager::createBasicMaterial() {
 
 }
 
-void lve::MaterialManager::createMaterial(const aiMaterial* p_mtl)
+void engine::MaterialManager::createMaterial(const aiMaterial* p_mtl)
 {
 	aiString materialName;
 
@@ -164,7 +164,7 @@ void lve::MaterialManager::createMaterial(const aiMaterial* p_mtl)
 	{
 		p_mtl->GetTexture(aiTextureType_SHININESS, 0, &texturePath);
 
-		//material._shininessMap = std::make_shared<LveTexture>( _dirPath + texturePath.C_Str());
+		//material._shininessMap = std::make_shared<Texture>( _dirPath + texturePath.C_Str());
 		//Model::s_allTexturesName.emplace_back(_dirPath + texturePath.C_Str());
 		//material._hasShininessMap = true;
 	}

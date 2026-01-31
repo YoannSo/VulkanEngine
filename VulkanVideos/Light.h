@@ -3,7 +3,7 @@
 #include <glm.hpp>
 #include "GameObject.hpp"
 #include <iostream>
-namespace lve
+namespace engine
 {
 	struct LightGPU
 	{

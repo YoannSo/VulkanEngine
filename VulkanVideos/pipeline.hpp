@@ -2,8 +2,16 @@
 
 #include <string>
 #include <vector>
-#include "lve_device.hpp"
-namespace lve {
+#include <fstream>
+#include <stdexcept>
+#include <iostream>
+#include <cassert>
+
+#include "Device.hpp"
+#include "Model.hpp"
+#include "TriangleMesh.hpp"
+
+namespace engine {
 
 	struct PipelineConfigInfo {
 		PipelineConfigInfo(const PipelineConfigInfo&) = delete;
@@ -29,14 +37,14 @@ namespace lve {
 		uint32_t subpass = 0;
 	};
 
-	class LvePipeline {
+	class Pipeline {
 
 	public:
-		LvePipeline(const std::string& vertFilePath, const std::string fragFilePath, const PipelineConfigInfo& configInfo);
-		~LvePipeline();
+		Pipeline(const std::string& vertFilePath, const std::string fragFilePath, const PipelineConfigInfo& configInfo);
+		~Pipeline();
 
-		LvePipeline(const LvePipeline&) = delete; // delete copy constructor
-		LvePipeline& operator=(const LvePipeline&) = delete; // and copy operator, make sure to not have 2 pointer to window, then if we destroy one, the second isnt destroyed
+		Pipeline(const Pipeline&) = delete; // delete copy constructor
+		Pipeline& operator=(const Pipeline&) = delete; // and copy operator, make sure to not have 2 pointer to window, then if we destroy one, the second isnt destroyed
 		void bind(VkCommandBuffer commandBuffer);
 		static void defaultFowardPipelineConfigInfo(PipelineConfigInfo& configInfo);
 		static void defaultDeferredPipelineConfigInfo(PipelineConfigInfo& configInfo);

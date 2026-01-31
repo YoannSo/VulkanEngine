@@ -1,6 +1,6 @@
 #include "RenderSystem.h"
 
-namespace lve {
+namespace engine {
 
 
 	RenderSystem::RenderSystem() {
@@ -8,7 +8,7 @@ namespace lve {
 	}
 
 	RenderSystem::~RenderSystem() {
-		vkDestroyPipelineLayout(LveDevice::getInstance()->getDevice(), pipelineLayout, nullptr);
+		vkDestroyPipelineLayout(Device::getInstance()->getDevice(), pipelineLayout, nullptr);
 	}
 
 	void RenderSystem::init(VkRenderPass renderPass, std::vector <VkDescriptorSetLayout> p_descriptorSetLayouts, uint32_t p_pushConstantSize, std::string p_vertShader, std::string p_fragShader, bool p_clearAttributes) {
@@ -32,7 +32,7 @@ namespace lve {
 		pipelineLayoutInfo.pushConstantRangeCount = 1;
 		pipelineLayoutInfo.pPushConstantRanges = &pushConstantRange; // small amount of data, 
 
-		if (vkCreatePipelineLayout(LveDevice::getInstance()->getDevice(), &pipelineLayoutInfo, nullptr, &pipelineLayout) !=
+		if (vkCreatePipelineLayout(Device::getInstance()->getDevice(), &pipelineLayoutInfo, nullptr, &pipelineLayout) !=
 			VK_SUCCESS) {
 			throw std::runtime_error("failed to create pipeline layout!");
 		}
@@ -52,12 +52,12 @@ namespace lve {
 		// take swap chain w and h bc dont necessarly match the window,
 		pipelineConfig.renderPass = renderPass;
 		pipelineConfig.pipelineLayout = pipelineLayout;
-		lvePipeline = std::make_unique<LvePipeline>(p_vertShader, p_fragShader, pipelineConfig);
+		m_pipeline = std::make_unique<Pipeline>(p_vertShader, p_fragShader, pipelineConfig);
 	}
 
 	void RenderSystem::createPipelineInfo(PipelineConfigInfo& p_pipelineInfoOut) {
-		LvePipeline::defaultFowardPipelineConfigInfo(p_pipelineInfoOut);
-		LvePipeline::enableAlphaBlinding(p_pipelineInfoOut);
+		Pipeline::defaultFowardPipelineConfigInfo(p_pipelineInfoOut);
+		Pipeline::enableAlphaBlinding(p_pipelineInfoOut);
 	}
 
 }

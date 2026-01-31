@@ -5,7 +5,7 @@
 #include "define.hpp"
 #include "Light.h"
 
-namespace lve {
+namespace engine {
 
     class LightManager {
     public:

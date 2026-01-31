@@ -13,7 +13,7 @@
 #include "GameObject.hpp"
 #include "MaterialManager.h"
 #include "TriangleMesh.hpp"
-namespace lve {
+namespace engine {
 	class Model: public GameObject{
 
 

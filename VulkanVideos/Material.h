@@ -5,9 +5,9 @@
 #include <string>
 #include <glm.hpp>
 
-#include "lve_texture.hpp"
-#include "lve_buffer.hpp"
-namespace lve {
+#include "Texture.hpp"
+#include "Buffer.hpp"
+namespace engine {
 
 
 	class Material

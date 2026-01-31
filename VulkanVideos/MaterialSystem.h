@@ -4,12 +4,12 @@
 #include <vector>
 #include <vulkan/vulkan.h>
 
-#include "lve_buffer.hpp"
+#include "Buffer.hpp"
 #include "TextureManager.h"
 #include "MaterialManager.h"
-#include "lve_descriptor.hpp"
-#include "lve_swap_chain.hpp"
-namespace lve
+#include "Descriptor.hpp"
+#include "SwapChain.hpp"
+namespace engine
 {
 
 
@@ -18,7 +18,7 @@ namespace lve
 
 	
 	public:
-		MaterialSystem(const TextureManager& p_textureManager, const MaterialManager& p_materialManager,LveDescriptorPool& p_descriptorPool);
+		MaterialSystem(const TextureManager& p_textureManager, const MaterialManager& p_materialManager,DescriptorPool& p_descriptorPool);
 		~MaterialSystem();
 
 
@@ -53,22 +53,22 @@ namespace lve
 
 	private:
 		// Descriptors + layouts
-		std::unique_ptr<LveDescriptorSetLayout> m_bindlessTextureLayout;
+		std::unique_ptr<DescriptorSetLayout> m_bindlessTextureLayout;
 		std::vector<VkDescriptorSet> m_bindlessTextureSet;
 
-		std::unique_ptr<LveDescriptorSetLayout> m_materialLayout;
+		std::unique_ptr<DescriptorSetLayout> m_materialLayout;
 		std::vector<VkDescriptorSet> m_materialDescriptorSets;
 
 		// Buffers GPU
-		std::unique_ptr<LveBuffer> m_materialBuffer;
+		std::unique_ptr<GwatBuffer> m_materialBuffer;
 
 		// Référence au TextureManager pour créer bindless descriptors
 		const TextureManager& m_textureManager;
 		const MaterialManager& m_materialManager;
 
-		LveDescriptorPool& m_descriptorPool;
+		DescriptorPool& m_descriptorPool;
 
-		const LveDevice* m_device;
+		const Device* m_device;
 
 	};
 

@@ -1,5 +1,5 @@
 #pragma once 
-namespace lve {
+namespace engine {
 #ifdef _DEBUG
 	const bool VERBOSE = true;
 #else

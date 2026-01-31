@@ -3,7 +3,7 @@
 #define POINT_LIGHT_HPP
 
 #include "GameObject.hpp"
-namespace lve
+namespace engine
 {
 	class PointLight : public GameObject
 	{

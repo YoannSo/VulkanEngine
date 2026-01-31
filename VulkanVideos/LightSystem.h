@@ -4,11 +4,11 @@
 #include <vector>
 #include <vulkan/vulkan.h>
 
-#include "lve_buffer.hpp"
-#include "lve_descriptor.hpp"
-#include "lve_swap_chain.hpp"
+#include "Buffer.hpp"
+#include "Descriptor.hpp"
+#include "SwapChain.hpp"
 #include "LightManager.h"
-namespace lve
+namespace engine
 {
 	class LightSystem
 	{
@@ -20,7 +20,7 @@ namespace lve
 		};
 
 	public:
-		LightSystem(const LightManager& p_lightManager,LveDescriptorPool& p_descriptorPool);
+		LightSystem(const LightManager& p_lightManager,DescriptorPool& p_descriptorPool);
 		~LightSystem();
 
 
@@ -37,7 +37,7 @@ namespace lve
 		const VkDescriptorSetLayout& getDescriptorSetLayout() const {
 			return m_descriptorLayout->getDescriptorSetLayout();
 		}
-		void createDescriptors();
+		void setupDescriptorSet();
 
 	private:
 		void createDescriptorLayout();
@@ -46,15 +46,15 @@ namespace lve
 
 
 	private:
-		std::unique_ptr<LveDescriptorSetLayout> m_descriptorLayout;
+		std::unique_ptr<DescriptorSetLayout> m_descriptorLayout;
 		std::vector<VkDescriptorSet> m_descriptorSet;
 
 		// Buffers GPU
-		std::unique_ptr<LveBuffer> m_lightBuffer;
+		std::unique_ptr<GwatBuffer> m_lightBuffer;
 		const LightManager& m_lightManager;
 
-		LveDescriptorPool& m_descriptorPool;
-		const LveDevice* m_device;
+		DescriptorPool& m_descriptorPool;
+		const Device* m_device;
 
 	};
 

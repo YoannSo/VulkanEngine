@@ -8,10 +8,12 @@ layout(location = 2) in vec2 fragUV;
 layout(location = 3) flat in uint matIndex;
 layout(location = 4) in vec3 fragTangentWorld;
 layout(location = 5) in vec3 fragBitangentWorld;
+
 // ===== Outputs G-buffer =====
 layout(location = 0) out vec4 outAlbedo;
-layout(location = 1) out vec4 outNormal;
-layout(location = 2) out vec4 outPosition;
+layout(location = 1) out vec4 outSpecular;
+layout(location = 2) out vec4 outNormal;
+layout(location = 3) out vec4 outPosition;
 
 // ===== Bindless textures =====
 layout(set = 1, binding = 0) uniform sampler2D textures[];
@@ -65,6 +67,12 @@ if (material.maps1.y!=-1) {
     );
 
    outNormal = vec4(normalize(TBN * normalTS),1.0);
+}
+
+if(material.maps1.z!=-1){
+    outSpecular = texture(textures[material.maps1.z], fragUV);
+}else{
+    outSpecular = material.specular;
 }
 
     // Position monde

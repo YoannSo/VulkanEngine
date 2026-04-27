@@ -55,7 +55,7 @@ namespace engine {
 		configInfo.rasterizationInfo.polygonMode = VK_POLYGON_MODE_FILL;//triangle ? just corner ? filled ? 
 		configInfo.rasterizationInfo.lineWidth = 1.0f;
 		configInfo.rasterizationInfo.cullMode = VK_CULL_MODE_FRONT_BIT; //discard triangle by their facing ? front to camera ? back ?
-		configInfo.rasterizationInfo.frontFace = VK_FRONT_FACE_CLOCKWISE; // which is facing ? 
+		configInfo.rasterizationInfo.frontFace = VK_FRONT_FACE_COUNTER_CLOCKWISE; // which is facing ? 
 		configInfo.rasterizationInfo.depthBiasEnable = VK_FALSE; //alter deapth value, by ading value
 		configInfo.rasterizationInfo.depthBiasConstantFactor = 0.0f;  // Optional
 		configInfo.rasterizationInfo.depthBiasClamp = 0.0f;           // Optional
@@ -71,8 +71,8 @@ namespace engine {
 		configInfo.multisampleInfo.alphaToCoverageEnable = VK_FALSE;  // Optional
 		configInfo.multisampleInfo.alphaToOneEnable = VK_FALSE;       // Optional
 
-		// Crée un blend state par attachment du G-Buffer (3 ici : albedo, normal, position)
-		configInfo.colorBlendAttachments.resize(3);
+		// Crée un blend state par attachment du G-Buffer (4 ici : albedo,specular, normal, position)
+		configInfo.colorBlendAttachments.resize(4);
 
 
 		for (auto& attachment : configInfo.colorBlendAttachments) {
@@ -124,6 +124,81 @@ namespace engine {
 		configInfo.dynamicStateInfo.flags = 0;
 
 
+
+		configInfo.bindingDescriptions = Vertex::getBindingDescriptions();
+		configInfo.attributDescriptions = Vertex::getAttributeDescription();
+	}
+	void Pipeline::shadowPipelineConfigInfo(PipelineConfigInfo& configInfo)
+	{
+
+		configInfo.inputAssemblyInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO;
+		configInfo.inputAssemblyInfo.topology = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
+		configInfo.inputAssemblyInfo.primitiveRestartEnable = VK_FALSE;
+
+
+		configInfo.viewportInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO;
+		configInfo.viewportInfo.viewportCount = 1;
+		configInfo.viewportInfo.pViewports = nullptr;
+		configInfo.viewportInfo.scissorCount = 1;
+		configInfo.viewportInfo.pScissors = nullptr;
+
+		//setup the rasterizer state
+		configInfo.rasterizationInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO;
+		configInfo.rasterizationInfo.depthClampEnable = VK_FALSE;
+		configInfo.rasterizationInfo.rasterizerDiscardEnable = VK_FALSE;
+		configInfo.rasterizationInfo.polygonMode = VK_POLYGON_MODE_FILL;
+		configInfo.rasterizationInfo.lineWidth = 1.0f;
+		configInfo.rasterizationInfo.cullMode = VK_CULL_MODE_FRONT_BIT;
+		configInfo.rasterizationInfo.frontFace = VK_FRONT_FACE_COUNTER_CLOCKWISE;
+		configInfo.rasterizationInfo.depthBiasEnable = VK_FALSE;
+		configInfo.rasterizationInfo.depthBiasConstantFactor = 0.0f;
+		configInfo.rasterizationInfo.depthBiasClamp = 0.0f;
+		configInfo.rasterizationInfo.depthBiasSlopeFactor = 0.0f;
+
+
+		//multisampling
+		configInfo.multisampleInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO;
+		configInfo.multisampleInfo.sampleShadingEnable = VK_FALSE;
+		configInfo.multisampleInfo.rasterizationSamples = VK_SAMPLE_COUNT_1_BIT;
+		configInfo.multisampleInfo.minSampleShading = 1.0f;
+		configInfo.multisampleInfo.pSampleMask = nullptr;
+		configInfo.multisampleInfo.alphaToCoverageEnable = VK_FALSE;
+		configInfo.multisampleInfo.alphaToOneEnable = VK_FALSE;
+
+		// Pas d'attachement couleur pour le shadow pass
+		configInfo.colorBlendAttachments.clear();
+
+		// Remplissage de la structure VkPipelineColorBlendStateCreateInfo
+		configInfo.colorBlendInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO;
+		configInfo.colorBlendInfo.logicOpEnable = VK_FALSE;
+		configInfo.colorBlendInfo.logicOp = VK_LOGIC_OP_COPY;
+		configInfo.colorBlendInfo.attachmentCount = 0;
+		configInfo.colorBlendInfo.pAttachments = nullptr;
+		configInfo.colorBlendInfo.blendConstants[0] = 0.0f;
+		configInfo.colorBlendInfo.blendConstants[1] = 0.0f;
+		configInfo.colorBlendInfo.blendConstants[2] = 0.0f;
+		configInfo.colorBlendInfo.blendConstants[3] = 0.0f;
+
+
+		//depth stencil
+		configInfo.depthStencilInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO;
+		configInfo.depthStencilInfo.depthTestEnable = VK_TRUE;
+		configInfo.depthStencilInfo.depthWriteEnable = VK_TRUE;
+		configInfo.depthStencilInfo.depthCompareOp = VK_COMPARE_OP_LESS;
+		configInfo.depthStencilInfo.depthBoundsTestEnable = VK_FALSE;
+		configInfo.depthStencilInfo.minDepthBounds = 0.0f;
+		configInfo.depthStencilInfo.maxDepthBounds = 1.0f;
+		configInfo.depthStencilInfo.stencilTestEnable = VK_FALSE;
+		configInfo.depthStencilInfo.front = {};
+		configInfo.depthStencilInfo.back = {};
+
+		//dynamic states
+		configInfo.dynamicStateEnables = { VK_DYNAMIC_STATE_VIEWPORT, VK_DYNAMIC_STATE_SCISSOR };
+		configInfo.dynamicStateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_DYNAMIC_STATE_CREATE_INFO;
+		configInfo.dynamicStateInfo.pDynamicStates = configInfo.dynamicStateEnables.data();
+		configInfo.dynamicStateInfo.dynamicStateCount =
+			static_cast<uint32_t>(configInfo.dynamicStateEnables.size());
+		configInfo.dynamicStateInfo.flags = 0;
 
 		configInfo.bindingDescriptions = Vertex::getBindingDescriptions();
 		configInfo.attributDescriptions = Vertex::getAttributeDescription();

@@ -32,6 +32,7 @@ namespace engine {
 	{
 		outputViews.clear();
 		outputViews.push_back(albedoViews[index]);
+		outputViews.push_back(specularViews[index]);
 		outputViews.push_back(normalViews[index]);
 		outputViews.push_back(positionViews[index]);
 		outputViews.push_back(depthViews[index]);
@@ -41,6 +42,11 @@ namespace engine {
 		albedoImages.resize(imageCount);
 		albedoMem.resize(imageCount);
 		albedoViews.resize(imageCount);
+
+		specularImages.resize(imageCount);
+		specularMem.resize(imageCount);
+		specularViews.resize(imageCount);
+
 
 		normalImages.resize(imageCount);
 		normalMem.resize(imageCount);
@@ -72,6 +78,11 @@ namespace engine {
 			imageInfo.format = chooseColorFormat();
 			imageInfo.usage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT | VK_IMAGE_USAGE_SAMPLED_BIT;
 			device->createImageWithInfo(imageInfo, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, albedoImages[i], albedoMem[i]);
+
+			//specular 
+			imageInfo.format = chooseColorFormat();
+			imageInfo.usage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT | VK_IMAGE_USAGE_SAMPLED_BIT;
+			device->createImageWithInfo(imageInfo, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, specularImages[i], specularMem[i]);
 
 			// normal
 			imageInfo.format = chooseNormalFormat();
@@ -105,6 +116,12 @@ namespace engine {
 			viewInfo.format = chooseColorFormat();
 			if (vkCreateImageView(device->getDevice(), &viewInfo, nullptr, &albedoViews[i]) != VK_SUCCESS) {
 				throw std::runtime_error("failed to create albedo image view");
+			}
+
+			viewInfo.image = specularImages[i];
+			viewInfo.format = chooseColorFormat();
+			if (vkCreateImageView(device->getDevice(), &viewInfo, nullptr, &specularViews[i]) != VK_SUCCESS) {
+				throw std::runtime_error("failed to create specular image view");
 			}
 
 			viewInfo.image = normalImages[i];
@@ -161,7 +178,7 @@ namespace engine {
 	void GBuffer::createFramebuffers(VkRenderPass renderPass) {
 		framebuffers.resize(imageCount);
 		for (uint32_t i = 0; i < imageCount; ++i) {
-			std::array<VkImageView, 4> attachments = { albedoViews[i], normalViews[i], positionViews[i], depthViews[i] };
+			std::array<VkImageView, 5> attachments = { albedoViews[i], specularViews[i], normalViews[i], positionViews[i], depthViews[i] };
 
 			VkFramebufferCreateInfo fbInfo{};
 			fbInfo.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
@@ -185,6 +202,12 @@ namespace engine {
 		albedoInfo.imageView = albedoViews[index];
 		albedoInfo.sampler = colorSampler;
 		infos.push_back(albedoInfo);
+
+		VkDescriptorImageInfo specularInfo{};
+		specularInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+		specularInfo.imageView = specularViews[index];
+		specularInfo.sampler = colorSampler;
+		infos.push_back(specularInfo);
 
 		VkDescriptorImageInfo normalInfo{};
 		normalInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
@@ -210,9 +233,13 @@ namespace engine {
 		for (auto v : normalViews) vkDestroyImageView(device->getDevice(), v, nullptr);
 		for (auto v : positionViews) vkDestroyImageView(device->getDevice(), v, nullptr);
 		for (auto v : depthViews) vkDestroyImageView(device->getDevice(), v, nullptr);
+		for (auto v : specularViews) vkDestroyImageView(device->getDevice(), v, nullptr);
 
 		for (auto img : albedoImages) vkDestroyImage(device->getDevice(), img, nullptr);
 		for (auto mem : albedoMem) vkFreeMemory(device->getDevice(), mem, nullptr);
+
+		for (auto img : specularImages) vkDestroyImage(device->getDevice(), img, nullptr);
+		for (auto mem : specularMem) vkFreeMemory(device->getDevice(), mem, nullptr);
 
 		for (auto img : normalImages) vkDestroyImage(device->getDevice(), img, nullptr);
 		for (auto mem : normalMem) vkFreeMemory(device->getDevice(), mem, nullptr);
@@ -227,8 +254,9 @@ namespace engine {
 	void GBuffer::createDescriptorSetLayout()
 	{
 		m_descriptorSetLayout = DescriptorSetLayout::Builder().addBinding(0, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, VK_SHADER_STAGE_FRAGMENT_BIT)
-			.addBinding(1,VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,VK_SHADER_STAGE_FRAGMENT_BIT)
-			.addBinding(2, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, VK_SHADER_STAGE_FRAGMENT_BIT)
+			.addBinding(1, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, VK_SHADER_STAGE_FRAGMENT_BIT)
+			.addBinding(2,VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,VK_SHADER_STAGE_FRAGMENT_BIT)
+			.addBinding(3, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, VK_SHADER_STAGE_FRAGMENT_BIT)
 			.build();
 
 	}
@@ -243,8 +271,9 @@ namespace engine {
 
 			DescriptorWriter(*m_descriptorSetLayout, SceneManager::getInstance()->getPool())
 				.writeImage(0, &imageInfos[0]) // albedo
-				.writeImage(1, &imageInfos[1]) // normal
-				.writeImage(2, &imageInfos[2]) // position
+				.writeImage(1, &imageInfos[1]) // specular
+				.writeImage(2, &imageInfos[2]) // normal
+				.writeImage(3, &imageInfos[3]) // position
 				.build(m_descriptorSet[i]);
 		}
 	}

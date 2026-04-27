@@ -7,6 +7,7 @@
 #include <Renderer/Ressources/GBuffer.hpp>
 #include <Renderer/Stages/GeometryStage.h>
 #include <Renderer/Stages/LightingStage.h>
+#include <Renderer/Stages/ShadowStage.h>
 #include <Vulkan/Window.hpp>
 namespace engine {
 

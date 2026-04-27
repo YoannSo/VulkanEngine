@@ -27,12 +27,17 @@ namespace engine {
 
 		const std::vector<TriangleMesh>& getMeshes() const { return m_meshes; }
 
+		void overrideMaterial(uint32_t p_newMaterialID);
+		bool askMaterialExist(uint32_t p_materialId) const;
+
 	private:
 		void _loadMesh(const aiMesh* const p_mesh, const aiScene& p_scene,const MaterialManager& p_materialManagerRef, bool p_useBasicMaterial=false);
 
 	private:
 
 		std::string _name{"UNDEFINED"};
+
+		const MaterialManager& m_materialManagerRef;
 		
 		std::vector<TriangleMesh> m_meshes;
 

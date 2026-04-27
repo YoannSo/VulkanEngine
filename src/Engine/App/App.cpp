@@ -1,5 +1,4 @@
 #include <Engine/App/App.hpp>
-
 namespace engine {
 
 
@@ -16,7 +15,6 @@ namespace engine {
 			.addPoolSize(VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, SwapChain::MAX_FRAMES_IN_FLIGHT)
 			.build();
 
-		SceneManager::getInstance();
 
 		/*m_guiManager = std::make_unique<GuiManager>();
 		m_guiManager->init(
@@ -41,15 +39,17 @@ namespace engine {
 
 		//changer le traitement des descriptorset 
 
-		Camera camera{};
-		//camera.setViewDirection(glm::vec3(0.f), glm::vec3(0.5f, 0.f, 1.f));
-		camera.setViewTarget(glm::vec3(-1.f, -2.f, 2.f), glm::vec3(0.f, 0.f, 2.5f));
-		//       camera.setPerspectiveProjection(glm::radians(50.f),aspect,0.1f,10.f)
 
 
 		Camera* viewerObject = SceneManager::getInstance()->createCameraObject();//store camera state
 		viewerObject->transform.translation.z = -2.5f;
+		viewerObject->setViewTarget(glm::vec3(0.f, 0.f, 0.f), glm::vec3(0.f, 0.f, 0.0f));
+		viewerObject->setPerspectiveProjection(glm::radians(50.f),  Renderer.getAspectRatio(), 0.5f, 30.f);
 
+		Camera* lightCamera = SceneManager::getInstance()->createCameraObject();
+		lightCamera->transform.translation = { -1.f, 2.f, 2.f };
+		lightCamera->setViewTarget(glm::vec3(10.f, 10.f, 0.f), glm::vec3(0.f, 1.f, 0.0f));
+		lightCamera->setOrthographicProjection(-10.f, 10.f, -10.f, 10.f, 0.5f, 30.f);
 
 
 		KeyBoardMovementController cameraController{};
@@ -70,15 +70,13 @@ namespace engine {
 
 			// frameTime = glm::min(frameTime, MAX_FRAME_TIME);
 			cameraController.moveInPLaneXZ(_window.getGLFWWindow(), frameTime, viewerObject);
-			camera.setViewYXZ(viewerObject->transform.translation, viewerObject->transform.rotation);
+			viewerObject->setViewYXZ(viewerObject->transform.translation, viewerObject->transform.rotation);
 
-		//	std::cout << "Camera position: " << viewerObject->transform.translation.x << ", "
-			//	<< viewerObject->transform.translation.y << ", "
-			//	<< viewerObject->transform.translation.z << std::endl;
 
-			float aspect = Renderer.getAspectRatio();
+
+			//std::cout << "Camera position: " << viewerObject->transform.translation.x << ", "<< viewerObject->transform.translation.y << ", "<< viewerObject->transform.translation.z << std::endl;
+
 			//camera.setOrthographicProjection(-aspect, aspect, -1, 1, -1, 1);
-			camera.setPerspectiveProjection(glm::radians(50.f), aspect, 0.1f, 100.f);
 
 			SceneManager::getInstance()->updateAllGameObject(frameTime);
 			// measure update CPU time
@@ -96,14 +94,15 @@ namespace engine {
 
 				// Reset queries for this frame and write GPU timestamp start
 
-				FrameInfo frameInfo{ frameIndex, frameTime, commandBuffer, camera };
+				FrameInfo frameInfo{ frameIndex, frameTime, commandBuffer, *viewerObject };
 				cameraController.handleAction(_window.getGLFWWindow());
 
 				SceneManager::GlobalUbo ubo{};
-				ubo.projection = camera.getProjection();
-				ubo.view = camera.getView();
+				ubo.projection = viewerObject->getProjection();
+				ubo.view = viewerObject->getView();
+				ubo.lightSpace = lightCamera->getProjection() * lightCamera->getView();
 				//Renderer.updateRenderSystems(frameInfo, ubo);
-				ubo.inverseView = camera.getInverseView();
+				ubo.inverseView = viewerObject->getInverseView();
 
 				SceneManager::getInstance()->writeInGlobalUbo(ubo, frameIndex);
 
@@ -148,28 +147,69 @@ namespace engine {
 			bunny->transform.translation = { 0.f, .5f, 0.f };
 			bunny->transform.scale = { 3.f, 1.f, 3.f };*/
 
-		Model* floor = SceneManager::getInstance()->createModelObject("sponza", "models/sponza/sponza.obj");
+		
+		
+		/*Model* floor = SceneManager::getInstance()->createModelObject("sponza", "models/sponza/sponza.obj");
 		floor->transform.translation = { 2.f, 0.f, 0.f };
 		floor->transform.rotation = { 0.f, 0.f, glm::pi<float>() };
-		floor->transform.scale = { 0.01f,  0.01f, 0.01f };
+		floor->transform.scale = { 0.01f,  0.01f, 0.01f };*/
 
-
-		Model* icosphere = SceneManager::getInstance()->createModelObject("icosphere", "models/sponza/icosphere.obj",true);
-		icosphere->transform.translation = { 0.f, -2.f, 0.f };
-		icosphere->transform.scale = { 1.f, 1.f,1.f };
-
-		Model* sphere = SceneManager::getInstance()->createModelObject("sphere", "models/sponza/sphere.obj", true);
-		sphere->transform.translation = { 3.f, -2.f, 0.f };
-		sphere->transform.scale = { 1.f, 1.f,1.f };
 		
 
-		Model* cube = SceneManager::getInstance()->createModelObject("cube", "models/sponza/cube.obj", true);
-		cube->transform.translation = { 6.f, -2.f, 0.f };
+
+
+		SceneManager::getInstance()->getMaterialManager().createBasicMaterial("red", glm::vec4(1.0f, 0.f, 0.f, 1.f));
+		SceneManager::getInstance()->getMaterialManager().createBasicMaterial("green", glm::vec4(0.f, 1.f, 0.f, 1.f));
+		SceneManager::getInstance()->getMaterialManager().createBasicMaterial("blue", glm::vec4(0.f, 0.f, 1.f, 1.f));
+
+
+		Model* icosphere = SceneManager::getInstance()->createModelObject("icosphere", "models/basics/models/icosphere/icosphere.obj", true);
+		icosphere->transform.translation = { -3.f, 2.f, 0.f };
+		icosphere->transform.scale = { 1.f, 1.f,1.f };
+		icosphere->overrideMaterial(SceneManager::getInstance()->getMaterialManager().getIDOfMaterial("red"));
+
+		Model* sphere = SceneManager::getInstance()->createModelObject("sphere", "models/basics/models/uvsphere/uvsphere.obj", true);
+		sphere->transform.translation = { 0.f, 2.f, 0.f };
+		sphere->transform.scale = { 1.f, 1.f,1.f };
+		sphere->overrideMaterial(SceneManager::getInstance()->getMaterialManager().getIDOfMaterial("red"));
+
+
+		Model* cube = SceneManager::getInstance()->createModelObject("cube", "models/basics/models/cube/cube.obj", true);
+		cube->transform.translation = { 3.f, 2.f, 0.f };
 		cube->transform.scale = { 1.f, 1.f,1.f };
+		cube->overrideMaterial(SceneManager::getInstance()->getMaterialManager().getIDOfMaterial("box"));
 
 
 
-		/*	Model* bunny2 = SceneManager::getInstance()->createModelObject("Helicopter", "models/Helicopter/Seahawk.obj");
+		Model* cubeX = SceneManager::getInstance()->createModelObject("cubeX", "models/basics/models/cube/cube.obj", true);
+		cubeX->transform.translation = { 1.f, 0.f, 0.f };
+		cubeX->transform.scale = { 1.f, 0.1f,0.1f };
+		cubeX->overrideMaterial(SceneManager::getInstance()->getMaterialManager().getIDOfMaterial("red"));
+
+		Model* cubeY = SceneManager::getInstance()->createModelObject("cubeX", "models/basics/models/cube/cube.obj", true);
+		cubeY->transform.translation = { 0.f, 0.f, 1.f};
+		cubeY->transform.scale = { 0.1f, 0.1f,1.f };
+		cubeY->overrideMaterial(SceneManager::getInstance()->getMaterialManager().getIDOfMaterial("blue"));
+
+		Model* cubeZ = SceneManager::getInstance()->createModelObject("cubeX", "models/basics/models/cube/cube.obj", true);
+		cubeZ->transform.translation = { 0.f, 1.f, 0.f };
+		cubeZ->transform.scale = { 0.1f, 1.f,0.1f };
+		cubeZ->overrideMaterial(SceneManager::getInstance()->getMaterialManager().getIDOfMaterial("green"));
+
+
+
+		Model* plane = SceneManager::getInstance()->createModelObject("plane", "models/basics/models/plane/plane.obj", true);
+		//plane->transform.rotation = { glm::pi<float>(), 0.f, 0.f };
+		plane->transform.translation = { 3.f, -0.f, 0.f };
+		plane->transform.scale = { 10.f, 1.0,10.f };
+		plane->overrideMaterial(SceneManager::getInstance()->getMaterialManager().getIDOfMaterial("bricks1"));
+
+
+		//cube->transform.rotation = { glm::half_pi<float>(), 0.f, 0.f };
+
+
+
+			/*Model * bunny2 = SceneManager::getInstance()->createModelObject("Helicopter", "models/Helicopter/Seahawk.obj");
 			bunny2->transform.translation = { 0.f,0.0f, 0.f };
 			bunny2->transform.scale = { 0.1f, 0.1f, 0.1f };
 			bunny2->transform.rotation = { 0.f,  glm::pi<float>(),  glm::pi<float>() };
@@ -213,10 +253,23 @@ namespace engine {
 				});
 		}*/
 
-		SceneManager::getInstance()->getLightManager().addDirectionalLight({ 0.0,-1.f,-1.f }, { 1.f,1.f,1.f }, 1.f);
-		SceneManager::getInstance()->getLightManager().addPointLight({ 3.5f, -4.6f, -1.3f }, { 1.f,1.f,1.f }, 20.f);
+		//SceneManager::getInstance()->getLightManager().addDirectionalLight({ 0.0,-1.f,0.f }, { 1.f,1.f,1.f }, 1.f);
 
-		SceneManager::getInstance()->getBillboardManager().addBillboard({ 0.f, 0.f, 0.f }, 0.5f, { 1.f, 0.f, 0.f, 1.f }, 0);
+
+		SceneManager::getInstance()->getLightManager().addPointLight({ 3.f, 3.0f, 3.f }, { 1.f,1.f,1.f }, 20.f);
+
+		Model* cubeLight = SceneManager::getInstance()->createModelObject("light1", "models/basics/models/cube/cube.obj", true);
+		cubeLight->transform.translation = { 3.f, 3.0f, 3.f };
+		cubeLight->transform.scale = { 0.2f, 0.2f,0.2f };
+
+		/*
+		SceneManager::getInstance()->getLightManager().addPointLight({-3.f, 3.0f, -3.f}, {0.f,0.f,1.f}, 20.f);
+		Model* cubeLight2 = SceneManager::getInstance()->createModelObject("light2", "models/basics/models/cube/cube.obj", true);
+		cubeLight2->transform.translation = { -3.f, 3.0f, -3.f };
+		cubeLight2->transform.scale = { 0.2f, 0.2f,0.2f };
+
+		*/
+		//SceneManager::getInstance()->getBillboardManager().addBillboard({ 0.f, 0.f, 0.f }, 0.5f, { 1.f, 0.f, 0.f, 1.f }, 0);
 
 
 		SceneManager::getInstance()->initializeDescriptor();

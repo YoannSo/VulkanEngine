@@ -1,5 +1,6 @@
 #include "TriangleMesh.hpp"
 
+#include "Model.hpp"
 engine::TriangleMesh::~TriangleMesh()
 {
 	
@@ -7,7 +8,7 @@ engine::TriangleMesh::~TriangleMesh()
 
 
 engine::TriangleMesh::TriangleMesh(const std::string& p_name, const std::vector<Vertex>& p_vertices, const std::vector<unsigned int>& p_indices, const uint32_t p_materialID, const Model* p_parent)
-	: _name{ p_name }, _vertices{ p_vertices }, _materialID{ p_materialID }, _indices{ p_indices },m_modelRef{ p_parent }
+	: _name{ p_name }, _vertices{ p_vertices }, m_materialID{ p_materialID }, _indices{ p_indices },m_modelRef{ p_parent }
 {
 	_indexCount = _indices.size();
 	_vertexCount = _vertices.size();
@@ -109,6 +110,14 @@ void engine::TriangleMesh::createIndexBuffer()
 
 	Device::getInstance()->copyBuffer(stagingBuffer.getBuffer(), _indexBuffer->getBuffer(), bufferSize);
 
+}
+
+void engine::TriangleMesh::setMaterialId(uint32_t p_materialID)
+{
+	if (m_modelRef->askMaterialExist(p_materialID)) {
+		m_materialID = p_materialID;
+		std::cout << "Material ID of mesh " << _name << " set to " << m_materialID << std::endl;
+	}
 }
 
 std::vector<VkVertexInputBindingDescription> engine::Vertex::getBindingDescriptions()

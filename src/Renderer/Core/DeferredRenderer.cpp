@@ -17,6 +17,7 @@ void engine::DeferredRenderer::onSwapChainRecreated()
 
 void engine::DeferredRenderer::createRenderStages()
 {
+	m_renderStages.emplace_back(std::make_unique<stages::ShadowStage>(*m_deviceRef, *m_swapChain, *m_sceneManagerRef));
     m_renderStages.emplace_back(std::make_unique<stages::GeometryStage>(*m_deviceRef, *m_swapChain, m_gBuffer, *m_sceneManagerRef));
 	m_renderStages.emplace_back(std::make_unique<stages::LightingStage>(*m_deviceRef, *m_swapChain, m_gBuffer, *m_sceneManagerRef));
 }

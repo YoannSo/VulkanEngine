@@ -51,6 +51,8 @@ namespace engine {
 		m_materialSystem = std::make_unique<MaterialSystem>(m_textureManager, m_materialManager, *m_descriptorPool);
 		m_lightSystem = std::make_unique<LightSystem>(m_lightManager, *m_descriptorPool);
 
+		m_materialManager.parseMaterials();
+
     }
 
     SceneManager::~SceneManager() {

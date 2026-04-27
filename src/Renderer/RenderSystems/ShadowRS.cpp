@@ -1,4 +1,4 @@
-#include "GeometryRS.h"
+#include "ShadowRS.h"
 #include <Engine/Managers/SceneManager.h>
 #include <algorithm>
 
@@ -10,17 +10,17 @@ namespace engine {
     };
 
 
-    GeometryPassRenderSystem::GeometryPassRenderSystem(VkRenderPass renderPass, std::vector<VkDescriptorSetLayout>& p_descriptorSetLayout)
+    ShadowRenderSystem::ShadowRenderSystem(VkRenderPass renderPass, std::vector<VkDescriptorSetLayout>& p_descriptorSetLayout)
         : RenderSystem()  // call base class constructor
     {
         uint32_t pushConstantSize = sizeof(SimplePushConstantData);
-        init(renderPass, p_descriptorSetLayout, pushConstantSize, "shaders/gBuffer.vert.spv", "shaders/gBuffer.frag.spv");
+        init(renderPass, p_descriptorSetLayout, pushConstantSize, "shaders/shadow.vert.spv", "shaders/shadow.frag.spv");
 
     }
-    GeometryPassRenderSystem::~GeometryPassRenderSystem() {
+    ShadowRenderSystem::~ShadowRenderSystem() {
     }
 
-    void GeometryPassRenderSystem::render(const FrameInfo& frameInfo)
+    void ShadowRenderSystem::render(const FrameInfo& frameInfo)
     {
         m_pipeline->bind(frameInfo.commandBuffer);
 
@@ -32,21 +32,6 @@ namespace engine {
             nullptr
         );
 
-        vkCmdBindDescriptorSets(frameInfo.commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout,
-            1, // starting set
-            1, // number of sets
-            &(SceneManager::getInstance()->getMaterialSystemBindlessTextureSet()[frameInfo.frameIndex]),
-            0,
-            nullptr
-        );
-
-        vkCmdBindDescriptorSets(frameInfo.commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout,
-            2, // starting set
-            1, // number of sets
-            &(SceneManager::getInstance()->getMaterialSystemMaterialSet()[frameInfo.frameIndex]),
-            0,
-            nullptr
-        );
 
         for(auto& object:SceneManager::getInstance()->getObjectMap()){
 			Model* model = dynamic_cast<Model*>(object.second);
@@ -77,7 +62,7 @@ namespace engine {
 
  
 
-    void GeometryPassRenderSystem::drawBatch(FrameInfo& frameInfo, SceneManager::RenderingBatch& batchs)
+    void ShadowRenderSystem::drawBatch(FrameInfo& frameInfo, SceneManager::RenderingBatch& batchs)
     {
 
         for (auto& batch : batchs) {
@@ -106,9 +91,9 @@ namespace engine {
         }
     }
 
-    void GeometryPassRenderSystem::createPipelineInfo(PipelineConfigInfo& p_pipelineInfoOut)
+    void ShadowRenderSystem::createPipelineInfo(PipelineConfigInfo& p_pipelineInfoOut)
     {
-         Pipeline::defaultDeferredPipelineConfigInfo(p_pipelineInfoOut);
+         Pipeline::shadowPipelineConfigInfo(p_pipelineInfoOut);
     }
 
 }

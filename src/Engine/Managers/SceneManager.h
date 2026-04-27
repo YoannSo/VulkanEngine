@@ -34,6 +34,7 @@ namespace engine {
         struct GlobalUbo {
             glm::mat4 projection{ 1.f };
             glm::mat4 view{ 1.f };
+            glm::mat4 lightSpace{ 1.f };
             glm::mat4 inverseView{ 1.f };//cam pos last colum
         };
 
@@ -58,6 +59,7 @@ namespace engine {
         inline MaterialMap& getMaterialMap() { return m_materialMap; }
 		LightManager& getLightManager()  { return m_lightManager; }
 		BillboardManager& getBillboardManager() { return m_billboardManager; }
+        MaterialManager& getMaterialManager() { return m_materialManager; }
 
 
         void addMaterial(std::unique_ptr<Material> p_material);

@@ -10,6 +10,8 @@ namespace engine {
 		Texture( const std::string& filepath);
 		Texture( const std::string& filepath, const std::string p_type);
 		Texture(const Texture& p_Texture, const std::string p_type);
+		Texture(uint32_t width, uint32_t height, VkFormat format, VkImageUsageFlags usage, bool isDepth = false, uint32_t mipLevels = 1, bool compareEnable = false);
+
 		~Texture();
 
 

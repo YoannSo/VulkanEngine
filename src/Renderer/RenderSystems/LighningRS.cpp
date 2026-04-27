@@ -20,6 +20,7 @@ namespace engine {
     {
         m_pipeline->bind(frameInfo.commandBuffer);
 
+
         // Descriptor set global (camera + lights)
         vkCmdBindDescriptorSets(
             frameInfo.commandBuffer,

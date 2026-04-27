@@ -9,63 +9,69 @@
 #include <Vulkan/Buffer.hpp>
 #include <Engine/Managers/SceneManager.h>
 namespace engine {
-class GBuffer {
-public:
-    GBuffer(VkExtent2D extent, uint32_t imageCount);
-    ~GBuffer();
+    class GBuffer {
+    public:
+        GBuffer(VkExtent2D extent, uint32_t imageCount);
+        ~GBuffer();
 
-    // create the framebuffers for the provided render pass (must match attachments)
-    void createFramebuffers(VkRenderPass renderPass);
+        // create the framebuffers for the provided render pass (must match attachments)
+        void createFramebuffers(VkRenderPass renderPass);
 
-    // descriptor infos for lighting pass (albedo, normal, position)
-    std::vector<VkDescriptorImageInfo> getDescriptorImageInfos(uint32_t index) const;
+        // descriptor infos for lighting pass (albedo, normal, position)
+        std::vector<VkDescriptorImageInfo> getDescriptorImageInfos(uint32_t index) const;
 
-    const std::vector<VkFramebuffer>& getFramebuffers() const { return framebuffers; }
-    VkExtent2D getExtent() const { return extent; }
+        const std::vector<VkFramebuffer>& getFramebuffers() const { return framebuffers; }
+        VkExtent2D getExtent() const { return extent; }
 
-    void getImageViews(uint32_t index, std::vector<VkImageView>& outputViews) const;
+        void getImageViews(uint32_t index, std::vector<VkImageView>& outputViews) const;
 
-    VkDescriptorSetLayout getDescritporSetLayout() const {
-        return m_descriptorSetLayout->getDescriptorSetLayout();
-	}
-	const std::vector<VkDescriptorSet>& getDescriptorSets() const { return m_descriptorSet; }
+        VkDescriptorSetLayout getDescritporSetLayout() const {
+            return m_descriptorSetLayout->getDescriptorSetLayout();
+        }
+        const std::vector<VkDescriptorSet>& getDescriptorSets() const { return m_descriptorSet; }
 
-private:
-    void createImages();
-    void createSampler();
-    void createImageViews();
-    void cleanup();
-	void createDescriptorSetLayout();
-	void createDescriptorSets();
-private:
+    private:
+        void createImages();
+        void createSampler();
+        void createImageViews();
+        void cleanup();
+        void createDescriptorSetLayout();
+        void createDescriptorSets();
+    private:
 
-	std::vector<VkDescriptorSet> m_descriptorSet;
-    std::unique_ptr<DescriptorSetLayout> m_descriptorSetLayout;
-    std::vector<GwatBuffer*> m_uboBuffer;
+        std::vector<VkDescriptorSet> m_descriptorSet;
+        std::unique_ptr<DescriptorSetLayout> m_descriptorSetLayout;
+        std::vector<GwatBuffer*> m_uboBuffer;
 
-    Device* device{ nullptr };
-    VkExtent2D extent{};
-    uint32_t imageCount{ 0 };
+        Device* device{ nullptr };
+        VkExtent2D extent{};
+        uint32_t imageCount{ 0 };
 
-    // per-image arrays
-    std::vector<VkImage> albedoImages;
-    std::vector<VkDeviceMemory> albedoMem;
-    std::vector<VkImageView> albedoViews;
+        // per-image arrays
+        std::vector<VkImage> albedoImages;
+        std::vector<VkDeviceMemory> albedoMem;
+        std::vector<VkImageView> albedoViews;
 
-    std::vector<VkImage> normalImages;
-    std::vector<VkDeviceMemory> normalMem;
-    std::vector<VkImageView> normalViews;
+        // specular
+        std::vector<VkImage> specularImages;
+        std::vector<VkDeviceMemory> specularMem;
+        std::vector<VkImageView> specularViews;
 
-    std::vector<VkImage> positionImages;
-    std::vector<VkDeviceMemory> positionMem;
-    std::vector<VkImageView> positionViews;
+        std::vector<VkImage> normalImages;
+        std::vector<VkDeviceMemory> normalMem;
+        std::vector<VkImageView> normalViews;
 
-    std::vector<VkImage> depthImages;
-    std::vector<VkDeviceMemory> depthMem;
-    std::vector<VkImageView> depthViews;
+        std::vector<VkImage> positionImages;
+        std::vector<VkDeviceMemory> positionMem;
+        std::vector<VkImageView> positionViews;
 
-    VkSampler colorSampler{ VK_NULL_HANDLE };
+        std::vector<VkImage> depthImages;
+        std::vector<VkDeviceMemory> depthMem;
+        std::vector<VkImageView> depthViews;
 
-    std::vector<VkFramebuffer> framebuffers;
-};
+        VkSampler colorSampler{ VK_NULL_HANDLE };
+
+        std::vector<VkFramebuffer> framebuffers;
+    };
 }
+

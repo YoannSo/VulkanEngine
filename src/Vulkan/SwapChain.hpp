@@ -25,7 +25,7 @@ class SwapChain {
   VkImageView getDepthImageView(int index) { return depthImageViews[index]; }
   size_t imageCount() { return swapChainImages.size(); }
   VkFormat getSwapChainImageFormat() { return swapChainImageFormat; }
-  VkExtent2D getSwapChainExtent() { return swapChainExtent; }
+  VkExtent2D getSwapChainExtent() const { return swapChainExtent; }
   uint32_t width() { return swapChainExtent.width; }
   uint32_t height() { return swapChainExtent.height; }
 

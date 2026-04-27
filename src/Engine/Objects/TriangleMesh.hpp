@@ -68,7 +68,11 @@ namespace engine {
 		inline const Model* getModel() const { return m_modelRef; };
 
 
-		const uint32_t _materialID;		
+
+		uint32_t getMaterialId() const{ return m_materialID; }
+		void setMaterialId(uint32_t p_materialID);
+
+
 
 	private:
 
@@ -89,6 +93,9 @@ namespace engine {
 		std::shared_ptr<GwatBuffer> _indexBuffer{ nullptr };
 		
 		const Model* m_modelRef;
+
+		uint32_t m_materialID;
+
 
 	};
 }

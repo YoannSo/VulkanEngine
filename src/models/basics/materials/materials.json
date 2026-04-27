@@ -1,0 +1,21 @@
+{
+  "materials": [
+    {
+      "name": "bricks1",
+      "folder": "bricks1/",
+      "diffuse":      "bricks_d.jpg",
+      "normal":       "bricks_n.jpg",
+      "displacement": "bricks_disp.jpg",
+      "shininess": 32.0,
+      "color": [1.0, 1.0, 1.0, 1.0]
+    },
+    {
+      "name": "box",
+      "folder": "box/",
+      "diffuse":  "box_d.png",
+      "specular":   "box_s.png",
+      "shininess": 16.0,
+      "color": [1.0, 1.0, 1.0, 1.0]
+    }
+  ]
+}

@@ -2,7 +2,7 @@
 namespace engine {
 
 
-	Model::Model(const std::string p_name, const aiScene& p_scene,const MaterialManager& p_materialManagerRef, bool p_useBasicMaterial) :GameObject(), _name{ p_name }
+	Model::Model(const std::string p_name, const aiScene& p_scene,const MaterialManager& p_materialManagerRef, bool p_useBasicMaterial) :GameObject(), _name{ p_name },m_materialManagerRef(p_materialManagerRef)
 	{
 
 		_nbMeshes = p_scene.mNumMeshes;
@@ -16,6 +16,28 @@ namespace engine {
 	}
 	Model::~Model()
 	{
+	}
+
+	void Model::overrideMaterial(uint32_t p_newMaterialID)
+	{
+		if(m_materialManagerRef.isMaterialAlreadyExisted(p_newMaterialID))
+		{
+			for (size_t i = 0; i < m_meshes.size(); i++)
+			{
+				m_meshes[i].setMaterialId(p_newMaterialID);
+			}
+		}
+		else
+		{
+			if (VERBOSE)
+				std::cout << "Material ID " << p_newMaterialID << " does not exist! Cannot override material." << std::endl;
+		}
+	}
+
+	bool Model::askMaterialExist(uint32_t p_materialId) const
+	{
+		return m_materialManagerRef.isMaterialAlreadyExisted(static_cast<int32_t>(p_materialId));
+
 	}
 
 	void Model::_loadMesh(const aiMesh* const p_mesh, const aiScene&  p_scene, const MaterialManager& p_materialManagerRef, bool p_useBasicMaterial)

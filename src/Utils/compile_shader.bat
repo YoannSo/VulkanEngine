@@ -8,3 +8,5 @@ C:\VulkanSDK\1.4.309.0\Bin\glslc.exe ../shaders/LightningPassDeffered.vert -o ..
 C:\VulkanSDK\1.4.309.0\Bin\glslc.exe ../shaders/LightningPassDeffered.frag -o ../shaders/LightningPassDeffered.frag.spv
 C:\VulkanSDK\1.4.309.0\Bin\glslc.exe ../shaders/billboard.vert -o ../shaders/billboard.vert.spv
 C:\VulkanSDK\1.4.309.0\Bin\glslc.exe ../shaders/billboard.frag -o ../shaders/billboard.frag.spv
+C:\VulkanSDK\1.4.309.0\Bin\glslc.exe ../shaders/shadow.vert -o ../shaders/shadow.vert.spv
+C:\VulkanSDK\1.4.309.0\Bin\glslc.exe ../shaders/shadow.frag -o ../shaders/shadow.frag.spv

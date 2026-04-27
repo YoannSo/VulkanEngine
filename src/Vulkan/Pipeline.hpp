@@ -48,6 +48,7 @@ namespace engine {
 		void bind(VkCommandBuffer commandBuffer);
 		static void defaultFowardPipelineConfigInfo(PipelineConfigInfo& configInfo);
 		static void defaultDeferredPipelineConfigInfo(PipelineConfigInfo& configInfo);
+		static void shadowPipelineConfigInfo(PipelineConfigInfo& configInfo);
 
 		static void enableAlphaBlinding(
 			PipelineConfigInfo& configInfo);

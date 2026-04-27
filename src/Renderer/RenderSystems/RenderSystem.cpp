@@ -57,7 +57,7 @@ namespace engine {
 
 	void RenderSystem::createPipelineInfo(PipelineConfigInfo& p_pipelineInfoOut) {
 		Pipeline::defaultFowardPipelineConfigInfo(p_pipelineInfoOut);
-		Pipeline::enableAlphaBlinding(p_pipelineInfoOut);
+		//Pipeline::enableAlphaBlinding(p_pipelineInfoOut);
 	}
 
 }

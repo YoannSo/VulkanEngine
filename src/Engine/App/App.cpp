@@ -7,8 +7,6 @@ namespace engine {
 
 	FirstApp::FirstApp() {
 
-		system("C:/prog/git/VulkanEngine/VulkanVideos/compile_shader.bat");
-
 		_globalPool =
 			DescriptorPool::Builder()
 			.setMaxSets(SwapChain::MAX_FRAMES_IN_FLIGHT)
@@ -47,9 +45,31 @@ namespace engine {
 		viewerObject->setPerspectiveProjection(glm::radians(50.f),  Renderer.getAspectRatio(), 0.5f, 30.f);
 
 		Camera* lightCamera = SceneManager::getInstance()->createCameraObject();
-		lightCamera->transform.translation = { -1.f, 2.f, 2.f };
-		lightCamera->setViewTarget(glm::vec3(10.f, 10.f, 0.f), glm::vec3(0.f, 1.f, 0.0f));
-		lightCamera->setOrthographicProjection(-10.f, 10.f, -10.f, 10.f, 0.5f, 30.f);
+		// 1. Direction de la lumière (celle passée à addDirectionalLight)
+		glm::vec3 lightDir = glm::normalize(glm::vec3(0.f, -1.f, 0.f));
+
+		// 2. Centre approximatif de ta scène (ou calcule un vrai AABB si tu veux être précis)
+		glm::vec3 sceneCenter = glm::vec3(0.f, 0.f, 0.f);
+		float sceneRadius = 15.f; // englobe tous tes objets
+
+		// 3. Position de la caméra: on recule le long de -lightDir
+		float distance = sceneRadius * 2.f;
+		glm::vec3 lightCamPos = sceneCenter - lightDir * distance;
+
+		// 4. Up vector NON colinéaire à lightDir (important si lightDir est vertical !)
+		glm::vec3 up = glm::abs(lightDir.y) > 0.99f
+			? glm::vec3(0.f, 0.f, 1.f)
+			: glm::vec3(0.f, 1.f, 0.f);
+
+		lightCamera->transform.translation = lightCamPos;
+		lightCamera->setViewTarget(lightCamPos, sceneCenter, up);
+
+		// 5. Bornes ortho basées sur le rayon de la scène
+		lightCamera->setOrthographicProjection(
+			-sceneRadius, sceneRadius,   // left, right
+			-sceneRadius, sceneRadius,   // top, bottom  
+			0.1f, distance * 2.f         // near, far
+		);
 
 
 		KeyBoardMovementController cameraController{};
@@ -253,7 +273,7 @@ namespace engine {
 				});
 		}*/
 
-		//SceneManager::getInstance()->getLightManager().addDirectionalLight({ 0.0,-1.f,0.f }, { 1.f,1.f,1.f }, 1.f);
+		SceneManager::getInstance()->getLightManager().addDirectionalLight({ 0.0,-1.f,0.f }, { 1.f,1.f,1.f }, 1.f);
 
 
 		SceneManager::getInstance()->getLightManager().addPointLight({ 3.f, 3.0f, 3.f }, { 1.f,1.f,1.f }, 20.f);
@@ -269,7 +289,7 @@ namespace engine {
 		cubeLight2->transform.scale = { 0.2f, 0.2f,0.2f };
 
 		*/
-		//SceneManager::getInstance()->getBillboardManager().addBillboard({ 0.f, 0.f, 0.f }, 0.5f, { 1.f, 0.f, 0.f, 1.f }, 0);
+		SceneManager::getInstance()->getBillboardManager().addBillboard({ 0.f, 0.f, 0.f }, 0.5f, { 1.f, 0.f, 0.f, 1.f }, 0);
 
 
 		SceneManager::getInstance()->initializeDescriptor();

@@ -2,12 +2,12 @@
 
 
 namespace engine::stages {
-	LightingStage::LightingStage(const Device& p_device, const SwapChain& m_swapchain, std::shared_ptr<GBuffer> p_gBuffer, const SceneManager& p_sceneManager) : RenderStage(p_device, m_swapchain),
+	LightingStage::LightingStage(const Device& p_device, const SwapChain& m_swapchain, std::shared_ptr<GBuffer> p_gBuffer, std::shared_ptr<Texture> p_shadowMap, const SceneManager& p_sceneManager) : RenderStage(p_device, m_swapchain),
 		m_gBuffer(p_gBuffer)
 	{
 		init();
 		std::vector<VkDescriptorSetLayout> descriptorLayoutLightningPass = { p_sceneManager.getGlobalDescriptorSetLayout() };
-		m_renderSystems.emplace_back(std::make_unique<LightingPassDeferred>(m_renderPass,descriptorLayoutLightningPass,m_gBuffer));
+		m_renderSystems.emplace_back(std::make_unique<LightingPassDeferred>(m_renderPass,descriptorLayoutLightningPass,m_gBuffer, p_shadowMap));
 	}
 
 	void LightingStage::createRenderPass()

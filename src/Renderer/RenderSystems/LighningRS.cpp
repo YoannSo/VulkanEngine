@@ -3,15 +3,21 @@
 namespace engine {
  
 
-    LightingPassDeferred::LightingPassDeferred(VkRenderPass renderPass, std::vector<VkDescriptorSetLayout>& p_descriptorSetLayout,std::shared_ptr<GBuffer> p_gBuffer)
+    LightingPassDeferred::LightingPassDeferred(VkRenderPass renderPass, std::vector<VkDescriptorSetLayout>& p_descriptorSetLayout,std::shared_ptr<GBuffer> p_gBuffer, std::shared_ptr<Texture> p_shadowMap)
         : RenderSystem(),
-		m_gBuffer{ p_gBuffer }
+		m_gBuffer{ p_gBuffer },
+		m_shadowMap{ p_shadowMap }
     {
         p_descriptorSetLayout.push_back(m_gBuffer->getDescritporSetLayout());
 		p_descriptorSetLayout.push_back(SceneManager::getInstance()->getLightDescriptorSetLayout());
+        createShadowDescriptorSetLayout();
+        p_descriptorSetLayout.push_back(m_shadowDescriptorLayout->getDescriptorSetLayout());
+
         uint32_t pushConstantSize = sizeof(SimplePushConstantData);
         init(renderPass, p_descriptorSetLayout, pushConstantSize, "shaders/LightningPassDeffered.vert.spv", "shaders/LightningPassDeffered.frag.spv");
         m_pushConstants._lightNumber = SceneManager::getInstance()->getLightManager().getLightCount();
+        createShadowDescriptorSet();
+
     }
     LightingPassDeferred::~LightingPassDeferred() {
     }
@@ -52,6 +58,16 @@ namespace engine {
             0, nullptr
 		 );
 
+         VkDescriptorSet shadowSet = m_shadowDescriptorSet[frameInfo.frameIndex];
+         vkCmdBindDescriptorSets(
+             frameInfo.commandBuffer,
+             VK_PIPELINE_BIND_POINT_GRAPHICS,
+             pipelineLayout,
+             3, 1,
+             &shadowSet,
+             0, nullptr
+         );
+
 		 m_pushConstants._showNormalMap = m_sceneManager->_showNormal ? 1 : 0;
 		 m_pushConstants._showLighning = m_sceneManager->_showLighning ? 1 : 0;
 
@@ -74,6 +90,28 @@ namespace engine {
     void LightingPassDeferred::createPipelineInfo(PipelineConfigInfo& p_pipelineInfoOut)
     {
         Pipeline::defaultFowardPipelineConfigInfo(p_pipelineInfoOut);
+    }
+
+    void LightingPassDeferred::createShadowDescriptorSetLayout()
+    {
+        m_shadowDescriptorLayout = DescriptorSetLayout::Builder().addBinding(0, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, VK_SHADER_STAGE_FRAGMENT_BIT).build();
+    }
+
+    void LightingPassDeferred::createShadowDescriptorSet()
+    {
+        // Attention: Texture::getDescriptorImageInfo() renvoie _vkImageLayout, jamais mis à jour
+        // pour ce constructeur (reste UNDEFINED). On construit l'info manuellement.
+        VkDescriptorImageInfo shadowInfo{};
+        shadowInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+        shadowInfo.imageView = m_shadowMap->getImageView();
+        shadowInfo.sampler = m_shadowMap->getSampler();
+
+        m_shadowDescriptorSet.resize(SwapChain::MAX_FRAMES_IN_FLIGHT);
+        for (auto& set : m_shadowDescriptorSet) {
+            DescriptorWriter(*m_shadowDescriptorLayout, SceneManager::getInstance()->getPool())
+                .writeImage(0, &shadowInfo)
+                .build(set);
+        }
     }
 
 }

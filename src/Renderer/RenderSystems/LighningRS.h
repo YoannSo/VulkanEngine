@@ -23,7 +23,7 @@ namespace engine {
 		};
 
 
-		LightingPassDeferred(VkRenderPass renderPass, std::vector<VkDescriptorSetLayout>& p_descriptorSetLayout, std::shared_ptr<GBuffer> p_gBuffer);//globalSetLayout to tell the pipeline what descriptor set layout will be
+		LightingPassDeferred(VkRenderPass renderPass, std::vector<VkDescriptorSetLayout>& p_descriptorSetLayout, std::shared_ptr<GBuffer> p_gBuffer, std::shared_ptr<Texture> p_shadowMap);//globalSetLayout to tell the pipeline what descriptor set layout will be
 		~LightingPassDeferred();
 
 		LightingPassDeferred(const LightingPassDeferred&) = delete; // delete copy constructor
@@ -36,9 +36,18 @@ namespace engine {
 		void drawBatch(FrameInfo& frameInfo, SceneManager::RenderingBatch& batchs);
 		void createPipelineInfo(PipelineConfigInfo& p_pipelineInfoOut) override;
 
+		void createShadowDescriptorSetLayout();
+		void createShadowDescriptorSet();
+
 		
 		std::shared_ptr<GBuffer> m_gBuffer;
 		SimplePushConstantData m_pushConstants;
 		SceneManager* m_sceneManager = SceneManager::getInstance();
+
+		//Shadow
+		std::shared_ptr<Texture> m_shadowMap;
+		std::unique_ptr<DescriptorSetLayout> m_shadowDescriptorLayout;
+		std::vector<VkDescriptorSet> m_shadowDescriptorSet;
+
 	};
 }

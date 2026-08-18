@@ -12,6 +12,8 @@ namespace engine::stages {
 	{
 	public:
 		ShadowStage(const engine::Device& p_device, const SwapChain& m_swapchain,const SceneManager& p_sceneManager);
+
+		std::shared_ptr<Texture> getShadowMap() { return m_shadowMap; }
 	protected:
 			void createRenderPass() override;
 			void createFrameBuffers() override;

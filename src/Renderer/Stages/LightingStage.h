@@ -8,11 +8,11 @@ namespace engine::stages {
 	class LightingStage :public RenderStage
 	{
 		public:
-			LightingStage(const engine::Device& p_device, const SwapChain& m_swapchain, std::shared_ptr<GBuffer> p_gBuffer, const SceneManager& p_sceneManager);
+			LightingStage(const engine::Device& p_device, const SwapChain& m_swapchain, std::shared_ptr<GBuffer> p_gBuffer, std::shared_ptr<Texture> p_shadowMap, const SceneManager& p_sceneManager);
 	protected:
 		void createRenderPass() override;
-			void createFrameBuffers() override;
-			std::vector<VkClearValue> getClearValues() override;
+		void createFrameBuffers() override;
+		std::vector<VkClearValue> getClearValues() override;
 	private:
 		std::shared_ptr<GBuffer> m_gBuffer;
 	};

@@ -405,3 +405,18 @@ FodyWeavers.xsd
 x64/*
 /VulkanVideos/x64
 /VulkanVideos/x64
+
+# CMake and vcpkg
+out/
+vcpkg_installed/
+CMakeUserPresets.json
+*.vcxproj.user
+*.slnx.user
+
+# Additional build artifacts
+*.idb
+*.exe
+*.dll
+!lib/**/*.dll
+*.lib
+!lib/**/*.lib

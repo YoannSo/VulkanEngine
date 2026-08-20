@@ -32,7 +32,6 @@ void engine::LightSystem::setupDescriptorSet()
 	);
 
 
-	std::cout << "Number of lights in scene: " << lightsBuffer.data() <<" size " << lightsBuffer[0].position.w << std::endl;
 	m_lightBuffer->map();
 	m_lightBuffer->writeToBuffer(lightsBuffer.data(), sizeof(LightGPU) * lightsBuffer.size());
 	m_lightBuffer->flush();

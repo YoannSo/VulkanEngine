@@ -75,7 +75,7 @@ namespace engine {
 
 	void Renderer::freeCommandBuffers()
 	{
-		vkFreeCommandBuffers(Device::getInstance()->getDevice(), Device::getInstance()->getCommandPool(), static_cast<float>(commandBuffers.size()), commandBuffers.data());
+		vkFreeCommandBuffers(Device::getInstance()->getDevice(), Device::getInstance()->getCommandPool(), static_cast<uint32_t>(commandBuffers.size()), commandBuffers.data());
 	}
 
 	void Renderer::createCommandBuffers() {

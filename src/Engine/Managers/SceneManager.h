@@ -40,7 +40,7 @@ namespace engine {
 
 
     public:
-        using Map = std::unordered_map<uint32_t, GameObject*>; // efficiently look up object
+        using Map = std::unordered_map<uint32_t, std::unique_ptr<GameObject>>; // efficiently look up object
         using RenderingBatch = std::vector<std::pair<std::string, std::vector<TriangleMesh*>>>;
         using TransparentRenderingBatch = std::vector<std::pair<std::string, TriangleMesh*>>;
         using MaterialMap = std::unordered_map<std::string, std::shared_ptr<Material>>; // efficiently look up object
@@ -50,10 +50,8 @@ namespace engine {
         ~SceneManager();
 
         Model* createModelObject(std::string p_meshName, std::string p_path,bool p_useBasicMaterial=false);
-        Camera* createCameraObject();
-        void addGameObject(GameObject* p_newGameObject);
+        std::unique_ptr<Camera> createCameraObject();
 
-        inline Map getSceneObjects() { return m_objectMap; }
         inline DescriptorPool& getPool() { return *m_descriptorPool; }
 
         inline MaterialMap& getMaterialMap() { return m_materialMap; }

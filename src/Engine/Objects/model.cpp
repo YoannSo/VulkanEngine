@@ -6,7 +6,8 @@ namespace engine {
 	{
 
 		_nbMeshes = p_scene.mNumMeshes;
-		std::cout << "--** Your model got " << _nbMeshes << " meshes **--" << std::endl;
+		if (VERBOSE)
+			std::cout << "--** Your model got " << _nbMeshes << " meshes **--" << std::endl;
 
 		for (uint32_t i = 0; i < _nbMeshes; ++i) {
 			_loadMesh(p_scene.mMeshes[i], p_scene, p_materialManagerRef, p_useBasicMaterial);

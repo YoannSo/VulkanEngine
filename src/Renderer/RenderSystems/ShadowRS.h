@@ -19,7 +19,7 @@ namespace engine {
 		ShadowRenderSystem(const ShadowRenderSystem&) = delete; // delete copy constructor
 		ShadowRenderSystem& operator=(const ShadowRenderSystem&) = delete; // and copy operator, make sure to not have 2 pointer to window, then if we destroy one, the second isnt destroyed
 
-		void update(FrameInfo& frameInfo, SceneManager::GlobalUbo& ubo) override {}
+		void update(FrameInfo&, SceneManager::GlobalUbo&) override {}
 		void render(const FrameInfo& frameInfo)override;// camera not meber bs we want to be able to share camera object multiple mtiple render system
 
 	private:

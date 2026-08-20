@@ -48,8 +48,8 @@ namespace engine {
             nullptr
         );
 
-        for(auto& object:SceneManager::getInstance()->getObjectMap()){
-			Model* model = dynamic_cast<Model*>(object.second);
+        for (auto& object : SceneManager::getInstance()->getObjectMap()) {
+            Model* model = dynamic_cast<Model*>(object.second.get());
 
             for (auto& mesh : model->getMeshes()) {
 

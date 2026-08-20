@@ -43,7 +43,7 @@ namespace engine {
 			return currentFrameIndex;
 		};
 
-		inline uint32_t getImageCount() const { return m_swapChain->imageCount(); }
+		inline uint32_t getImageCount() const { return static_cast<uint32_t>(m_swapChain->imageCount()); }
 
 		virtual void render(const FrameInfo& frameInfo);
 

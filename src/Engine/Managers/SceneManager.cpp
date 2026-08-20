@@ -58,12 +58,11 @@ namespace engine {
     SceneManager::~SceneManager() {
     }
 
-    Camera* SceneManager::createCameraObject() {
+    std::unique_ptr<Camera> SceneManager::createCameraObject() {
         if (VERBOSE)
             std::cout << "-*-" << " Create Camera Game Object:" << std::endl;
 
-        Camera* obj = new Camera();
-        return obj;
+        return std::make_unique<Camera>();
     }
 
     Model* SceneManager::createModelObject(std::string p_meshName, std::string p_path,bool p_useBasicMaterial) {
@@ -86,18 +85,11 @@ namespace engine {
 		    m_materialManager.createMaterialsFromMesh(*scene, p_meshName);
 
 
-        Model* obj = new Model(p_meshName, *scene,m_materialManager, p_useBasicMaterial);
-
-        m_objectMap.emplace(obj->getId(), obj);
-        return obj;
+        auto obj = std::make_unique<Model>(p_meshName, *scene, m_materialManager, p_useBasicMaterial);
+        Model* rawPtr = obj.get();
+        m_objectMap.emplace(rawPtr->getId(), std::move(obj));
+        return rawPtr;
     }
-
-    void SceneManager::addGameObject(GameObject* p_newGameObject) {
-        if (VERBOSE)
-            std::cout << "-*-" << " add Game Object " << p_newGameObject->getId() << std::endl;
-        m_objectMap.emplace(p_newGameObject->getId(), p_newGameObject);
-    }
-
 
     void SceneManager::addMaterial(std::unique_ptr<Material> p_material) {
         m_materialMap.emplace(p_material->getName(), std::move(p_material));

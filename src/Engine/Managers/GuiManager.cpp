@@ -1,4 +1,5 @@
 #include "GuiManager.h"
+#include <Utils/define.hpp>
 #if LVF_USE_IMGUI
 // Loader helper for ImGui Vulkan to resolve function pointers through vkGetInstanceProcAddr
 static PFN_vkVoidFunction ImGuiVulkanLoader(const char* function_name, void* user_data) {
@@ -19,7 +20,8 @@ void GuiManager::init(GLFWwindow* window,
                       VkDescriptorPool descriptorPool,
                       uint32_t minImageCount) {
   if (m_initialized) {
-    std::cerr << "GuiManager already initialized\n";
+    if (engine::VERBOSE)
+      std::cerr << "GuiManager already initialized\n";
     return;
   }
   m_window = window;
@@ -117,7 +119,8 @@ void GuiManager::init(GLFWwindow* window,
 //	  });
 
   // Currently this is a stub. Real ImGui initialization will go here.
-  std::cout << "GuiManager initialized (stub).\n";
+  if (engine::VERBOSE)
+    std::cout << "GuiManager initialized (stub).\n";
   m_initialized = true;
 }
 
@@ -181,7 +184,8 @@ void GuiManager::cleanup() {
     m_imguiPool = VK_NULL_HANDLE;
   }
 #endif
-  std::cout << "GuiManager cleaned up.\n";
+  if (engine::VERBOSE)
+    std::cout << "GuiManager cleaned up.\n";
   m_initialized = false;
 }
 

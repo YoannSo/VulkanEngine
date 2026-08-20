@@ -21,7 +21,7 @@ namespace engine {
 		RenderSystem(const RenderSystem&) = delete; // delete copy constructor
 		RenderSystem& operator=(const RenderSystem&) = delete; // and copy operator, make sure to not have 2 pointer to window, then if we destroy one, the second isnt destroyed
 		
-		virtual void update(FrameInfo& frameInfo, SceneManager::GlobalUbo& ubo) {};
+		virtual void update(FrameInfo&, SceneManager::GlobalUbo&) {};
 		virtual void render(const FrameInfo& frameInfo) = 0;// camera not meber bs we want to be able to share camera object multiple mtiple render system
 		virtual void createPipelineInfo(PipelineConfigInfo& p_pipelineInfoOut);
 		void init(VkRenderPass renderPass, std::vector <VkDescriptorSetLayout> p_descriptorSetLayouts, uint32_t p_pushConstantSize, std::string p_vertShader, std::string p_fragShader, bool p_clearAttributes = false);

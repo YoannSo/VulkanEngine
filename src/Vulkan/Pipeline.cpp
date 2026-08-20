@@ -400,9 +400,6 @@ namespace engine {
 
 		if (vkCreateGraphicsPipelines(Device::getInstance()->getDevice(), VK_NULL_HANDLE, 1, &pipelineInfo, nullptr, &graphicsPipeline) != VK_SUCCESS)//null handle to pipeline cache => performance, pipeline count =>1, no allocation callback 
 			throw	std::runtime_error("Failed to create graphics pipeline");
-
-		std::cout << "Vertex shader code size " << vertCode.size() << std::endl;
-		std::cout << "Vertex shader code size " << vertCode.size() << std::endl;
 	}
 	void Pipeline::createShaderModule(const std::vector<char>& code, VkShaderModule* shaderModule)
 	{

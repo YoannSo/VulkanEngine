@@ -81,7 +81,7 @@ uint32_t engine::MaterialManager::createBasicMaterial(const std::string p_name, 
 
 bool engine::MaterialManager::isMaterialAlreadyExisted(int32_t p_materialID) const
 {
-	if(m_currentIdMaterial > p_materialID && p_materialID >= 0)
+	if(p_materialID >= 0 && m_currentIdMaterial > static_cast<uint32_t>(p_materialID))
 		return true;
 	return false;
 }
@@ -111,7 +111,8 @@ void engine::MaterialManager::parseMaterial(const nlohmann::json& m)
 	// Vérifie si déjà existant (même logique que pour aiMaterial)
 	auto [it, inserted] = m_materialNameToID.try_emplace(name, m_currentIdMaterial);
 	if (!inserted) {
-		std::cout << "Material " << name << " already exists!" << std::endl;
+		if (VERBOSE)
+			std::cout << "Material " << name << " already exists!" << std::endl;
 		return;
 	}
 

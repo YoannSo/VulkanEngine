@@ -30,8 +30,8 @@ namespace engine {
 
 
         TransformComponent transform;
-        virtual void bind(VkCommandBuffer& commandBuffer, int& p_frameIndex, VkPipelineLayout& p_pipelineLayout) {};
-        virtual void draw(VkCommandBuffer& commandBuffer, int& p_frameIndex, VkPipelineLayout& p_pipelineLayout) {};
+        virtual void bind(VkCommandBuffer&, int&, VkPipelineLayout&) {};
+        virtual void draw(VkCommandBuffer&, int&, VkPipelineLayout&) {};
     protected:
 
         uint32_t m_id;

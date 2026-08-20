@@ -13,19 +13,6 @@ namespace engine {
 			.addPoolSize(VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, SwapChain::MAX_FRAMES_IN_FLIGHT)
 			.build();
 
-
-		/*m_guiManager = std::make_unique<GuiManager>();
-		m_guiManager->init(
-			_window.getGLFWWindow(),
-			Device::getInstance()->getVkInstance(),
-			Device::getInstance()->getDevice(),
-			Device::getInstance()->getPhysicalDevice(),
-			0,
-			Device::getInstance()->getGraphicsQueue(),
-			Renderer.getRenderPass(),
-			nullptr,
-			SwapChain::MAX_FRAMES_IN_FLIGHT
-		);*/
 		loadGameObjects();
 
 	}
@@ -34,17 +21,13 @@ namespace engine {
 
 	void FirstApp::run() {
 
-
-		//changer le traitement des descriptorset 
-
-
-
-		Camera* viewerObject = SceneManager::getInstance()->createCameraObject();//store camera state
+		std::unique_ptr<Camera> viewerObject = SceneManager::getInstance()->createCameraObject();
 		viewerObject->transform.translation.z = -2.5f;
 		viewerObject->setViewTarget(glm::vec3(0.f, 0.f, 0.f), glm::vec3(0.f, 0.f, 0.0f));
-		viewerObject->setPerspectiveProjection(glm::radians(50.f),  Renderer.getAspectRatio(), 0.5f, 30.f);
+		viewerObject->setPerspectiveProjection(glm::radians(50.f), Renderer.getAspectRatio(), 0.5f, 30.f);
 
-		Camera* lightCamera = SceneManager::getInstance()->createCameraObject();
+		std::unique_ptr<Camera> lightCamera = SceneManager::getInstance()->createCameraObject();
+		lightCamera->transform.translation = { -1.f, 2.f, 2.f };
 		// 1. Direction de la lumière (celle passée à addDirectionalLight)
 		glm::vec3 lightDir = glm::normalize(glm::vec3(0.f, -1.f, 0.f));
 
@@ -89,7 +72,7 @@ namespace engine {
 
 
 			// frameTime = glm::min(frameTime, MAX_FRAME_TIME);
-			cameraController.moveInPLaneXZ(_window.getGLFWWindow(), frameTime, viewerObject);
+			cameraController.moveInPLaneXZ(_window.getGLFWWindow(), frameTime, viewerObject.get());
 			viewerObject->setViewYXZ(viewerObject->transform.translation, viewerObject->transform.rotation);
 
 
@@ -109,10 +92,7 @@ namespace engine {
 
 			if (auto commandBuffer = Renderer.beginFrame()) {//begin fram return nullptr if swapchain need to be recreated
 
-
 				int frameIndex = Renderer.getFrameIndex();
-
-				// Reset queries for this frame and write GPU timestamp start
 
 				FrameInfo frameInfo{ frameIndex, frameTime, commandBuffer, *viewerObject };
 				cameraController.handleAction(_window.getGLFWWindow());
@@ -121,17 +101,11 @@ namespace engine {
 				ubo.projection = viewerObject->getProjection();
 				ubo.view = viewerObject->getView();
 				ubo.lightSpace = lightCamera->getProjection() * lightCamera->getView();
-				//Renderer.updateRenderSystems(frameInfo, ubo);
 				ubo.inverseView = viewerObject->getInverseView();
 
 				SceneManager::getInstance()->writeInGlobalUbo(ubo, frameIndex);
 
 				Renderer.render(frameInfo);
-			//	m_guiManager->render(commandBuffer);
-
-				// write GPU timestamp end for this frame
-
-
 
 				Renderer.endFrame();
 
@@ -140,39 +114,6 @@ namespace engine {
 		vkDeviceWaitIdle(Device::getInstance()->getDevice());//block the stop, cpu will block until gpu is completed
 	}
 	void FirstApp::loadGameObjects() {
-	//	SceneManager::getInstance()->addTextureElement("C:/prog/git/VulkanEngine/VulkanVideos/models/debugTex.png", new Texture("C:/prog/git/VulkanEngine/VulkanVideos/models/debugTex.png"));
-
-
-		/* std::shared_ptr<Model> lveModel = std::make_shared<Model>(Device, "Seahawk", "models/Helicopter/Seahawk.obj");
-
-
-		 auto flatVase = LveGameObject::createGameObject();
-		 flatVase._model = lveModel;
-		 flatVase.transform.translation = {-.5f, .5f, 0.f};
-		 flatVase.transform.scale = {3.f, 1.5f, 3.f};
-		 gameObjects.emplace(flatVase.getId(), std::move(flatVase));*/
-
-		 /* std::shared_ptr<Model>  lveModel = std::make_shared<Model>(Device, "bunny", "models/bunny/bunny_2.obj");
-		  auto smoothVase = LveGameObject::createGameObject();
-		  smoothVase._model = lveModel;
-		  smoothVase.transform.translation = {.5f, .5f, 0.f};
-		  smoothVase.transform.scale = {3.f, 1.5f, 3.f};
-		  gameObjects.emplace(smoothVase.getId(), std::move(smoothVase));*/
-
-		  //for (std::string test : smoothVase._model->m_allTexturesName)
-			//  std::cout << test << std::endl;
-
-		 // Texture* myText = new Texture(Device, "E:/Prog/VulkanEngine/VulkanVideos/models/debugTex.png");
-			/*auto bunny = SceneManager::getInstance()->createMeshObject("bunny", "models/bunny/bunny_2.obj");
-			bunny->transform.translation = { 0.f, .5f, 0.f };
-			bunny->transform.scale = { 3.f, 1.f, 3.f };*/
-
-		
-		
-		/*Model* floor = SceneManager::getInstance()->createModelObject("sponza", "models/sponza/sponza.obj");
-		floor->transform.translation = { 2.f, 0.f, 0.f };
-		floor->transform.rotation = { 0.f, 0.f, glm::pi<float>() };
-		floor->transform.scale = { 0.01f,  0.01f, 0.01f };*/
 
 		
 
@@ -256,23 +197,6 @@ namespace engine {
 		;
 
 
-		/*for (int i = 0; i < lightColors.size(); i++) {
-			PointLight* light = SceneManager::getInstance()->createLightObject();
-			light->setColor(lightColors[i]);
-			auto rotateLight = glm::rotate(
-				glm::mat4(1.f),
-				(i * glm::two_pi<float>()) / lightColors.size(),
-				{ 0.f, 1.f, 0.f });
-
-			// Increase the Y component (height) to make the light higher  
-			light->transform.translation = glm::vec3(rotateLight * glm::vec4(4.f, -3.f, -2.f, 1.f));
-			light->transform.scale = { 0.2f, 0.2f, 0.2f };
-
-			light->setUpdateFunction([](GameObject* gameObject, float deltaTime) {
-				gameObject->transform.rotate(glm::vec3(0.f, 1.f, 0.f), deltaTime);
-				});
-		}*/
-
 		SceneManager::getInstance()->getLightManager().addDirectionalLight({ 0.0,-1.f,0.f }, { 1.f,1.f,1.f }, 1.f);
 
 
@@ -282,13 +206,6 @@ namespace engine {
 		cubeLight->transform.translation = { 3.f, 3.0f, 3.f };
 		cubeLight->transform.scale = { 0.2f, 0.2f,0.2f };
 
-		/*
-		SceneManager::getInstance()->getLightManager().addPointLight({-3.f, 3.0f, -3.f}, {0.f,0.f,1.f}, 20.f);
-		Model* cubeLight2 = SceneManager::getInstance()->createModelObject("light2", "models/basics/models/cube/cube.obj", true);
-		cubeLight2->transform.translation = { -3.f, 3.0f, -3.f };
-		cubeLight2->transform.scale = { 0.2f, 0.2f,0.2f };
-
-		*/
 		SceneManager::getInstance()->getBillboardManager().addBillboard({ 0.f, 0.f, 0.f }, 0.5f, { 1.f, 0.f, 0.f, 1.f }, 0);
 
 

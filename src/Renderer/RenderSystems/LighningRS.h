@@ -12,16 +12,13 @@
 #include <Engine/Managers/SceneManager.h>
 
 namespace engine {
-
 	class LightingPassDeferred : public RenderSystem {
-
 	public:
 		struct SimplePushConstantData {
 			uint32_t _lightNumber;
 			uint32_t _showNormalMap = 0; // 0: no normal map, 1: normal map
 			uint32_t _showLighning = 0; // 0: normal lighting, 1: no lighting (show albedo only)
 		};
-
 
 		LightingPassDeferred(VkRenderPass renderPass, std::vector<VkDescriptorSetLayout>& p_descriptorSetLayout, std::shared_ptr<GBuffer> p_gBuffer, std::shared_ptr<Texture> p_shadowMap);//globalSetLayout to tell the pipeline what descriptor set layout will be
 		~LightingPassDeferred();

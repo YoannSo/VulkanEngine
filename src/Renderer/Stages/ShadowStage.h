@@ -6,7 +6,6 @@
 
 #include <Renderer/RenderSystems/ShadowRS.h>
 namespace engine::stages {
-
 	
 	class ShadowStage :public RenderStage
 	{
@@ -22,4 +21,3 @@ namespace engine::stages {
 		std::shared_ptr<Texture> m_shadowMap;
 	};
 }
-

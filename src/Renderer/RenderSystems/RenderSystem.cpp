@@ -1,10 +1,7 @@
 #include "RenderSystem.h"
 
 namespace engine {
-
-
 	RenderSystem::RenderSystem() {
-
 	}
 
 	RenderSystem::~RenderSystem() {
@@ -15,7 +12,6 @@ namespace engine {
 		createPipelineLayout(p_descriptorSetLayouts, p_pushConstantSize);
 		createPipeline(renderPass, p_vertShader, p_fragShader, p_clearAttributes);
 	}
-
 
 
 	void RenderSystem::createPipelineLayout(std::vector <VkDescriptorSetLayout> p_descriptorSetLayouts,uint32_t p_pushConstantSize)
@@ -39,7 +35,6 @@ namespace engine {
 	}
 	void RenderSystem::createPipeline(VkRenderPass renderPass, std::string p_vertShader, std::string p_fragShader,bool p_clearAttributes)
 	{
-
 		assert(pipelineLayout != nullptr && "Cannot create pipeline before pipeline layout");
 		PipelineConfigInfo pipelineConfig{};
 		createPipelineInfo(pipelineConfig);
@@ -59,5 +54,4 @@ namespace engine {
 		Pipeline::defaultFowardPipelineConfigInfo(p_pipelineInfoOut);
 		//Pipeline::enableAlphaBlinding(p_pipelineInfoOut);
 	}
-
 }

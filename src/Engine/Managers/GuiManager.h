@@ -11,7 +11,6 @@
 
 #define LVF_USE_IMGUI 1
 
-
 struct GLFWwindow;
 class GuiManager {
  public:
@@ -45,6 +44,7 @@ class GuiManager {
 
 private:
 	void setupTopMenuBar();
+    void setupLightControls();
 
  private:
   bool m_initialized{false};
@@ -59,4 +59,3 @@ private:
   uint32_t m_minImageCount{0};
   VkDescriptorPool m_imguiPool{VK_NULL_HANDLE};
 };
-

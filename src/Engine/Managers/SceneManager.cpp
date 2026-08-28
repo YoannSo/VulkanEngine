@@ -1,7 +1,6 @@
 #include <Engine/Managers/SceneManager.h>
 
 namespace engine {
-
     SceneManager* SceneManager::s_sceneSingleton = nullptr;
 
     SceneManager::SceneManager() {
@@ -9,8 +8,6 @@ namespace engine {
         m_materialMap = MaterialMap();
         m_opaqueRenderingBatch = RenderingBatch();
         m_transparentRenderingBatch = TransparentRenderingBatch();
-
-
 
 
 
@@ -24,7 +21,6 @@ namespace engine {
             .build();
 
         m_globalDescriptorLayout = DescriptorSetLayout::Builder().addBinding(0, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, VK_SHADER_STAGE_ALL_GRAPHICS).build();
-
 
 
         m_globalUboBuffers.resize(SwapChain::MAX_FRAMES_IN_FLIGHT);
@@ -47,11 +43,13 @@ namespace engine {
         }
 
 
-
 		m_materialSystem = std::make_unique<MaterialSystem>(m_textureManager, m_materialManager, *m_descriptorPool);
 		m_lightSystem = std::make_unique<LightSystem>(m_lightManager, *m_descriptorPool);
+        
+        m_syncableSystems.push_back(m_lightSystem.get());
 
 		m_materialManager.parseMaterials();
+
 
     }
 
@@ -63,6 +61,14 @@ namespace engine {
             std::cout << "-*-" << " Create Camera Game Object:" << std::endl;
 
         return std::make_unique<Camera>();
+    }
+
+      void SceneManager::syncAllBuffers()
+    {
+          for (auto& system : m_syncableSystems)
+          {
+              system->syncBuffer();
+          }
     }
 
     Model* SceneManager::createModelObject(std::string p_meshName, std::string p_path,bool p_useBasicMaterial) {
@@ -84,7 +90,6 @@ namespace engine {
         if(!p_useBasicMaterial)
 		    m_materialManager.createMaterialsFromMesh(*scene, p_meshName);
 
-
         auto obj = std::make_unique<Model>(p_meshName, *scene, m_materialManager, p_useBasicMaterial);
         Model* rawPtr = obj.get();
         m_objectMap.emplace(rawPtr->getId(), std::move(obj));
@@ -94,7 +99,6 @@ namespace engine {
     void SceneManager::addMaterial(std::unique_ptr<Material> p_material) {
         m_materialMap.emplace(p_material->getName(), std::move(p_material));
     }
-
 
     void SceneManager::updateAllGameObject(float p_dt) {
         for (auto& gameObject : m_objectMap) {
@@ -109,13 +113,10 @@ namespace engine {
     }
 
 
-
     void SceneManager::writeInGlobalUbo(GlobalUbo& p_buffer, size_t p_frameIndex)
     {
         m_globalUboBuffers[p_frameIndex]->writeToBuffer(&p_buffer);
         m_globalUboBuffers[p_frameIndex]->flush();
     }
-
-
 
 }

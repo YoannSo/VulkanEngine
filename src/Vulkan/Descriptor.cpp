@@ -6,7 +6,6 @@
 #include <iostream>
 
 namespace engine {
-
     // *************** Descriptor Set Layout Builder *********************
 
     DescriptorSetLayout::Builder& DescriptorSetLayout::Builder::addBinding( //check iof binding dont already exist at this space, configure vulkan sctruct with descriptor layout
@@ -40,7 +39,6 @@ namespace engine {
 
         VkDescriptorSetLayoutCreateInfo descriptorSetLayoutInfo{};//create info 
         descriptorSetLayoutInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
-
 
         descriptorSetLayoutInfo.bindingCount = static_cast<uint32_t>(setLayoutBindings.size());
 
@@ -108,13 +106,11 @@ namespace engine {
 
     bool DescriptorPool::allocateDescriptor(// allocate single descriptor SET (not one descriptor) from the pool 
         const VkDescriptorSetLayout descriptorSetLayout, VkDescriptorSet& descriptor) const {
-
         VkDescriptorSetAllocateInfo allocInfo{};
         allocInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
         allocInfo.descriptorPool = descriptorPool;
         allocInfo.pSetLayouts = &descriptorSetLayout;// pool knwo how many descriptoir and what trype
         allocInfo.descriptorSetCount = 1;
-
 
 
         // Might want to create a "DescriptorPoolManager" class that handles this case, and builds
@@ -217,5 +213,4 @@ namespace engine {
         }
         vkUpdateDescriptorSets(Device::getInstance()->getDevice(), writes.size(), writes.data(), 0, nullptr);
     }
-
 }  // namespace engine

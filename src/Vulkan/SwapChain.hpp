@@ -8,7 +8,6 @@
 #include <vector>
 #include <memory>
 namespace engine {
-
 class SwapChain {
  public:
   static constexpr int MAX_FRAMES_IN_FLIGHT = 2;
@@ -58,7 +57,6 @@ class SwapChain {
   VkFormat swapChainDepthFormat;
   VkExtent2D swapChainExtent;
 
-
   std::shared_ptr <SwapChain > oldSwapChain;
   std::vector<VkImage> depthImages;
   std::vector<VkDeviceMemory> depthImageMemorys;
@@ -78,5 +76,4 @@ class SwapChain {
 
   Device* m_deviceRef;
 };
-
 }  // namespace engine

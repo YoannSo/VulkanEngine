@@ -15,82 +15,74 @@ namespace engine {
 
 		loadGameObjects();
 
+		  void init(GLFWwindow * window, VkInstance instance, VkDevice device, VkPhysicalDevice physicalDevice, uint32_t graphicsQueueFamily,
+                  VkQueue graphicsQueue, VkRenderPass renderPass, VkDescriptorPool descriptorPool, uint32_t minImageCount);
+
+		  m_guiManager = std::make_unique<GuiManager>();
+          m_guiManager->init(_window.getGLFWWindow(), Device::getInstance()->getVkInstance(), Device::getInstance()->getDevice(),
+                             Device::getInstance()->getPhysicalDevice(), Device::getInstance()->getGraphicsQueueFamily(),
+                             Device::getInstance()->getGraphicsQueue(), Renderer.getUIRenderPass(), nullptr, Renderer.getImageCount());
+
+          Renderer.setUIRenderCallback([this](VkCommandBuffer p_commandBuffer) { m_guiManager->render(p_commandBuffer); });
+
+
 	}
 	FirstApp::~FirstApp() {
 	}
 
 	void FirstApp::run() {
+        glm::vec3 sceneCenter = glm::vec3(0.f, 0.f, 0.f);
+        float sceneRadius = 15.f; // englobe tous tes objets
+
+        std::unique_ptr<Camera> lightCamera = SceneManager::getInstance()->createCameraObject();
+
 
 		std::unique_ptr<Camera> viewerObject = SceneManager::getInstance()->createCameraObject();
 		viewerObject->transform.translation.z = -2.5f;
 		viewerObject->setViewTarget(glm::vec3(0.f, 0.f, 0.f), glm::vec3(0.f, 0.f, 0.0f));
 		viewerObject->setPerspectiveProjection(glm::radians(50.f), Renderer.getAspectRatio(), 0.5f, 30.f);
 
-		std::unique_ptr<Camera> lightCamera = SceneManager::getInstance()->createCameraObject();
-		lightCamera->transform.translation = { -1.f, 2.f, 2.f };
-		// 1. Direction de la lumière (celle passée à addDirectionalLight)
-		glm::vec3 lightDir = glm::normalize(glm::vec3(0.f, -1.f, 0.f));
-
-		// 2. Centre approximatif de ta scène (ou calcule un vrai AABB si tu veux être précis)
-		glm::vec3 sceneCenter = glm::vec3(0.f, 0.f, 0.f);
-		float sceneRadius = 15.f; // englobe tous tes objets
-
-		// 3. Position de la caméra: on recule le long de -lightDir
-		float distance = sceneRadius * 2.f;
-		glm::vec3 lightCamPos = sceneCenter - lightDir * distance;
-
-		// 4. Up vector NON colinéaire à lightDir (important si lightDir est vertical !)
-		glm::vec3 up = glm::abs(lightDir.y) > 0.99f
-			? glm::vec3(0.f, 0.f, 1.f)
-			: glm::vec3(0.f, 1.f, 0.f);
-
-		lightCamera->transform.translation = lightCamPos;
-		lightCamera->setViewTarget(lightCamPos, sceneCenter, up);
-
-		// 5. Bornes ortho basées sur le rayon de la scène
-		lightCamera->setOrthographicProjection(
-			-sceneRadius, sceneRadius,   // left, right
-			-sceneRadius, sceneRadius,   // top, bottom  
-			0.1f, distance * 2.f         // near, far
-		);
-
+	
 
 		KeyBoardMovementController cameraController{};
 		auto currentTime = std::chrono::high_resolution_clock::now();
 
-
-		while (!_window.shouldClose()) {//tant que la window doit pas close 
-			glfwPollEvents();//process any window event 
-		//	m_guiManager->newFrame();
-
+		while (!_window.shouldClose()) {
+			glfwPollEvents();
+			m_guiManager->newFrame();
 
 			auto newTime = std::chrono::high_resolution_clock::now();
 			float frameTime = std::chrono::duration<float, std::chrono::seconds::period>(newTime - currentTime).count();
 			currentTime = newTime;
 
+            // 1. Direction de la lumière (celle passée à addDirectionalLight)
+            glm::vec3 lightDir = SceneManager::getInstance()->getLightManager().getDirectionalLightDirection();
+
+            // 2. Centre approximatif de ta scène (ou calcule un vrai AABB si tu veux être précis)
+
+            // 3. Position de la caméra: on recule le long de -lightDir
+            float distance = sceneRadius * 2.f;
+            glm::vec3 lightCamPos = sceneCenter - lightDir * distance;
+
+            // 4. Up vector NON colinéaire à lightDir (important si lightDir est vertical !)
+            glm::vec3 up = glm::abs(lightDir.y) > 0.99f ? glm::vec3(0.f, 0.f, 1.f) : glm::vec3(0.f, 1.f, 0.f);
+
+            lightCamera->transform.translation = lightCamPos;
+            lightCamera->setViewTarget(lightCamPos, sceneCenter, up);
+
+            // 5. Bornes ortho basées sur le rayon de la scène
+            lightCamera->setOrthographicProjection(-sceneRadius, sceneRadius, // left, right
+                                                   -sceneRadius, sceneRadius, // top, bottom
+                                                   0.1f, distance * 2.f       // near, far
+            );
 
 
-
-			// frameTime = glm::min(frameTime, MAX_FRAME_TIME);
 			cameraController.moveInPLaneXZ(_window.getGLFWWindow(), frameTime, viewerObject.get());
 			viewerObject->setViewYXZ(viewerObject->transform.translation, viewerObject->transform.rotation);
 
-
-
-			//std::cout << "Camera position: " << viewerObject->transform.translation.x << ", "<< viewerObject->transform.translation.y << ", "<< viewerObject->transform.translation.z << std::endl;
-
-			//camera.setOrthographicProjection(-aspect, aspect, -1, 1, -1, 1);
-
 			SceneManager::getInstance()->updateAllGameObject(frameTime);
-			// measure update CPU time
-			auto updateEndTime = std::chrono::high_resolution_clock::now();
-			static std::chrono::high_resolution_clock::time_point updateStartTime = updateEndTime; // placeholder
 
-			// record start of update was measured earlier (frameTime calc), but measure actual update cost
-			// For simplicity, record updateStartTime before update call and compute here
-			// (we approximate here by using previous points)
-
-			if (auto commandBuffer = Renderer.beginFrame()) {//begin fram return nullptr if swapchain need to be recreated
+			if (auto commandBuffer = Renderer.beginFrame()) {
 
 				int frameIndex = Renderer.getFrameIndex();
 
@@ -104,6 +96,7 @@ namespace engine {
 				ubo.inverseView = viewerObject->getInverseView();
 
 				SceneManager::getInstance()->writeInGlobalUbo(ubo, frameIndex);
+				SceneManager::getInstance()->syncAllBuffers();
 
 				Renderer.render(frameInfo);
 

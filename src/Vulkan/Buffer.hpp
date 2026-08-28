@@ -3,7 +3,6 @@
 #include <Vulkan/Device.hpp>
 
 namespace engine {
-
     class GwatBuffer {
     public:
         GwatBuffer(
@@ -28,8 +27,7 @@ namespace engine {
         VkDescriptorBufferInfo descriptorInfo(VkDeviceSize size = VK_WHOLE_SIZE, VkDeviceSize offset = 0);
         VkResult invalidate(VkDeviceSize size = VK_WHOLE_SIZE, VkDeviceSize offset = 0);
 
-
-        //grouping multiple instéance into a single buffer, 
+        //grouping multiple instï¿½ance into a single buffer, 
         void writeToIndex(void* data, int index);
         VkResult flushIndex(int index);
         VkDescriptorBufferInfo descriptorInfoForIndex(int index);
@@ -58,5 +56,4 @@ namespace engine {
         VkBufferUsageFlags usageFlags;
         VkMemoryPropertyFlags memoryPropertyFlags;
     };
-
 }  // namespace engine

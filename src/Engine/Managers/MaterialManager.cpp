@@ -1,8 +1,6 @@
 #include <Engine/Managers/MaterialManager.h>
 
-
 static const std::string MATERIALS_ROOT = "models/basics/materials/";
-
 
 engine::MaterialManager::MaterialManager(TextureManager& p_textureManager):
 	m_materialBuffer{},
@@ -28,7 +26,6 @@ uint32_t engine::MaterialManager::createMaterialsFromMesh(const aiScene& p_scene
 
 void engine::MaterialManager::fillMaterialsBufferData(std::vector<Material::MaterialGPU>& p_materialsBufferData) const
 {
-
 	p_materialsBufferData.reserve(m_materialBuffer.size());
 	for (const auto& materialPair : m_materialBuffer) {
 		p_materialsBufferData.emplace_back(materialPair.getMaterialBuffer());
@@ -49,7 +46,6 @@ uint32_t engine::MaterialManager::getIDOfMaterial(const std::string& p_materialN
 }
 
 uint32_t engine::MaterialManager::createBasicMaterial(const std::string p_name, glm::vec4 p_color) {
-
 	// Guard against exceptions / corrupted map and provide debug info
 	try {
 		auto [it, inserted] = m_materialNameToID.try_emplace(p_name, m_currentIdMaterial);
@@ -108,7 +104,7 @@ void engine::MaterialManager::parseMaterial(const nlohmann::json& m)
 	std::string folder = m.value("folder", "");
 	std::string name = m["name"].get<std::string>();
 
-	// Vérifie si déjà existant (même logique que pour aiMaterial)
+	// Vï¿½rifie si dï¿½jï¿½ existant (mï¿½me logique que pour aiMaterial)
 	auto [it, inserted] = m_materialNameToID.try_emplace(name, m_currentIdMaterial);
 	if (!inserted) {
 		if (VERBOSE)
@@ -152,13 +148,11 @@ void engine::MaterialManager::parseMaterial(const nlohmann::json& m)
 	}
 }
 
-
 void engine::MaterialManager::createMaterial(const aiMaterial* p_mtl)
 {
 	aiString materialName;
 
 	p_mtl->Get(AI_MATKEY_NAME, materialName);
-
 
 	auto [it, inserted] = m_materialNameToID.try_emplace(materialName.C_Str(),m_currentIdMaterial);
 
@@ -196,7 +190,6 @@ void engine::MaterialManager::createMaterial(const aiMaterial* p_mtl)
 	// ===================================================== NORMAL
 	if (p_mtl->GetTextureCount(aiTextureType_NORMALS) > 0) // Texture ?
 	{
-
 		p_mtl->GetTexture(aiTextureType_NORMALS, 0, &texturePath);
 		std::string completePath = _dirPath + texturePath.C_Str();
 
@@ -232,7 +225,6 @@ void engine::MaterialManager::createMaterial(const aiMaterial* p_mtl)
 			std::cout << "DIFFUSE COLOR " << color.r << color.b << color.g << std::endl;
 		currentMat.setMaterialParameter(Material::EMaterialParameter::DIFFUSECOLOR, glm::vec4(color.r, color.g, color.b, 0.f));
 	}
-
 
 
 
@@ -296,4 +288,3 @@ void engine::MaterialManager::createMaterial(const aiMaterial* p_mtl)
 
 	//material.setupDescriptorSet();    <-------------------------------- IMPRTANT
 }
-

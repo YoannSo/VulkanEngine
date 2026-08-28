@@ -1,6 +1,5 @@
 #include <Renderer/Stages/LightingStage.h>
 
-
 namespace engine::stages {
 	LightingStage::LightingStage(const Device& p_device, const SwapChain& m_swapchain, std::shared_ptr<GBuffer> p_gBuffer, std::shared_ptr<Texture> p_shadowMap, const SceneManager& p_sceneManager) : RenderStage(p_device, m_swapchain),
 		m_gBuffer(p_gBuffer)
@@ -16,7 +15,6 @@ namespace engine::stages {
 		std::vector<VkAttachmentReference> colorAttachmentRefs;
 		std::vector<VkSubpassDescription> subpasses;
 		std::vector<VkSubpassDependency> dependencies;
-
 
 		VkAttachmentDescription colorAttachment = {};
 		colorAttachment.format = m_swapchain.getSwapChainImageFormat();
@@ -52,9 +50,7 @@ namespace engine::stages {
 		dependency.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
 
 
-
 		dependencies.push_back(dependency);
-
 
 		VkRenderPassCreateInfo renderPassInfo = {};
 		renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
@@ -65,7 +61,6 @@ namespace engine::stages {
 		renderPassInfo.dependencyCount = 1;
 		renderPassInfo.pDependencies = dependencies.data();
 
-
 		if (vkCreateRenderPass(m_device.getDevice(), &renderPassInfo, nullptr, &m_renderPass) != VK_SUCCESS) {
 			throw std::runtime_error("failed to create deferred render pass!");
 		}
@@ -75,7 +70,6 @@ namespace engine::stages {
 	{
 		m_frameBuffers.resize(m_swapchain.imageCount());
 		for (size_t i = 0; i < m_swapchain.imageCount(); ++i) {
-
 			std::vector<VkImageView> attachementView;
 			//getAttachementView(i, attachementView);
 
@@ -109,4 +103,3 @@ namespace engine::stages {
 		return clearValues;
 	}
 }
-

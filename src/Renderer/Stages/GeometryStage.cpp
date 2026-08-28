@@ -1,7 +1,6 @@
 #include <Renderer/Stages/GeometryStage.h>
 
 namespace engine::stages {
-
 GeometryStage::GeometryStage(const Device& p_device, const SwapChain& p_swapchain, std::shared_ptr<GBuffer> p_gBuffer, const SceneManager& p_sceneManager)
     : RenderStage(p_device, p_swapchain), m_gBuffer(p_gBuffer)
 { 
@@ -17,7 +16,6 @@ GeometryStage::GeometryStage(const Device& p_device, const SwapChain& p_swapchai
 
 void GeometryStage::createRenderPass()
 {
-
     VkAttachmentDescription albedoAttachment{};
     albedoAttachment.format = VK_FORMAT_R8G8B8A8_UNORM;
     albedoAttachment.samples = VK_SAMPLE_COUNT_1_BIT;
@@ -37,7 +35,6 @@ void GeometryStage::createRenderPass()
     specularAttachement.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
     specularAttachement.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
     specularAttachement.finalLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
-
 
     VkAttachmentDescription normalAttachment{};
     normalAttachment.format = VK_FORMAT_R16G16B16A16_SFLOAT;    
@@ -69,7 +66,6 @@ void GeometryStage::createRenderPass()
     depthAttachment.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
     depthAttachment.finalLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
 
-
     std::array<VkAttachmentDescription, 5> attachments = {
         albedoAttachment,
 		specularAttachement,
@@ -77,7 +73,6 @@ void GeometryStage::createRenderPass()
         positionAttachment,
         depthAttachment
     };
-
 
     VkAttachmentReference albedoRef{};
     albedoRef.attachment = 0;
@@ -106,7 +101,6 @@ void GeometryStage::createRenderPass()
     depthRef.attachment = 4;
     depthRef.layout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
 
-
     VkSubpassDescription subpass{};
     subpass.pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS;
     subpass.colorAttachmentCount = 4;
@@ -121,7 +115,6 @@ void GeometryStage::createRenderPass()
     dependency.dstStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
     dependency.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
 
-
     VkRenderPassCreateInfo renderPassInfo = {};
     renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
     renderPassInfo.attachmentCount = static_cast<uint32_t>(attachments.size());
@@ -130,7 +123,6 @@ void GeometryStage::createRenderPass()
     renderPassInfo.pSubpasses = &subpass;
     renderPassInfo.dependencyCount = 1;
     renderPassInfo.pDependencies = &dependency;
-
 
     if (vkCreateRenderPass(m_device.getDevice(), &renderPassInfo, nullptr, &m_renderPass) != VK_SUCCESS) {
         throw std::runtime_error("failed to create geometry render pass!");
@@ -142,7 +134,6 @@ void GeometryStage::createFrameBuffers()
     m_frameBuffers.resize(m_swapchain.imageCount());
 
     for (size_t i = 0; i < m_swapchain.imageCount(); ++i) {
-
         std::vector<VkImageView> attachementView;
         m_gBuffer->getImageViews(i, attachementView);
         VkExtent2D swapChainExtent = m_swapchain.getSwapChainExtent();
@@ -177,5 +168,4 @@ std::vector<VkClearValue> GeometryStage::getClearValues()
 
     return clearValues;
 }
-
 } // namespace engine::stages

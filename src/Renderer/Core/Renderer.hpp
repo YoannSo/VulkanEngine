@@ -14,16 +14,13 @@
 #include <Renderer/Stages/RenderStage.h>
 
 namespace engine {
-
 	class Renderer {
-
 	public:
 
 		Renderer(Window& window, Device* p_deviceRef);
 		~Renderer();
 		//Renderer(const Renderer&) = delete; // delete copy constructor
 		//Renderer& operator=(const Renderer&) = delete; // and copy operator, make sure to not have 2 pointer to window, then if we destroy one, the second isnt destroyed
-
 
 		void init();
 		VkCommandBuffer beginFrame(); //can't be private that use outside , split drawfram into 
@@ -56,7 +53,6 @@ namespace engine {
 
 		virtual void onSwapChainRecreated() {}
 
-
 	protected:
 		std::unique_ptr<SwapChain> m_swapChain;//using pointer small performance cost
 		const Device* m_deviceRef;
@@ -67,7 +63,6 @@ namespace engine {
 		int currentFrameIndex{ 0 };
 
 		std::vector<std::unique_ptr<stages::RenderStage>> m_renderStages;
-
 
 	private:
 

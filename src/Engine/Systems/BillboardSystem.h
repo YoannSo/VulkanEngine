@@ -16,7 +16,6 @@ namespace engine::systems
 
 	class BillboardSystem
 	{
-
 	public:
 		BillboardSystem(const BillboardManager& p_billboardManager, DescriptorPool& p_descriptorPool);
 
@@ -26,7 +25,6 @@ namespace engine::systems
 		}
 
 		const std::vector<VkDescriptorSet>& getDescriptorSet() const {
-
 			return m_descriptorSet;
 
 		}
@@ -40,7 +38,6 @@ namespace engine::systems
 	private:
 		void createDescriptorLayout();
 
-
 	private:
 		const BillboardManager& m_billboardManager;
 
@@ -52,5 +49,3 @@ namespace engine::systems
 
 	};
 }
-
-

@@ -12,7 +12,6 @@
 #include <cstring>
 
 namespace engine {
-
     /**
      * Returns the minimum instance size required to be compatible with devices minOffsetAlignment
      *
@@ -209,5 +208,4 @@ namespace engine {
     VkResult GwatBuffer::invalidateIndex(int index) {
         return invalidate(alignmentSize, index * alignmentSize);
     }
-
 }  // namespace engine

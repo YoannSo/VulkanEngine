@@ -10,7 +10,6 @@
 #include <stdexcept>
 
 namespace engine {
-
     SwapChain::SwapChain(VkExtent2D extent, RenderPassMode mode)
         : windowExtent{ extent }, renderPassMode(mode) {
         m_deviceRef = Device::getInstance();
@@ -214,7 +213,6 @@ namespace engine {
 
 
 
-
     void SwapChain::createDepthResources() {
         VkFormat depthFormat = m_deviceRef->findDepthFormat();
         swapChainDepthFormat = depthFormat;
@@ -351,7 +349,5 @@ namespace engine {
             return actualExtent;
         }
     }
-
-
 
 }  // namespace engine

@@ -12,6 +12,4 @@ namespace engine::render_systems
 		void render(const FrameInfo& frameInfo) override;
 
 	};
-
 }
-

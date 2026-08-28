@@ -9,7 +9,6 @@ namespace engine {
         uint32_t idMaterial=0;//x:idMaterial
     };
 
-
     GeometryPassRenderSystem::GeometryPassRenderSystem(VkRenderPass renderPass, std::vector<VkDescriptorSetLayout>& p_descriptorSetLayout)
         : RenderSystem()  // call base class constructor
     {
@@ -52,15 +51,12 @@ namespace engine {
             Model* model = dynamic_cast<Model*>(object.second.get());
 
             for (auto& mesh : model->getMeshes()) {
-
                 SimplePushConstantData push{};
-
 
                 push.modelMatrix = object.second->transform.mat4();
                 push.normalMatrix = object.second->transform.normalMatrix();
 
 				push.idMaterial = mesh.getMaterialId();
-
 
                 vkCmdPushConstants(frameInfo.commandBuffer, pipelineLayout, VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT, 0, sizeof(SimplePushConstantData), &push);
                 mesh.bind(frameInfo.commandBuffer, frameInfo.frameIndex, pipelineLayout);
@@ -74,12 +70,10 @@ namespace engine {
         //drawBatch(frameInfo, SceneManager::getInstance()->getOpaqueRenderingBatch());
     }
 
-
  
 
     void GeometryPassRenderSystem::drawBatch(FrameInfo& frameInfo, SceneManager::RenderingBatch& batchs)
     {
-
         for (auto& batch : batchs) {
             auto material = SceneManager::getInstance()->getMaterialMap().find(batch.first);
 
@@ -97,7 +91,6 @@ namespace engine {
                     push.modelMatrix = object->getModel()->transform.mat4();
                     push.normalMatrix = object->getModel()->transform.normalMatrix();
 
-
                     vkCmdPushConstants(frameInfo.commandBuffer, pipelineLayout, VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT, 0, sizeof(SimplePushConstantData), &push);
                     object->bind(frameInfo.commandBuffer, frameInfo.frameIndex, pipelineLayout);
                     object->draw(frameInfo.commandBuffer);
@@ -110,5 +103,4 @@ namespace engine {
     {
          Pipeline::defaultDeferredPipelineConfigInfo(p_pipelineInfoOut);
     }
-
 }

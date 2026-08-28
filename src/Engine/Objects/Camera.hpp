@@ -6,7 +6,6 @@
 #include <glm.hpp>
 #include <Engine/Objects/GameObject.hpp>
 namespace engine {
-
 class Camera :public GameObject {
  public:
   void setOrthographicProjection(

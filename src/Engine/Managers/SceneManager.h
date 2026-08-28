@@ -6,7 +6,6 @@
 #include <memory>
 #include <vector>
 
-
 #include <Vulkan/Texture.hpp>
 #include <Engine/Objects/Model.hpp>
 #include <Engine/Objects/Camera.hpp>
@@ -23,13 +22,12 @@
 #include <Engine/Managers/BillboardManager.h>
 #include <Engine/Systems/BillboardSystem.h>
 
+#include <Engine/Systems/IGpuSyncable.h>
 namespace engine {
-
 	using namespace managers;
     using namespace systems;
 
     class SceneManager {
-
     public:
         struct GlobalUbo {
             glm::mat4 projection{ 1.f };
@@ -37,7 +35,6 @@ namespace engine {
             glm::mat4 lightSpace{ 1.f };
             glm::mat4 inverseView{ 1.f };//cam pos last colum
         };
-
 
     public:
         using Map = std::unordered_map<uint32_t, std::unique_ptr<GameObject>>; // efficiently look up object
@@ -58,7 +55,6 @@ namespace engine {
 		LightManager& getLightManager()  { return m_lightManager; }
 		BillboardManager& getBillboardManager() { return m_billboardManager; }
         MaterialManager& getMaterialManager() { return m_materialManager; }
-
 
         void addMaterial(std::unique_ptr<Material> p_material);
 
@@ -81,32 +77,26 @@ namespace engine {
             return layouts;
 		}
 
-
         const std::vector < VkDescriptorSet>& getMaterialSystemBindlessTextureSet() const
         {
-
             return m_materialSystem->getBindlessTextureSet();
 		}
 
         const std::vector < VkDescriptorSet>& getMaterialSystemMaterialSet() const
         {
-
             return m_materialSystem->getMaterialDescriptorSet();
         }
 
         const std::vector < VkDescriptorSet>& getLightDescriptorSet() const
         {
-
             return m_lightSystem->getDescriptorSet();
         }
-        const VkDescriptorSetLayout& getLightDescriptorSetLayout() const
+        VkDescriptorSetLayout getLightDescriptorSetLayout() const
         {
-
             return m_lightSystem->getDescriptorSetLayout();
         }
 
-
-        const VkDescriptorSetLayout& getGlobalDescriptorSetLayout() const
+        VkDescriptorSetLayout getGlobalDescriptorSetLayout() const
         {
             return m_globalDescriptorLayout->getDescriptorSetLayout();
 		}
@@ -115,8 +105,10 @@ namespace engine {
         {
             return m_globalDescriptorSets;
         }
+       
 
         void writeInGlobalUbo(GlobalUbo& p_buffer, size_t p_frameIndex);
+        void syncAllBuffers();
 
     public:
         const uint16_t MAX_TEXTURE_IN_SCENE{ 100 };
@@ -133,7 +125,7 @@ namespace engine {
         std::unique_ptr<DescriptorSetLayout> m_globalDescriptorLayout;
         std::vector<std::unique_ptr<GwatBuffer>> m_globalUboBuffers;
 		std::vector<VkDescriptorSet> m_globalDescriptorSets;
-
+        std::vector<IGpuSyncable*> m_syncableSystems;
 
         Map m_objectMap;
         MaterialMap m_materialMap;
@@ -144,14 +136,11 @@ namespace engine {
         MaterialManager m_materialManager{ m_textureManager };
 		std::unique_ptr<MaterialSystem> m_materialSystem;
 
-
         LightManager m_lightManager;
 		std::unique_ptr<LightSystem> m_lightSystem;
 
         BillboardManager m_billboardManager;
 		std::unique_ptr<BillboardSystem> m_billboardSystem;
-
-
 
 
 

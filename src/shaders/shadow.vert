@@ -16,6 +16,12 @@ layout(push_constant) uniform Push {
 
 
 layout(location = 0) in vec3 position;
+layout(location = 1) in vec3 color;   // pas utilisé mais conservé
+layout(location = 2) in vec3 normal;
+layout(location = 3) in vec2 uv;
+layout(location = 4) in vec3 tangent;
+layout(location = 5) in vec3 bitangent;
+
 
 
 void main()

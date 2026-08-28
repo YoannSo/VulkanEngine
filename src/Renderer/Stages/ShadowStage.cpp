@@ -1,7 +1,6 @@
 #include <Renderer/Stages/ShadowStage.h>
 
 namespace engine::stages {
-
 ShadowStage::ShadowStage(const Device& p_device, const SwapChain& p_swapchain, const SceneManager& p_sceneManager)
     : RenderStage(p_device, p_swapchain)
 { 
@@ -10,7 +9,6 @@ ShadowStage::ShadowStage(const Device& p_device, const SwapChain& p_swapchain, c
 
     init();
     std::vector<VkDescriptorSetLayout> descriptorLayoutGeometryPass = { p_sceneManager.getGlobalDescriptorSetLayout()};
-
 
     m_renderSystems.emplace_back(std::make_unique<ShadowRenderSystem>(m_renderPass, descriptorLayoutGeometryPass));
 }
@@ -100,5 +98,4 @@ std::vector<VkClearValue> ShadowStage::getClearValues()
 
     return clearValues;
 }
-
 } // namespace engine::stages

@@ -1,10 +1,8 @@
 #include "BillboardRS.h"
 
-
 namespace engine::render_systems
 {
 	struct PushConstantData {
-
 	};
 
 	BillboardRenderSystem::BillboardRenderSystem(VkRenderPass renderPass, std::vector<VkDescriptorSetLayout>& p_descriptorSetLayout) :RenderSystem() {
@@ -22,8 +20,4 @@ namespace engine::render_systems
 	void BillboardRenderSystem::render(const FrameInfo& frameInfo)
 	{
 	}
-
 }
-
-
-

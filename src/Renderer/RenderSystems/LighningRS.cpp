@@ -10,6 +10,7 @@ namespace engine {
     {
         p_descriptorSetLayout.push_back(m_gBuffer->getDescritporSetLayout());
 		p_descriptorSetLayout.push_back(SceneManager::getInstance()->getLightDescriptorSetLayout());
+
         createShadowDescriptorSetLayout();
         p_descriptorSetLayout.push_back(m_shadowDescriptorLayout->getDescriptorSetLayout());
 
@@ -25,7 +26,6 @@ namespace engine {
     void LightingPassDeferred::render(const FrameInfo& frameInfo)
     {
         m_pipeline->bind(frameInfo.commandBuffer);
-
 
         // Descriptor set global (camera + lights)
         vkCmdBindDescriptorSets(
@@ -74,11 +74,9 @@ namespace engine {
          vkCmdPushConstants(frameInfo.commandBuffer, pipelineLayout,  VK_SHADER_STAGE_VERTEX_BIT| VK_SHADER_STAGE_FRAGMENT_BIT, 0, sizeof(SimplePushConstantData), &m_pushConstants);
 
 
-
         // FULLSCREEN TRIANGLE
         vkCmdDraw(frameInfo.commandBuffer, 3, 1, 0, 0);
     }
-
 
 
 
@@ -113,5 +111,4 @@ namespace engine {
                 .build(set);
         }
     }
-
 }

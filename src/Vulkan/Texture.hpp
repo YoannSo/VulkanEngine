@@ -4,8 +4,6 @@
 #include <Vulkan/Device.hpp>
 namespace engine {
 	class Texture {
-
-
 	public:
 		Texture( const std::string& filepath);
 		Texture( const std::string& filepath, const std::string p_type);
@@ -13,7 +11,6 @@ namespace engine {
 		Texture(uint32_t width, uint32_t height, VkFormat format, VkImageUsageFlags usage, bool isDepth = false, uint32_t mipLevels = 1, bool compareEnable = false);
 
 		~Texture();
-
 
 		inline std::string getPath() { return _path; };
 		inline std::string getType() { return _type; };

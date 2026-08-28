@@ -7,7 +7,6 @@
 #include <unordered_set>
 
 namespace engine {
-
 // local callback functions
 static VKAPI_ATTR VkBool32 VKAPI_CALL debugCallback(
     VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
@@ -169,7 +168,6 @@ void Device::createLogicalDevice() {
   createInfo.enabledExtensionCount = static_cast<uint32_t>(deviceExtensions.size());
   createInfo.ppEnabledExtensionNames = deviceExtensions.data();
 
-
   //bindless textures, 
   VkPhysicalDeviceDescriptorIndexingFeatures indexingFeatures{};
   indexingFeatures.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_FEATURES_EXT;
@@ -211,7 +209,6 @@ void Device::createCommandPool() {
 }
 
 void Device::createSurface() { window.createWindowSurface(instance, &surface_);}
-
 
 bool Device::isDeviceSuitable(VkPhysicalDevice device) {
   QueueFamilyIndices indices = findQueueFamilies(device);
@@ -548,5 +545,4 @@ void Device::createImageWithInfo(
     throw std::runtime_error("failed to bind image memory!");
   }
 }
-
 }  // namespace engine

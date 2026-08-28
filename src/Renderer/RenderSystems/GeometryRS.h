@@ -7,11 +7,8 @@
 #include <Renderer/RenderSystems/RenderSystem.h>
 
 namespace engine {
-
 	class GeometryPassRenderSystem : public RenderSystem {
-
 	public:
-
 
 		GeometryPassRenderSystem(VkRenderPass renderPass, std::vector<VkDescriptorSetLayout>& p_descriptorSetLayout);//globalSetLayout to tell the pipeline what descriptor set layout will be
 		~GeometryPassRenderSystem();

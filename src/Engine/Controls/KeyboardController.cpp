@@ -1,6 +1,5 @@
 #include "KeyboardController.hpp"
 namespace engine {
-
 	void KeyBoardMovementController::moveInPLaneXZ(
 		GLFWwindow* window, float dt, Camera* gameObject) {
 		glm::vec3 rotate{ 0 };
@@ -36,7 +35,6 @@ namespace engine {
 	}
 
 	void KeyBoardMovementController::handleAction(GLFWwindow* window) {
-
 		// ===== NORMAL DEBUG =====
 		if (glfwGetKey(window, keys.normalSwitch) == GLFW_PRESS && !m_normalPressed) {
 			m_sceneManager->_showNormal = !m_sceneManager->_showNormal;
@@ -46,7 +44,6 @@ namespace engine {
 		if (glfwGetKey(window, keys.normalSwitch) == GLFW_RELEASE) {
 			m_normalPressed = false;
 		}
-
 
 		// ===== LIGHTING DEBUG =====
 		if (glfwGetKey(window, keys.lightningSwitch) == GLFW_PRESS && !m_lightPressed) {
@@ -58,5 +55,4 @@ namespace engine {
 			m_lightPressed = false;
 		}
 	}
-
 }

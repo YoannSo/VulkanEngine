@@ -7,7 +7,7 @@ void engine::LightSystem::createDescriptorLayout()
 		.build();
 }
 
-engine::LightSystem::LightSystem(const LightManager& p_lightManager, DescriptorPool& p_descriptorPool):
+engine::LightSystem::LightSystem(LightManager& p_lightManager, DescriptorPool& p_descriptorPool):
 	m_lightManager(p_lightManager),
 	m_descriptorPool(p_descriptorPool)
 {
@@ -16,13 +16,25 @@ engine::LightSystem::LightSystem(const LightManager& p_lightManager, DescriptorP
 
 engine::LightSystem::~LightSystem()
 {
+}
+void engine::LightSystem::syncBuffer()
+{
+    if (!m_lightManager.consumeDirty())
+    {
+        return;
+    }
 
+    if (VERBOSE)
+        std::cout << "-*-" << " Syncing Light buffer for system: "<< std::endl;
+
+    std::vector<LightGPU> lightsBuffer = m_lightManager.getLightsBufferData();
+
+    m_lightBuffer->writeToBuffer(lightsBuffer.data(), sizeof(LightGPU) * lightsBuffer.size());
+    m_lightBuffer->flush();
 }
 void engine::LightSystem::setupDescriptorSet()
 {
-
 	std::vector<LightGPU> lightsBuffer = m_lightManager.getLightsBufferData();
-
 
 	m_lightBuffer = std::make_unique<GwatBuffer>(
 		sizeof(LightGPU)* lightsBuffer.size(),                            // instanceSize
@@ -31,13 +43,11 @@ void engine::LightSystem::setupDescriptorSet()
 		VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT
 	);
 
-
 	m_lightBuffer->map();
 	m_lightBuffer->writeToBuffer(lightsBuffer.data(), sizeof(LightGPU) * lightsBuffer.size());
 	m_lightBuffer->flush();
 
 	m_descriptorSet.resize(SwapChain::MAX_FRAMES_IN_FLIGHT);
-
 
 	for (auto& descriptorSet : m_descriptorSet) {
 		auto bufferUboInfo = m_lightBuffer->descriptorInfo();

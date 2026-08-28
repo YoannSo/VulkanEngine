@@ -12,7 +12,6 @@
 #include <Engine/Objects/TriangleMesh.hpp>
 
 namespace engine {
-
 	struct PipelineConfigInfo {
 		PipelineConfigInfo(const PipelineConfigInfo&) = delete;
 		PipelineConfigInfo& operator=(const PipelineConfigInfo&) = delete;
@@ -38,7 +37,6 @@ namespace engine {
 	};
 
 	class Pipeline {
-
 	public:
 		Pipeline(const std::string& vertFilePath, const std::string fragFilePath, const PipelineConfigInfo& configInfo);
 		~Pipeline();
@@ -58,7 +56,6 @@ namespace engine {
 		void createGraphicsPipeline(const std::string& vertFilePath, const std::string& fragFilePath, const PipelineConfigInfo& configInfo);
 
 		void createShaderModule(const std::vector<char>& code, VkShaderModule* shaderModule);
-
 
 		VkPipeline graphicsPipeline;
 		VkShaderModule vertShaderModule;

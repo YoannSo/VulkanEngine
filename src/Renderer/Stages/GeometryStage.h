@@ -6,7 +6,6 @@
 
 #include <Renderer/RenderSystems/GeometryRS.h>
 namespace engine::stages {
-
 	
 	class GeometryStage :public RenderStage
 	{
@@ -20,4 +19,3 @@ namespace engine::stages {
 		std::shared_ptr<GBuffer> m_gBuffer;
 	};
 }
-

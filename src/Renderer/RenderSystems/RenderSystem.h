@@ -12,9 +12,7 @@
 #include   <Renderer/Ressources/FrameInfo.hpp>
 #include <Engine/Managers/SceneManager.h>
 namespace engine {
-
 	class RenderSystem {
-
 	public:
 		virtual ~RenderSystem();
 

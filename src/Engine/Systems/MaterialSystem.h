@@ -11,16 +11,12 @@
 #include <Vulkan/SwapChain.hpp>
 namespace engine
 {
-
-
 	class MaterialSystem
 	{
-
 	
 	public:
 		MaterialSystem(const TextureManager& p_textureManager, const MaterialManager& p_materialManager,DescriptorPool& p_descriptorPool);
 		~MaterialSystem();
-
 
 		void setupDescriptorSetLayout();
 		void setupDescriptorSet();
@@ -50,7 +46,6 @@ namespace engine
 
 
 
-
 	private:
 		// Descriptors + layouts
 		std::unique_ptr<DescriptorSetLayout> m_bindlessTextureLayout;
@@ -62,7 +57,7 @@ namespace engine
 		// Buffers GPU
 		std::unique_ptr<GwatBuffer> m_materialBuffer;
 
-		// Référence au TextureManager pour créer bindless descriptors
+		// Rï¿½fï¿½rence au TextureManager pour crï¿½er bindless descriptors
 		const TextureManager& m_textureManager;
 		const MaterialManager& m_materialManager;
 
@@ -71,5 +66,4 @@ namespace engine
 		const Device* m_device;
 
 	};
-
 }

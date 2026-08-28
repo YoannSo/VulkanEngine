@@ -13,7 +13,6 @@ namespace engine {
 		glm::vec4 color{};//w inteisty
 		};
 
-
 	struct FrameInfo {
 		int frameIndex;
 		float frameTime;

@@ -1,10 +1,7 @@
 #include <Engine/Objects/Model.hpp>
 namespace engine {
-
-
 	Model::Model(const std::string p_name, const aiScene& p_scene,const MaterialManager& p_materialManagerRef, bool p_useBasicMaterial) :GameObject(), _name{ p_name },m_materialManagerRef(p_materialManagerRef)
 	{
-
 		_nbMeshes = p_scene.mNumMeshes;
 		if (VERBOSE)
 			std::cout << "--** Your model got " << _nbMeshes << " meshes **--" << std::endl;
@@ -12,7 +9,6 @@ namespace engine {
 		for (uint32_t i = 0; i < _nbMeshes; ++i) {
 			_loadMesh(p_scene.mMeshes[i], p_scene, p_materialManagerRef, p_useBasicMaterial);
 		}
-
 
 	}
 	Model::~Model()
@@ -66,7 +62,6 @@ namespace engine {
 			// Texture coordinates.
 			if (p_mesh->HasTextureCoords(0))
 			{
-
 				vertex._texCoords.x = p_mesh->mTextureCoords[0][v].x;
 				vertex._texCoords.y = p_mesh->mTextureCoords[0][v].y;
 				// Tangent.
@@ -87,7 +82,6 @@ namespace engine {
 		}
 
 
-
 		// Load indices.
 		std::vector<unsigned int> indices;
 		indices.resize(p_mesh->mNumFaces * 3); // Triangulated.
@@ -100,7 +94,6 @@ namespace engine {
 			indices[f3 + 2] = face.mIndices[2];
 		}
 
-
 		// Load materials.
 		const aiMaterial* const mtl = p_scene.mMaterials[p_mesh->mMaterialIndex];
 		aiString  texturePath;
@@ -112,14 +105,12 @@ namespace engine {
 		_nbTriangles += p_mesh->mNumFaces;
 		_nbVertices += p_mesh->mNumVertices;
 
-
 		//_meshes.emplace_back(std::move());
 		size_t textureID = 0;
 		if (!p_useBasicMaterial) {
 			std::string materialName = p_scene.mMaterials[p_mesh->mMaterialIndex]->GetName().C_Str();
 			textureID = p_materialManagerRef.getIDOfMaterial(materialName);
 		}
-
 
 		m_meshes.emplace_back(TriangleMesh(meshName, vertices, indices, textureID, this));//la pas mettre 0
 
@@ -129,7 +120,6 @@ namespace engine {
 				<< indices.size() / 3 << " triangles, " //
 				<< vertices.size() << " vertices." << std::endl;
 		}
-
 
 	}
 
@@ -143,13 +133,10 @@ namespace engine {
 
 	void Model::draw(VkCommandBuffer& commandBuffer, int& p_frameIndex, VkPipelineLayout& p_pipelineLayout)
 	{
-
 		for (size_t i = 0; i < m_meshes.size(); i++)
 		{
 			m_meshes[i].draw(commandBuffer);
 		}
 	}
-
-
 
 }

@@ -7,7 +7,6 @@
 #include <vector>
 
 namespace engine {
-
 struct SwapChainSupportDetails {
   VkSurfaceCapabilitiesKHR capabilities;
   std::vector<VkSurfaceFormatKHR> formats;
@@ -42,7 +41,6 @@ class Device {
       return nullptr;
   }
   bool m_initialized{ false };
-
 
   // Not copyable or movable
   Device(const Device &) = delete;
@@ -92,7 +90,6 @@ class Device {
  private:
      Device(Window& window);
 
-
   void createInstance();
   void setupDebugMessenger();
   void pickPhysicalDevice();
@@ -123,5 +120,4 @@ class Device {
   const std::vector<const char *> validationLayers = {"VK_LAYER_KHRONOS_validation"};
   const std::vector<const char *> deviceExtensions = {VK_KHR_SWAPCHAIN_EXTENSION_NAME};
 };
-
 }  // namespace engine

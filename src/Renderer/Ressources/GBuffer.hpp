@@ -74,4 +74,3 @@ namespace engine {
         std::vector<VkFramebuffer> framebuffers;
     };
 }
-

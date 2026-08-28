@@ -29,7 +29,6 @@ namespace engine {
 
 
 
-
 	class TriangleMesh {
 	public:
 		TriangleMesh() = delete;
@@ -38,17 +37,16 @@ namespace engine {
 		//TriangleMesh(const TriangleMesh&) = delete; // delete copy constructor
 		//TriangleMesh& operator=(const TriangleMesh&) = delete; // and copy operator, make sure to not have 2 pointer to window, then if we destroy one, the second isnt destroyed
 
-
-		 // Constructeur de copie désactivé
+		 // Constructeur de copie dï¿½sactivï¿½
 		TriangleMesh(const TriangleMesh& other) = delete;
 
-		// Opérateur d'assignation de copie désactivé
+		// Opï¿½rateur d'assignation de copie dï¿½sactivï¿½
 		TriangleMesh& operator=(const TriangleMesh& other) = delete;
 
-		// Constructeur de déplacement
+		// Constructeur de dï¿½placement
 		TriangleMesh(TriangleMesh&& other) noexcept = default;
 
-		// Opérateur d'assignation de déplacement
+		// Opï¿½rateur d'assignation de dï¿½placement
 		TriangleMesh& operator=(TriangleMesh&& other) noexcept = default;
 
 		TriangleMesh(const std::string& p_name,
@@ -56,7 +54,6 @@ namespace engine {
 			const std::vector<unsigned int>& p_indices,
 			const uint32_t p_materialID,
 			const Model* p_parent);
-
 
 		void bind(const VkCommandBuffer& commandBuffer, const int& p_frameIndex, VkPipelineLayout& p_pipelineLayout)const;
 		void draw(const VkCommandBuffer& commandBuffer)const;
@@ -68,10 +65,8 @@ namespace engine {
 		inline const Model* getModel() const { return m_modelRef; };
 
 
-
 		uint32_t getMaterialId() const{ return m_materialID; }
 		void setMaterialId(uint32_t p_materialID);
-
 
 
 	private:
@@ -82,7 +77,6 @@ namespace engine {
 		std::vector<glm::vec3> _positions;
 
 		std::vector<uint32_t> _indices;
-
 
 		uint32_t _indexCount{ 0 };
 		uint32_t _vertexCount{ 0 };
@@ -95,7 +89,6 @@ namespace engine {
 		const Model* m_modelRef;
 
 		uint32_t m_materialID;
-
 
 	};
 }

@@ -4,7 +4,6 @@
 namespace engine::managers {
 	class BillboardManager
 	{
-
 	public:
 		struct BillboardCPU {
 			glm::vec4 position_size;// w: size
@@ -30,5 +29,3 @@ namespace engine::managers {
 		std::vector<BillboardCPU> m_billboards;
 	};
 }
-
-

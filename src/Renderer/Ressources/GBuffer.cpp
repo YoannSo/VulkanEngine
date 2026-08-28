@@ -1,8 +1,6 @@
 #include "GBuffer.hpp"
 
-
 namespace engine {
-
 	static VkFormat chooseColorFormat() {
 		return VK_FORMAT_R8G8B8A8_UNORM;
 	}
@@ -46,7 +44,6 @@ namespace engine {
 		specularImages.resize(imageCount);
 		specularMem.resize(imageCount);
 		specularViews.resize(imageCount);
-
 
 		normalImages.resize(imageCount);
 		normalMem.resize(imageCount);
@@ -266,7 +263,6 @@ namespace engine {
 		m_descriptorSet.resize(imageCount);
 
 		for (uint32_t i = 0; i < imageCount; i++) {
-
 			auto imageInfos = getDescriptorImageInfos(i);
 
 			DescriptorWriter(*m_descriptorSetLayout, SceneManager::getInstance()->getPool())
@@ -277,6 +273,4 @@ namespace engine {
 				.build(m_descriptorSet[i]);
 		}
 	}
-
-
 }

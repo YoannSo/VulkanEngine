@@ -6,7 +6,6 @@ engine::TriangleMesh::~TriangleMesh()
 	
 }
 
-
 engine::TriangleMesh::TriangleMesh(const std::string& p_name, const std::vector<Vertex>& p_vertices, const std::vector<unsigned int>& p_indices, const uint32_t p_materialID, const Model* p_parent)
 	: _name{ p_name }, _vertices{ p_vertices }, m_materialID{ p_materialID }, _indices{ p_indices },m_modelRef{ p_parent }
 {
@@ -21,16 +20,13 @@ engine::TriangleMesh::TriangleMesh(const std::string& p_name, const std::vector<
 	createIndexBuffer();
 }
 
-
 void engine::TriangleMesh::bind(const VkCommandBuffer& commandBuffer, const int& p_frameIndex, VkPipelineLayout& p_pipelineLayout)const
 {
 	
 
-
 	VkBuffer buffers[] = { _vertexBuffer->getBuffer() };
 	VkDeviceSize offsets[] = { 0 };
 	vkCmdBindVertexBuffers(commandBuffer, 0, 1, buffers, offsets);// record comand buffer, to bind one vertex buffer at index 0 with offset of 0
-
 
 	
 
@@ -42,7 +38,6 @@ void engine::TriangleMesh::bind(const VkCommandBuffer& commandBuffer, const int&
 
 void engine::TriangleMesh::draw(const VkCommandBuffer& commandBuffer)const
 {
-
 	if (_hasIndexBuffer) {
 		vkCmdDrawIndexed(commandBuffer, _indexCount, 1, 0, 0, 0);
 
@@ -66,17 +61,13 @@ void engine::TriangleMesh::createVertexBuffers()
 		VK_MEMORY_PROPERTY_HOST_COHERENT_BIT };//keep host and device memory consistent together, }
 
 
-
 	stagingBuffer.map();
 	stagingBuffer.writeToBuffer((void*)_vertices.data());
-
 
 	_vertexBuffer = std::make_unique<GwatBuffer>( vertexSize, _vertexCount, VK_BUFFER_USAGE_VERTEX_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT,//tell device that we want to create a buffer for vextes data
 		VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
 
 	Device::getInstance()->copyBuffer(stagingBuffer.getBuffer(), _vertexBuffer->getBuffer(), bufferSize);
-
-
 
 }
 
@@ -109,7 +100,6 @@ void engine::TriangleMesh::createIndexBuffer()
 		VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
 
 	Device::getInstance()->copyBuffer(stagingBuffer.getBuffer(), _indexBuffer->getBuffer(), bufferSize);
-
 }
 
 void engine::TriangleMesh::setMaterialId(uint32_t p_materialID)

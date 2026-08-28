@@ -8,13 +8,10 @@
 #include <iostream>
 #include <Utils/define.hpp>
 namespace engine {
-
-
 	uint32_t Texture::_nextAvailbleId = 0;
 
 	Texture::Texture(const std::string& filepath) : _path{ filepath }
 	{
-
 		m_deviceRef = Device::getInstance();
 
 		int channels;
@@ -26,7 +23,6 @@ namespace engine {
 		auto data = stbi_load(filepath.c_str(), &_width, &_height, &m_BytesPerPixel, 4);
 
 		_mipLevels = 1;//static_cast<uint32_t>(std::floor(std::log2(std::max(_width, _height)))) + 1;//eq to generate mipmap
-
 
 		_id = Texture::_nextAvailbleId;
 		++Texture::_nextAvailbleId;
@@ -84,7 +80,6 @@ namespace engine {
 
 		vkCreateSampler(m_deviceRef->getDevice(), &samplerInfo, nullptr, &_vkSampler);
 
-
 		VkImageViewCreateInfo imageViewInfo{};
 		imageViewInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
 		imageViewInfo.viewType = VK_IMAGE_VIEW_TYPE_2D;
@@ -99,20 +94,17 @@ namespace engine {
 
 		vkCreateImageView(m_deviceRef->getDevice(), &imageViewInfo, nullptr, &_vkImageView);
 
-
 		stbi_image_free(data);
 	}
 
 	Texture::Texture( const std::string& filepath, const std::string p_type ) :_path{ filepath }, _type{p_type}
 	{
-
 		int channels;
 		int m_BytesPerPixel;
 
 		auto data = stbi_load(filepath.c_str(), &_width, &_height, &m_BytesPerPixel, 4);
 
 		_mipLevels = static_cast<uint32_t>(std::floor(std::log2(std::max(_width, _height)))) + 1;//eq to generate mipmap
-
 
 		GwatBuffer stagingBuffer{
 			   4,
@@ -140,9 +132,7 @@ namespace engine {
 
 		m_deviceRef->createImageWithInfo(imageInfo, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, _vkImage, _vkDeviceMem);
 
-
 		transitionImageLayout(VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);//transfer image layout from stagging to image object in gpu
-
 
 		m_deviceRef->copyBufferToImage(stagingBuffer.getBuffer(), _vkImage, static_cast<uint32_t>(_width), static_cast<uint32_t>(_height), 1);
 
@@ -169,7 +159,6 @@ namespace engine {
 
 		vkCreateSampler(m_deviceRef->getDevice(), &samplerInfo, nullptr, &_vkSampler);
 
-
 		VkImageViewCreateInfo imageViewInfo{};
 		imageViewInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
 		imageViewInfo.viewType = VK_IMAGE_VIEW_TYPE_2D;
@@ -183,7 +172,6 @@ namespace engine {
 		imageViewInfo.image = _vkImage;
 
 		vkCreateImageView(m_deviceRef->getDevice(), &imageViewInfo, nullptr, &_vkImageView);
-
 
 		stbi_image_free(data);
 	}
@@ -262,7 +250,6 @@ namespace engine {
 		}
 	}
 
-
 	Texture::~Texture()
 	{
 		vkDestroyImage(m_deviceRef->getDevice(), _vkImage, nullptr);
@@ -290,7 +277,6 @@ namespace engine {
 		VkPipelineStageFlags sourceStage;
 		VkPipelineStageFlags destinationStage;
 
-
 		if (oldLayout == VK_IMAGE_LAYOUT_UNDEFINED && newLayout == VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL) {
 			barrier.srcAccessMask = 0;
 			barrier.dstAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
@@ -313,7 +299,6 @@ namespace engine {
 
 		m_deviceRef->endSingleTimeCommands(commandBuffer);
 
-
 	}
 
 	VkDescriptorImageInfo Texture::getDescriptorImageInfo()const
@@ -327,7 +312,6 @@ namespace engine {
 
 	void Texture::generateMipMaps()
 	{
-
 		VkFormatProperties formatProperties;
 		vkGetPhysicalDeviceFormatProperties(m_deviceRef->getPhysicalDevice(), _vkFormat, &formatProperties);
 
@@ -396,6 +380,4 @@ namespace engine {
 
 		m_deviceRef->endSingleTimeCommands(commandBuffer);
 	}
-
 }
-

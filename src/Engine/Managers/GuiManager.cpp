@@ -1,5 +1,7 @@
 #include "GuiManager.h"
 #include <Utils/define.hpp>
+#include <Engine/Managers/SceneManager.h>
+
 #if LVF_USE_IMGUI
 // Loader helper for ImGui Vulkan to resolve function pointers through vkGetInstanceProcAddr
 static PFN_vkVoidFunction ImGuiVulkanLoader(const char* function_name, void* user_data) {
@@ -33,7 +35,6 @@ void GuiManager::init(GLFWwindow* window,
   m_renderPass = renderPass;
   m_descriptorPool = descriptorPool;
   m_minImageCount = minImageCount;
-
 
   // 1: create descriptor pool for IMGUI
 	//  the size of the pool is very oversize, but it's copied from imgui demo
@@ -92,7 +93,6 @@ void GuiManager::init(GLFWwindow* window,
   //init_info.PipelineRenderingCreateInfo.colorAttachmentCount = 1;
   //init_info.PipelineRenderingCreateInfo.pColorAttachmentFormats = &m_swap;
 
-
   //init_info.MSAASamples = VK_SAMPLE_COUNT_1_BIT;
 
 #if LVF_USE_IMGUI
@@ -133,14 +133,14 @@ void GuiManager::newFrame() {
 #endif
 }
 void GuiManager::setupTopMenuBar() {
-
     if (ImGui::BeginMainMenuBar())
     {
         if (ImGui::BeginMenu("File"))
         {
             if (ImGui::MenuItem("Quit"))
             {
-                // TODO: signaler � ton app de quitter
+                // TODO: wire this button to trigger application shutdown (e.g. via a callback
+                // or glfwSetWindowShouldClose)
             }
             ImGui::EndMenu();
         }
@@ -165,6 +165,7 @@ void GuiManager::render(VkCommandBuffer commandBuffer) {
   if (!m_initialized) return;
 #if LVF_USE_IMGUI
   setupTopMenuBar();
+  setupLightControls();
   ImGui::Render();
   ImDrawData* draw_data = ImGui::GetDrawData();
   if (draw_data) {
@@ -195,3 +196,32 @@ void GuiManager::recreate(VkRenderPass renderPass) {
   // Stub: handle recreating any ImGui resources that depend on render pass
 }
 
+void GuiManager::setupLightControls()
+{
+    ImGui::Begin("Lighting");
+
+    auto& lightManager = engine::SceneManager::getInstance()->getLightManager();
+    const auto& lights = lightManager.getLights();
+
+    // On cherche la première directional light
+    for (const auto& light : lights)
+    {
+        if (light._type == engine::LightType::DirectionalLight)
+        {
+            glm::vec3 direction = light._direction;
+
+            if (ImGui::SliderFloat3("Direction", &direction.x, -1.0f, 1.0f))
+            {
+                // Évite normalize(0,0,0) si l'utilisateur met tout à zéro
+                if (glm::length(direction) > 0.0001f)
+                {
+                    lightManager.setDirectionalLightDirection(glm::normalize(direction));
+                }
+            }
+
+            break; // une seule directional light gérée pour l'instant
+        }
+    }
+
+    ImGui::End();
+}

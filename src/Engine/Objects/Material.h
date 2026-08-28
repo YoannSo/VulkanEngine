@@ -8,8 +8,6 @@
 #include <Vulkan/Texture.hpp>
 #include <Vulkan/Buffer.hpp>
 namespace engine {
-
-
 	class Material
 	{
 	
@@ -26,7 +24,6 @@ namespace engine {
 			glm::ivec4 maps2{ -1,-1,-1,-1 };  // ambient, emission, transmission, illum
 		};
 
-
 	public:
 
 		enum class EMaterialParameter {
@@ -42,7 +39,6 @@ namespace engine {
 			TRANSPARENCY,
 			ILLUMINATIONMODEL
 		};
-
 
 		Material(std::string p_name);
 

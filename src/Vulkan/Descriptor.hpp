@@ -8,7 +8,6 @@
 #include <vector>
 
 namespace engine {
-
     class DescriptorSetLayout {
     public:
         class Builder {//tell the pipeline what gonna expect 
@@ -79,7 +78,6 @@ namespace engine {
     };
 
 
-
     class DescriptorWriter {
     public:
         DescriptorWriter(DescriptorSetLayout& setLayout, DescriptorPool& pool);
@@ -96,5 +94,4 @@ namespace engine {
         DescriptorPool& pool;
         std::vector<VkWriteDescriptorSet> writes;
     };
-
 }  // namespace engine

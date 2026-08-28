@@ -1,8 +1,6 @@
 #include <Engine/Objects/GameObject.hpp>
 
-
 namespace engine {
-
     uint32_t GameObject::s_maxId = 0;
 
     GameObject::GameObject() {
@@ -60,7 +58,6 @@ namespace engine {
         glm::mat4 invTrans = glm::transpose(glm::inverse(model));
         return glm::mat3(invTrans);
     }
-
 
    /* LveGameObject* LveGameObject::makePointLight(float intensity, float radius, glm::vec3 color)
     {

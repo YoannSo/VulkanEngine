@@ -24,6 +24,28 @@ void engine::LightManager::addSpotLight(const glm::vec3& p_position, const glm::
 {
 	
 }
+glm::vec3 engine::LightManager::getDirectionalLightDirection() const
+{
+    for (const auto& light : m_lights)
+    {
+        if (light._type == LightType::DirectionalLight)
+        {
+            return light._direction;
+        }
+    }
+    return glm::vec3(0.0f, -1.0f, 0.0f);
+}
+
+void engine::LightManager::setDirectionalLightDirection(const glm::vec3& p_direction)
+{
+	for (auto& light : m_lights) {
+		if (light._type == LightType::DirectionalLight) {
+			light._direction = p_direction;
+            m_dirtyFlag.markDirty();
+            return;
+		}
+	}
+}
 
 const std::vector<engine::LightGPU> engine::LightManager::getLightsBufferData()const
 {

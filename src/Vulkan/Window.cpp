@@ -3,7 +3,6 @@
 
 #include <Vulkan/Device.hpp>
 namespace engine {
-
 	Window::Window(int w, int h, std::string name) :_width{ w }, _height{ h }, _windowName{ name }{
 		initWindow();
 		Device::setupInstance(*this);

@@ -16,8 +16,6 @@
 namespace engine {
 	class Model: public GameObject{
 
-
-
 	public:
 		Model(const std::string p_name, const aiScene& p_scene,const MaterialManager& p_materialManagerRef, bool p_useBasicMaterial=false);
 		~Model();

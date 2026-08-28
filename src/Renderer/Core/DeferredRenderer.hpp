@@ -10,20 +10,21 @@
 #include <Renderer/Stages/ShadowStage.h>
 #include <Vulkan/Window.hpp>
 namespace engine {
-
 	class DeferredRenderer :public Renderer {
-
 	public:
 		DeferredRenderer(Window& window, Device* p_deviceRef);
 		~DeferredRenderer();
 
 		void createRenderStages() override;
 
+		VkRenderPass getUIRenderPass() const;
+        void setUIRenderCallback(std::function<void(VkCommandBuffer)> p_callback);
 	private:
 		void onSwapChainRecreated() override;
 
-
 	private:
 		std::shared_ptr<GBuffer> m_gBuffer;
-	};
+        stages::LightingStage* m_lightingStage{nullptr}; // non-owning
+	};		
+
 }

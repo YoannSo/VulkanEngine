@@ -4,7 +4,6 @@
 #include <Renderer/Ressources/GBuffer.hpp>
 #include <Renderer/RenderSystems/LighningRS.h>
 namespace engine::stages {
-
 	class LightingStage :public RenderStage
 	{
 		public:

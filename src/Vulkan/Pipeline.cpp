@@ -18,7 +18,6 @@ namespace engine {
 	}
 	void Pipeline::defaultDeferredPipelineConfigInfo(PipelineConfigInfo& configInfo)
 	{
-
 		configInfo.inputAssemblyInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO;
 		configInfo.inputAssemblyInfo.topology = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
 		configInfo.inputAssemblyInfo.primitiveRestartEnable = VK_FALSE;
@@ -38,13 +37,11 @@ namespace engine {
 		configInfo.scissor.offset = {0, 0};
 		configInfo.scissor.extent = {width, height};*/
 
-
 		configInfo.viewportInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO;
 		configInfo.viewportInfo.viewportCount = 1;
 		configInfo.viewportInfo.pViewports = nullptr;
 		configInfo.viewportInfo.scissorCount = 1;
 		configInfo.viewportInfo.pScissors = nullptr;
-
 
 
 
@@ -61,7 +58,6 @@ namespace engine {
 		configInfo.rasterizationInfo.depthBiasClamp = 0.0f;           // Optional
 		configInfo.rasterizationInfo.depthBiasSlopeFactor = 0.0f;     // Optional
 
-
 		//multisampling, alising, if we use the pixel cneter to color  probleme of alisiang, multesampling in the pixel for the color
 		configInfo.multisampleInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO;
 		configInfo.multisampleInfo.sampleShadingEnable = VK_FALSE;
@@ -71,9 +67,8 @@ namespace engine {
 		configInfo.multisampleInfo.alphaToCoverageEnable = VK_FALSE;  // Optional
 		configInfo.multisampleInfo.alphaToOneEnable = VK_FALSE;       // Optional
 
-		// Crée un blend state par attachment du G-Buffer (4 ici : albedo,specular, normal, position)
+		// Crï¿½e un blend state par attachment du G-Buffer (4 ici : albedo,specular, normal, position)
 		configInfo.colorBlendAttachments.resize(4);
-
 
 		for (auto& attachment : configInfo.colorBlendAttachments) {
 			attachment = {};
@@ -101,7 +96,6 @@ namespace engine {
 		configInfo.colorBlendInfo.blendConstants[3] = 0.0f;
 
 
-
 		//depth buffer aditionnal attanchement to fram buffer , store value of the depth for every pixel, 
 		//depth buffer of the fra
 		configInfo.depthStencilInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO;
@@ -124,17 +118,15 @@ namespace engine {
 		configInfo.dynamicStateInfo.flags = 0;
 
 
-
 		configInfo.bindingDescriptions = Vertex::getBindingDescriptions();
 		configInfo.attributDescriptions = Vertex::getAttributeDescription();
 	}
+
 	void Pipeline::shadowPipelineConfigInfo(PipelineConfigInfo& configInfo)
 	{
-
 		configInfo.inputAssemblyInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO;
 		configInfo.inputAssemblyInfo.topology = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
 		configInfo.inputAssemblyInfo.primitiveRestartEnable = VK_FALSE;
-
 
 		configInfo.viewportInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO;
 		configInfo.viewportInfo.viewportCount = 1;
@@ -154,7 +146,6 @@ namespace engine {
 		configInfo.rasterizationInfo.depthBiasConstantFactor = 0.0f;
 		configInfo.rasterizationInfo.depthBiasClamp = 0.0f;
 		configInfo.rasterizationInfo.depthBiasSlopeFactor = 0.0f;
-
 
 		//multisampling
 		configInfo.multisampleInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO;
@@ -179,7 +170,6 @@ namespace engine {
 		configInfo.colorBlendInfo.blendConstants[2] = 0.0f;
 		configInfo.colorBlendInfo.blendConstants[3] = 0.0f;
 
-
 		//depth stencil
 		configInfo.depthStencilInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO;
 		configInfo.depthStencilInfo.depthTestEnable = VK_TRUE;
@@ -203,8 +193,8 @@ namespace engine {
 		configInfo.bindingDescriptions = Vertex::getBindingDescriptions();
 		configInfo.attributDescriptions = Vertex::getAttributeDescription();
 	}
-	void Pipeline::defaultFowardPipelineConfigInfo(PipelineConfigInfo& configInfo) {
 
+	void Pipeline::defaultFowardPipelineConfigInfo(PipelineConfigInfo& configInfo) {
 		configInfo.inputAssemblyInfo = {};
 		configInfo.inputAssemblyInfo.sType =
 			VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO;
@@ -295,7 +285,6 @@ namespace engine {
 	}
 	void Pipeline::enableAlphaBlinding(PipelineConfigInfo& configInfo)
 	{
-
 		for (auto& colorBlendInfo : configInfo.colorBlendAttachments) {
 			colorBlendInfo.blendEnable = VK_TRUE;
 			colorBlendInfo.colorWriteMask =
@@ -310,10 +299,8 @@ namespace engine {
 		}
 
 
-
 	}
 	std::vector<char> Pipeline::readFile(const std::string& filePath) {
-
 		std::ifstream file(filePath, std::ios::ate | std::ios::binary);
 		if (!file.is_open()) {
 			throw std::runtime_error("failed to open file :" + filePath);
@@ -327,7 +314,6 @@ namespace engine {
 	}
 	void Pipeline::createGraphicsPipeline(const std::string& vertFilePath, const std::string& fragFilePath, const PipelineConfigInfo& configInfo)
 	{
-
 		assert(configInfo.pipelineLayout != VK_NULL_HANDLE && "cannot create graphics pipeline: no pipelineLayout provided in configInfo");
 		assert(configInfo.renderPass != VK_NULL_HANDLE && "cannot create graphics pipeline: no renderPass provided in configInfo");
 		auto vertCode = readFile(vertFilePath);
@@ -357,7 +343,6 @@ namespace engine {
 		auto& bindingDecriptions = configInfo.bindingDescriptions;
 		auto& attributeDecriptions = configInfo.attributDescriptions;
 
-
 		VkPipelineVertexInputStateCreateInfo vertexInputInfo{};// struct to describe how to interpret the vertex buffer data,
 		vertexInputInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
 		vertexInputInfo.vertexAttributeDescriptionCount = static_cast<uint32_t>(attributeDecriptions.size()); //for now vertex info hard coded in the sahder
@@ -372,7 +357,6 @@ namespace engine {
 		viewportInfo.pViewports = &configInfo.viewport;
 		viewportInfo.scissorCount = 1;
 		viewportInfo.pScissors = &configInfo.scissor;*/
-
 
 		VkGraphicsPipelineCreateInfo pipelineInfo{}; // all the configuration to create the pipeline
 
@@ -389,14 +373,12 @@ namespace engine {
 		pipelineInfo.pDepthStencilState = &configInfo.depthStencilInfo;
 		pipelineInfo.pDynamicState = &configInfo.dynamicStateInfo;//optionnal to configure pipeline fonctionnalty, viewport dynamiclty ?
 
-
 		pipelineInfo.layout = configInfo.pipelineLayout;
 		pipelineInfo.renderPass = configInfo.renderPass;
 		pipelineInfo.subpass = configInfo.subpass;
 
 		pipelineInfo.basePipelineIndex = -1;//can be optimize performance
 		pipelineInfo.basePipelineHandle = VK_NULL_HANDLE;
-
 
 		if (vkCreateGraphicsPipelines(Device::getInstance()->getDevice(), VK_NULL_HANDLE, 1, &pipelineInfo, nullptr, &graphicsPipeline) != VK_SUCCESS)//null handle to pipeline cache => performance, pipeline count =>1, no allocation callback 
 			throw	std::runtime_error("Failed to create graphics pipeline");

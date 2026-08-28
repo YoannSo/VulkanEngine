@@ -1,7 +1,6 @@
 #include <Renderer/Stages/RenderStage.h>
 
 namespace engine::stages {
-
 	void RenderStage::init()
 	{
 		createRenderPass();
@@ -21,7 +20,6 @@ namespace engine::stages {
 		auto clearValues = getClearValues();
 		renderPassInfo.clearValueCount = static_cast<uint32_t>(clearValues.size());
 		renderPassInfo.pClearValues = clearValues.data();
-
 
 		vkCmdBeginRenderPass(p_frameInfo.commandBuffer , &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
 
@@ -50,6 +48,10 @@ namespace engine::stages {
 		for (auto& renderSystem : m_renderSystems) {
 			renderSystem->render(p_frameInfo);
 		}
+        if (m_uiRenderCallback)
+        {
+            m_uiRenderCallback(p_frameInfo.commandBuffer);
+        }
 		endRenderPass(p_frameInfo);
 	}
 }

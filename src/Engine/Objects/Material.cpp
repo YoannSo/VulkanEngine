@@ -1,12 +1,10 @@
 #include <Engine/Objects/Material.h>
 
 namespace engine {
-
 	Material::Material(std::string p_name): m_name(p_name)
 	{
 	}
 	void Material::setMaterialParameter(EMaterialParameter p_materialParameter, uint32_t p_textureID) {
-
 		switch (p_materialParameter) {
 			case EMaterialParameter::DIFFUSEMAP:
 				m_idDiffuseMap = p_textureID;
@@ -65,6 +63,4 @@ namespace engine {
 			
 		}
 	}
-
 }
-

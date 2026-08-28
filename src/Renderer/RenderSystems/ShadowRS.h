@@ -7,11 +7,8 @@
 #include <Renderer/RenderSystems/RenderSystem.h>
 
 namespace engine {
-
 	class ShadowRenderSystem : public RenderSystem {
-
 	public:
-
 
 		ShadowRenderSystem(VkRenderPass renderPass, std::vector<VkDescriptorSetLayout>& p_descriptorSetLayout);//globalSetLayout to tell the pipeline what descriptor set layout will be
 		~ShadowRenderSystem();

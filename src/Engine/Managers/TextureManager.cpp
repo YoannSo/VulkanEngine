@@ -26,7 +26,6 @@ uint32_t engine::TextureManager::loadTexture(const std::string& p_texturePath)
 void engine::TextureManager::fillDescriptorImageInfoArray(std::vector<VkDescriptorImageInfo>& p_imageInfos)const
 {
 	for (auto& tex : m_textureArray) {
-
 		p_imageInfos.emplace_back(tex->getDescriptorImageInfo());
 	}
 }

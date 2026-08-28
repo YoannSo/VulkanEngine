@@ -7,7 +7,6 @@
 #include <functional>
 #include <vulkan/vulkan.h>
 namespace engine {
-
     struct TransformComponent {
         glm::vec3 translation{};  // (position offset)
         glm::vec3 scale{ 1.f, 1.f,1.f };
@@ -28,7 +27,6 @@ namespace engine {
        inline void setUpdateFunction(std::function<void(GameObject*,float)> p_updateFunction) { m_updateFunction=p_updateFunction;}
        bool callUpdateFunction(float p_dt);
 
-
         TransformComponent transform;
         virtual void bind(VkCommandBuffer&, int&, VkPipelineLayout&) {};
         virtual void draw(VkCommandBuffer&, int&, VkPipelineLayout&) {};
@@ -37,7 +35,6 @@ namespace engine {
         uint32_t m_id;
         static uint32_t s_maxId;
         std::function<void(GameObject*,float)> m_updateFunction;
-
 
     };
 }  // namespace engine

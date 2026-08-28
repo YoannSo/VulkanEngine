@@ -1,20 +1,17 @@
 #include <Renderer/Core/Renderer.hpp>
 
 namespace engine {
-
 	Renderer::Renderer(Window& window, Device* p_deviceRef) : _window(window), m_deviceRef(p_deviceRef) {
 		m_sceneManagerRef = SceneManager::getInstance();
 
 	}
 
 	void Renderer::init() {
-
 		recreateSwapChain();
 		onSwapChainRecreated();
 		createCommandBuffers();
 
 	}
-
 
 	Renderer::~Renderer() {
 		freeCommandBuffers();//renderer destroy but app will continue so freecomand buffer
@@ -72,7 +69,6 @@ namespace engine {
 
 
 
-
 	void Renderer::freeCommandBuffers()
 	{
 		vkFreeCommandBuffers(Device::getInstance()->getDevice(), Device::getInstance()->getCommandPool(), static_cast<uint32_t>(commandBuffers.size()), commandBuffers.data());
@@ -92,7 +88,6 @@ namespace engine {
 			throw std::runtime_error("failed to allocate command buffers!");
 		}
 	}
-
 
 	void Renderer::recreateSwapChain()
 	{
@@ -119,14 +114,9 @@ namespace engine {
 		//createPipeline();//technically dont need this, still dependan in the swapchain renderpass, mutiplerender pass work with the pipeleine
 	}
 
-
 	void engine::Renderer::render(const FrameInfo& frameInfo) {
 		for (auto& stage : m_renderStages) {
 			stage->record(frameInfo, currentImgIndex);
 		}
 	}
 }
-
-
-
-

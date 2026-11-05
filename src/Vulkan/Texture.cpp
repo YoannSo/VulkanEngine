@@ -176,79 +176,115 @@ namespace engine {
 		stbi_image_free(data);
 	}
 
-	Texture::Texture(uint32_t width, uint32_t height, VkFormat format, VkImageUsageFlags usage, bool isDepth, uint32_t mipLevels, bool compareEnable)
-	{
-		m_deviceRef = Device::getInstance();
-		_width = static_cast<int>(width);
-		_height = static_cast<int>(height);
-		_mipLevels = static_cast<int>(mipLevels);
-		_vkFormat = format;
+Texture::Texture(uint32_t width, uint32_t height, VkFormat format, VkImageUsageFlags usage, bool isDepth, uint32_t mipLevels, bool compareEnable,
+                     bool p_isCubemap)
+    {
+        m_deviceRef = Device::getInstance();
+        _width = static_cast<int>(width);
+        _height = static_cast<int>(height);
+        _mipLevels = static_cast<int>(mipLevels);
+        _vkFormat = format;
+        m_isCubemap = p_isCubemap;
 
-		_id = Texture::_nextAvailbleId;
-		++Texture::_nextAvailbleId;
+        _id = Texture::_nextAvailbleId;
+        ++Texture::_nextAvailbleId;
 
-		VkImageCreateInfo imageInfo{};
-		imageInfo.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
-		imageInfo.imageType = VK_IMAGE_TYPE_2D;
-		imageInfo.format = _vkFormat;
-		imageInfo.mipLevels = static_cast<uint32_t>(_mipLevels);
-		imageInfo.arrayLayers = 1;
-		imageInfo.samples = VK_SAMPLE_COUNT_1_BIT;
-		imageInfo.tiling = VK_IMAGE_TILING_OPTIMAL;
-		imageInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
-		imageInfo.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
-		imageInfo.extent = { static_cast<uint32_t>(_width), static_cast<uint32_t>(_height), 1 };
-		imageInfo.usage = usage;
+        VkImageCreateInfo imageInfo{};
+        imageInfo.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
+        imageInfo.imageType = VK_IMAGE_TYPE_2D;
+        imageInfo.format = _vkFormat;
+        imageInfo.mipLevels = static_cast<uint32_t>(_mipLevels);
+        imageInfo.arrayLayers = m_isCubemap ? 6 : 1;
+        imageInfo.samples = VK_SAMPLE_COUNT_1_BIT;
+        imageInfo.tiling = VK_IMAGE_TILING_OPTIMAL;
+        imageInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
+        imageInfo.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+        imageInfo.extent = {static_cast<uint32_t>(_width), static_cast<uint32_t>(_height), 1};
+        imageInfo.usage = usage;
 
-		// Ensure sampled bit present if we want to sample from shader
-		if (!(imageInfo.usage & VK_IMAGE_USAGE_SAMPLED_BIT)) {
-			imageInfo.usage |= VK_IMAGE_USAGE_SAMPLED_BIT;
-		}
+        if (m_isCubemap)
+        {
+            imageInfo.flags = VK_IMAGE_CREATE_CUBE_COMPATIBLE_BIT;
+        }
 
-		m_deviceRef->createImageWithInfo(imageInfo, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, _vkImage, _vkDeviceMem);
+        // Ensure sampled bit present if we want to sample from shader
+        if (!(imageInfo.usage & VK_IMAGE_USAGE_SAMPLED_BIT))
+        {
+            imageInfo.usage |= VK_IMAGE_USAGE_SAMPLED_BIT;
+        }
 
-		// Keep initial layout undefined; user must transition before use in typical flows
-		_vkImageLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+        m_deviceRef->createImageWithInfo(imageInfo, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, _vkImage, _vkDeviceMem);
 
-		// Create sampler (enable compare if requested)
-		VkSamplerCreateInfo samplerInfo{};
-		samplerInfo.sType = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO;
-		samplerInfo.magFilter = VK_FILTER_LINEAR;
-		samplerInfo.minFilter = VK_FILTER_LINEAR;
-		samplerInfo.mipmapMode = VK_SAMPLER_MIPMAP_MODE_LINEAR;
-		samplerInfo.addressModeU = VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER;
-		samplerInfo.addressModeV = VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER;
-		samplerInfo.addressModeW = VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER;
-		samplerInfo.mipLodBias = 0.0f;
-		samplerInfo.compareOp = compareEnable ? VK_COMPARE_OP_LESS_OR_EQUAL : VK_COMPARE_OP_NEVER;
-		samplerInfo.minLod = 0.0f;
-		samplerInfo.maxLod = static_cast<float>(_mipLevels);
-		samplerInfo.maxAnisotropy = 1.0f;
-		samplerInfo.anisotropyEnable = VK_FALSE;
-		samplerInfo.borderColor = VK_BORDER_COLOR_FLOAT_OPAQUE_WHITE;
-		samplerInfo.compareEnable = compareEnable ? VK_TRUE : VK_FALSE;
+        // Keep initial layout undefined; user must transition before use in typical flows
+        _vkImageLayout = VK_IMAGE_LAYOUT_UNDEFINED;
 
-		if (vkCreateSampler(m_deviceRef->getDevice(), &samplerInfo, nullptr, &_vkSampler) != VK_SUCCESS) {
-			throw std::runtime_error("failed to create texture sampler!");
-		}
+        // Create sampler (enable compare if requested)
+        VkSamplerCreateInfo samplerInfo{};
+        samplerInfo.sType = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO;
+        samplerInfo.magFilter = VK_FILTER_LINEAR;
+        samplerInfo.minFilter = VK_FILTER_LINEAR;
+        samplerInfo.mipmapMode = VK_SAMPLER_MIPMAP_MODE_LINEAR;
+        samplerInfo.addressModeU = VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER;
+        samplerInfo.addressModeV = VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER;
+        samplerInfo.addressModeW = VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER;
+        samplerInfo.mipLodBias = 0.0f;
+        samplerInfo.compareOp = compareEnable ? VK_COMPARE_OP_LESS_OR_EQUAL : VK_COMPARE_OP_NEVER;
+        samplerInfo.minLod = 0.0f;
+        samplerInfo.maxLod = static_cast<float>(_mipLevels);
+        samplerInfo.maxAnisotropy = 1.0f;
+        samplerInfo.anisotropyEnable = VK_FALSE;
+        samplerInfo.borderColor = VK_BORDER_COLOR_FLOAT_OPAQUE_WHITE;
+        samplerInfo.compareEnable = compareEnable ? VK_TRUE : VK_FALSE;
 
-		// Create image view with correct aspect mask
-		VkImageViewCreateInfo imageViewInfo{};
-		imageViewInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
-		imageViewInfo.viewType = VK_IMAGE_VIEW_TYPE_2D;
-		imageViewInfo.format = _vkFormat;
-		imageViewInfo.components = { VK_COMPONENT_SWIZZLE_IDENTITY, VK_COMPONENT_SWIZZLE_IDENTITY, VK_COMPONENT_SWIZZLE_IDENTITY, VK_COMPONENT_SWIZZLE_IDENTITY };
-		imageViewInfo.subresourceRange.aspectMask = isDepth ? VK_IMAGE_ASPECT_DEPTH_BIT : VK_IMAGE_ASPECT_COLOR_BIT;
-		imageViewInfo.subresourceRange.baseMipLevel = 0;
-		imageViewInfo.subresourceRange.baseArrayLayer = 0;
-		imageViewInfo.subresourceRange.layerCount = 1;
-		imageViewInfo.subresourceRange.levelCount = static_cast<uint32_t>(_mipLevels);
-		imageViewInfo.image = _vkImage;
+        if (vkCreateSampler(m_deviceRef->getDevice(), &samplerInfo, nullptr, &_vkSampler) != VK_SUCCESS)
+        {
+            throw std::runtime_error("failed to create texture sampler!");
+        }
 
-		if (vkCreateImageView(m_deviceRef->getDevice(), &imageViewInfo, nullptr, &_vkImageView) != VK_SUCCESS) {
-			throw std::runtime_error("failed to create texture image view!");
-		}
-	}
+        // Vue complète (2D classique, ou cube si m_isCubemap) — utilisée pour le SAMPLING en lecture
+        VkImageViewCreateInfo imageViewInfo{};
+        imageViewInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
+        imageViewInfo.viewType = m_isCubemap ? VK_IMAGE_VIEW_TYPE_CUBE : VK_IMAGE_VIEW_TYPE_2D;
+        imageViewInfo.format = _vkFormat;
+        imageViewInfo.components = {VK_COMPONENT_SWIZZLE_IDENTITY, VK_COMPONENT_SWIZZLE_IDENTITY, VK_COMPONENT_SWIZZLE_IDENTITY,
+                                    VK_COMPONENT_SWIZZLE_IDENTITY};
+        imageViewInfo.subresourceRange.aspectMask = isDepth ? VK_IMAGE_ASPECT_DEPTH_BIT : VK_IMAGE_ASPECT_COLOR_BIT;
+        imageViewInfo.subresourceRange.baseMipLevel = 0;
+        imageViewInfo.subresourceRange.baseArrayLayer = 0;
+        imageViewInfo.subresourceRange.layerCount = m_isCubemap ? 6 : 1;
+        imageViewInfo.subresourceRange.levelCount = static_cast<uint32_t>(_mipLevels);
+        imageViewInfo.image = _vkImage;
+
+        if (vkCreateImageView(m_deviceRef->getDevice(), &imageViewInfo, nullptr, &_vkImageView) != VK_SUCCESS)
+        {
+            throw std::runtime_error("failed to create texture image view!");
+        }
+
+        if (m_isCubemap)
+        {
+            for (uint32_t face = 0; face < 6; ++face)
+            {
+                VkImageViewCreateInfo faceViewInfo{};
+                faceViewInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
+                faceViewInfo.image = _vkImage;
+                faceViewInfo.viewType = VK_IMAGE_VIEW_TYPE_2D;
+                faceViewInfo.format = _vkFormat;
+                faceViewInfo.components = {VK_COMPONENT_SWIZZLE_IDENTITY, VK_COMPONENT_SWIZZLE_IDENTITY, VK_COMPONENT_SWIZZLE_IDENTITY,
+                                           VK_COMPONENT_SWIZZLE_IDENTITY};
+                faceViewInfo.subresourceRange.aspectMask = isDepth ? VK_IMAGE_ASPECT_DEPTH_BIT : VK_IMAGE_ASPECT_COLOR_BIT;
+                faceViewInfo.subresourceRange.baseMipLevel = 0;
+                faceViewInfo.subresourceRange.levelCount = 1;
+                faceViewInfo.subresourceRange.baseArrayLayer = face;
+                faceViewInfo.subresourceRange.layerCount = 1;
+
+                if (vkCreateImageView(m_deviceRef->getDevice(), &faceViewInfo, nullptr, &m_cubemapImageViews[face]) != VK_SUCCESS)
+                {
+                    throw std::runtime_error("failed to create cubemap face image view!");
+                }
+            }
+        }
+    }
+
 
 	Texture::~Texture()
 	{
@@ -256,6 +292,14 @@ namespace engine {
 		vkFreeMemory(m_deviceRef->getDevice(), _vkDeviceMem, nullptr);
 		vkDestroyImageView(m_deviceRef->getDevice(), _vkImageView, nullptr);
 		vkDestroySampler(m_deviceRef->getDevice(), _vkSampler, nullptr);
+
+        for (auto view : m_cubemapImageViews)
+        {
+            if (view != VK_NULL_HANDLE)
+            {
+                vkDestroyImageView(m_deviceRef->getDevice(), view, nullptr);
+            }
+        }
 	}
 
 	void Texture::transitionImageLayout(VkImageLayout oldLayout, VkImageLayout newLayout) {//transition image layout 
